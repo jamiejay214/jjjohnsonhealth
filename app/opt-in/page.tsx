@@ -11,7 +11,6 @@ export default function OptInPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!consent) return;
     // In production this would send to your backend
     setSubmitted(true);
   };
@@ -114,7 +113,6 @@ export default function OptInPage() {
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
                 className="mt-1 h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-600"
-                required
               />
               <span className="text-sm text-gray-700 leading-relaxed">
                 By checking this box and providing your mobile phone number, you
@@ -145,8 +143,7 @@ export default function OptInPage() {
 
           <button
             type="submit"
-            disabled={!consent}
-            className="w-full rounded-xl bg-emerald-700 py-4 text-sm font-semibold text-white shadow hover:bg-emerald-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-xl bg-emerald-700 py-4 text-sm font-semibold text-white shadow hover:bg-emerald-800 transition"
           >
             Sign Up for SMS Updates
           </button>
