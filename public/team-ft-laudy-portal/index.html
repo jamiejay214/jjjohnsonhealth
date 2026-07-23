@@ -1,0 +1,1052 @@
+<title>Team FT. Laudy — 2026 Onboarding Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{
+  --bg:#0a1322; --panel:#111f33; --panel2:#16273f; --line:rgba(212,175,94,.22);
+  --line2:rgba(159,170,191,.16);
+  --gold:#d4af5e; --gold-bright:#efd08c; --gold-dim:rgba(212,175,94,.12);
+  --text:#ece5d3; --muted:#9daabf; --ocean:#4b9cc4;
+  --ok:#4aa877; --ok-bg:rgba(74,168,119,.12);
+  --bad:#cf6a5f; --bad-bg:rgba(207,106,95,.12);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#f5f0e2; --panel:#fdfbf3; --panel2:#f0e9d6; --line:rgba(122,94,36,.30);
+    --line2:rgba(21,34,56,.14);
+    --gold:#8f6f2a; --gold-bright:#6e5417; --gold-dim:rgba(143,111,42,.10);
+    --text:#1a2438; --muted:#5b667c; --ocean:#1f6e96;
+    --ok:#237a52; --ok-bg:rgba(35,122,82,.10);
+    --bad:#a4372c; --bad-bg:rgba(164,55,44,.09);
+    --shadow:0 8px 24px rgba(60,45,10,.12);
+    color-scheme:light;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1322; --panel:#111f33; --panel2:#16273f; --line:rgba(212,175,94,.22);
+  --line2:rgba(159,170,191,.16);
+  --gold:#d4af5e; --gold-bright:#efd08c; --gold-dim:rgba(212,175,94,.12);
+  --text:#ece5d3; --muted:#9daabf; --ocean:#4b9cc4;
+  --ok:#4aa877; --ok-bg:rgba(74,168,119,.12);
+  --bad:#cf6a5f; --bad-bg:rgba(207,106,95,.12);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#f5f0e2; --panel:#fdfbf3; --panel2:#f0e9d6; --line:rgba(122,94,36,.30);
+  --line2:rgba(21,34,56,.14);
+  --gold:#8f6f2a; --gold-bright:#6e5417; --gold-dim:rgba(143,111,42,.10);
+  --text:#1a2438; --muted:#5b667c; --ocean:#1f6e96;
+  --ok:#237a52; --ok-bg:rgba(35,122,82,.10);
+  --bad:#a4372c; --bad-bg:rgba(164,55,44,.09);
+  --shadow:0 8px 24px rgba(60,45,10,.12);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--text);
+  font:16px/1.65 "Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+h1,h2,h3,.display{
+  font-family:"Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  letter-spacing:.01em; text-wrap:balance;
+}
+a{color:var(--ocean)}
+.eyebrow{
+  font-size:.72rem; text-transform:uppercase; letter-spacing:.18em;
+  color:var(--gold); font-weight:600; font-family:"Avenir Next","Segoe UI",system-ui,sans-serif;
+}
+/* ---------- shell ---------- */
+.shell{display:flex; min-height:100vh}
+nav.side{
+  width:260px; flex-shrink:0; background:var(--panel);
+  border-right:1px solid var(--line);
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  display:flex; flex-direction:column;
+}
+.brand{padding:22px 18px 14px; text-align:center; border-bottom:1px solid var(--line)}
+.brand svg{width:96px; height:auto; display:block; margin:0 auto 8px}
+.brand .t1{font-size:.68rem; letter-spacing:.32em; text-transform:uppercase; color:var(--muted)}
+.brand .t2{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-size:1.35rem; font-weight:700; color:var(--gold-bright); line-height:1.2}
+.brand .t3{font-size:.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-top:2px}
+nav.side .grp{padding:14px 10px 4px}
+nav.side .grp-label{font-size:.66rem; text-transform:uppercase; letter-spacing:.2em; color:var(--muted); padding:0 10px 6px}
+nav.side button.navlink{
+  display:block; width:100%; text-align:left; background:none; border:0; cursor:pointer;
+  color:var(--text); font:inherit; font-size:.92rem; padding:7px 10px; border-radius:6px;
+}
+nav.side button.navlink:hover{background:var(--gold-dim)}
+body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"]){opacity:.45}
+body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"])::after{content:" 🔒"; font-size:.75em}
+body:not(.unlocked) .members-only{display:none}
+body.unlocked #gateCard{display:none}
+nav.side button.navlink.active{background:var(--gold-dim); color:var(--gold-bright); font-weight:600; box-shadow:inset 2px 0 0 var(--gold)}
+nav.side button.navlink:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible{
+  outline:2px solid var(--ocean); outline-offset:2px;
+}
+nav.side .foot{margin-top:auto; padding:14px 16px; font-size:.72rem; color:var(--muted); border-top:1px solid var(--line)}
+main{flex:1; min-width:0; padding:34px 42px 90px}
+.page{max-width:860px; margin:0 auto}
+section.view{display:none}
+section.view.on{display:block}
+.page-head{margin-bottom:26px; padding-bottom:16px; border-bottom:1px solid var(--line)}
+.page-head h1{font-size:2rem; margin:6px 0 4px}
+.page-head p.sub{color:var(--muted); margin:0; max-width:62ch}
+/* topbar (mobile) */
+.topbar{display:none}
+/* ---------- components ---------- */
+.card{background:var(--panel); border:1px solid var(--line2); border-radius:10px; padding:20px 22px; margin:0 0 18px}
+.card h3{margin:0 0 10px; color:var(--gold-bright); font-size:1.12rem}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.btn{
+  display:inline-block; background:var(--gold); color:#14100a; border:0; cursor:pointer;
+  font:600 .88rem/1 "Avenir Next","Segoe UI",system-ui,sans-serif; padding:10px 18px; border-radius:7px;
+}
+:root[data-theme="light"] .btn:not(.ghost){color:#fdfbf3}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .btn:not(.ghost){color:#fdfbf3} }
+.btn.ghost{background:transparent; color:var(--gold); border:1px solid var(--gold)}
+.searchbox{
+  width:100%; max-width:420px; background:var(--panel2); color:var(--text);
+  border:1px solid var(--line); border-radius:8px; padding:10px 14px; font:inherit; margin:0 0 16px;
+}
+table{border-collapse:collapse; width:100%; font-size:.92rem; font-variant-numeric:tabular-nums}
+.tblwrap{overflow-x:auto; border:1px solid var(--line2); border-radius:10px; background:var(--panel); margin:0 0 18px}
+th{
+  text-align:left; font-size:.7rem; text-transform:uppercase; letter-spacing:.14em; color:var(--gold);
+  padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2);
+  font-family:"Avenir Next","Segoe UI",system-ui,sans-serif; white-space:nowrap;
+}
+td{padding:9px 14px; border-bottom:1px solid var(--line2); vertical-align:top}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block; font-size:.72rem; font-weight:700; letter-spacing:.06em; padding:2px 10px; border-radius:99px; white-space:nowrap}
+.pill.ok{background:var(--ok-bg); color:var(--ok)}
+.pill.bad{background:var(--bad-bg); color:var(--bad)}
+.pill.gold{background:var(--gold-dim); color:var(--gold)}
+.callout{border-left:3px solid var(--gold); background:var(--gold-dim); padding:14px 18px; border-radius:0 8px 8px 0; margin:0 0 18px}
+.callout.red{border-left-color:var(--bad); background:var(--bad-bg)}
+.callout.green{border-left-color:var(--ok); background:var(--ok-bg)}
+.callout h4{margin:0 0 6px; font-size:.95rem}
+/* script blocks */
+.script p{max-width:68ch}
+.say{
+  background:var(--panel); border:1px solid var(--line2); border-left:3px solid var(--ocean);
+  border-radius:0 8px 8px 0; padding:14px 18px; margin:0 0 14px; max-width:72ch;
+}
+.say .who{font-size:.68rem; text-transform:uppercase; letter-spacing:.16em; color:var(--ocean); font-weight:700; margin-bottom:4px}
+.action{
+  font-size:.8rem; text-transform:uppercase; letter-spacing:.12em; color:var(--gold);
+  font-weight:700; margin:18px 0 10px;
+}
+.action::before{content:"▸ "}
+details.obj{border:1px solid var(--line2); border-radius:9px; background:var(--panel); margin:0 0 10px; overflow:hidden}
+details.obj summary{
+  cursor:pointer; padding:13px 18px; font-weight:600; color:var(--gold-bright); list-style:none;
+  font-family:"Palatino Linotype",Palatino,Georgia,serif; font-size:1.02rem;
+}
+details.obj summary::-webkit-details-marker{display:none}
+details.obj summary::before{content:"+"; display:inline-block; width:1.2em; color:var(--gold)}
+details.obj[open] summary::before{content:"–"}
+details.obj .body{padding:2px 18px 16px 18px; border-top:1px solid var(--line2)}
+/* checklist */
+.check{display:flex; gap:12px; align-items:flex-start; padding:10px 14px; border:1px solid var(--line2); border-radius:8px; background:var(--panel); margin:0 0 8px}
+details.how{margin-top:6px}
+details.how summary{cursor:pointer; list-style:none; font-size:.8rem; font-weight:700; color:var(--gold); letter-spacing:.04em}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::before{content:"▸ "}
+details.how[open] summary::before{content:"▾ "}
+details.how .howbody{font-size:.9rem; color:var(--muted); border-left:2px solid var(--line); margin-top:6px; padding:2px 0 2px 14px; max-width:64ch}
+details.how .howbody ol{margin:6px 0; padding-left:18px}
+details.how .howbody p{margin:6px 0}
+.check.done details.how{display:none}
+.check input{margin-top:5px; accent-color:var(--gold); width:16px; height:16px; flex-shrink:0}
+.check.done{opacity:.55}
+.check.done .lbl{text-decoration:line-through}
+.progress{height:10px; background:var(--panel2); border:1px solid var(--line2); border-radius:99px; overflow:hidden; margin:6px 0 20px}
+.progress i{display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-bright)); width:0; transition:width .3s}
+@media (prefers-reduced-motion: reduce){ .progress i{transition:none} }
+/* lookup tools */
+.tool{display:flex; flex-wrap:wrap; gap:12px; align-items:center; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin:0 0 18px}
+.tool label{font-size:.8rem; font-weight:600; color:var(--muted)}
+.tool input,.tool select{background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:7px; padding:8px 12px; font:inherit}
+.tool .result{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-size:1.15rem; color:var(--gold-bright); font-weight:700}
+textarea.goal, input.goal{
+  width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line2);
+  border-radius:7px; padding:9px 12px; font:inherit; resize:vertical;
+}
+.hint{font-size:.8rem; color:var(--muted)}
+.contact-links a{white-space:nowrap}
+mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
+/* hero (welcome) */
+.hero{
+  text-align:center; padding:34px 20px 30px; margin:0 0 26px;
+  background:radial-gradient(ellipse at 50% 0%, var(--gold-dim), transparent 70%), var(--panel);
+  border:1px solid var(--line); border-radius:14px;
+}
+.hero svg{width:150px; height:auto; margin:0 auto 12px; display:block}
+.hero h1{font-size:2.3rem; margin:8px 0 6px}
+.hero .sub{color:var(--muted); max-width:52ch; margin:0 auto}
+.sig{display:flex; gap:26px; justify-content:center; flex-wrap:wrap; margin-top:22px}
+.sig .p{text-align:center}
+.sig .nm{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-weight:700; font-size:1.05rem; color:var(--gold-bright)}
+.sig .rl{font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
+.themebtn{background:none; border:1px solid var(--line); color:var(--muted); border-radius:7px; padding:6px 12px; cursor:pointer; font:inherit; font-size:.8rem}
+/* real logo file replaces the SVG crest when logo.png exists next to this page */
+.logoimg{display:none; max-width:100%; border-radius:10px}
+body.has-logo .logoimg{display:block; margin:0 auto 10px}
+body.has-logo .brand .logoimg{width:120px}
+body.has-logo .hero .logoimg{width:190px}
+body.has-logo .brand svg, body.has-logo .hero svg{display:none}
+@media(max-width:900px){
+  .shell{flex-direction:column}
+  nav.side{position:static; width:100%; height:auto; border-right:0; border-bottom:1px solid var(--line)}
+  nav.side .grp{display:inline-block; vertical-align:top}
+  main{padding:22px 18px 70px}
+}
+.modal-backdrop{position:fixed; inset:0; background:rgba(4,8,16,.66); display:flex; align-items:center; justify-content:center; z-index:50; padding:18px}
+.modal-backdrop[hidden]{display:none}
+.modal{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:24px 26px; max-width:380px; width:100%; box-shadow:var(--shadow)}
+@media print{
+  nav.side,.topbar,.searchbox,.tool,.themebtn,.btn{display:none !important}
+  body{background:#fff; color:#000}
+  section.view{display:block !important; page-break-before:always}
+  .card,.say,.tblwrap{border-color:#999}
+}
+</style>
+
+<div class="shell">
+<nav class="side" id="sidenav">
+  <div class="brand">
+    <img class="logoimg" src="logo.png" alt="Team FT. Laudy logo">
+    <svg viewBox="0 0 200 190" role="img" aria-label="Team FT. Laudy crest">
+      <g id="crest">
+      <defs>
+        <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f0d189"/><stop offset=".5" stop-color="#cfa64f"/><stop offset="1" stop-color="#a97e2f"/>
+        </linearGradient>
+        <linearGradient id="wav" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#1b5e8f"/><stop offset="1" stop-color="#4b9cc4"/>
+        </linearGradient>
+      </defs>
+      <!-- crown -->
+      <g fill="url(#gld)">
+        <path d="M70 38 L78 16 L92 32 L100 10 L108 32 L122 16 L130 38 Z"/>
+        <rect x="68" y="38" width="64" height="8" rx="3"/>
+        <circle cx="78" cy="14" r="3.4"/><circle cx="100" cy="8" r="3.8"/><circle cx="122" cy="14" r="3.4"/>
+      </g>
+      <!-- laurel -->
+      <g fill="url(#gld)" opacity=".95">
+        <g id="laurelL">
+          <ellipse cx="28" cy="150" rx="4.5" ry="10" transform="rotate(30 28 150)"/>
+          <ellipse cx="22" cy="132" rx="4.5" ry="10" transform="rotate(18 22 132)"/>
+          <ellipse cx="19" cy="113" rx="4.5" ry="10" transform="rotate(8 19 113)"/>
+          <ellipse cx="19" cy="94" rx="4.5" ry="10" transform="rotate(-4 19 94)"/>
+          <ellipse cx="22" cy="76" rx="4.5" ry="10" transform="rotate(-16 22 76)"/>
+          <ellipse cx="28" cy="60" rx="4.5" ry="10" transform="rotate(-28 28 60)"/>
+        </g>
+        <use href="#laurelL" transform="translate(200,0) scale(-1,1)"/>
+      </g>
+      <!-- shield -->
+      <path d="M48 50 h104 v72 q0 34 -52 52 q-52 -18 -52 -52 Z" fill="#0d1a2c" stroke="url(#gld)" stroke-width="5"/>
+      <path d="M58 60 h84 v60 q0 27 -42 42 q-42 -15 -42 -27 Z" fill="none" stroke="url(#gld)" stroke-width="1.4" opacity=".7"/>
+      <!-- wave -->
+      <path d="M56 138 q14 -12 28 -2 q16 11 32 2 q16 -9 28 3 q-16 26 -44 35 q-28 -9 -44 -38 Z" fill="url(#wav)" opacity=".85"/>
+      <path d="M58 140 q13 -9 26 -1 M92 141 q14 5 26 -2 M124 140 q10 -4 18 2" stroke="#dce9f2" stroke-width="2" fill="none" opacity=".8"/>
+      <!-- lettering -->
+      <text x="100" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="13" letter-spacing="4" fill="url(#gld)" font-weight="bold">USHA</text>
+      <text x="100" y="100" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-weight="bold" font-size="20" fill="url(#gld)">Ft. Laudy</text>
+      <text x="100" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" letter-spacing="3" fill="url(#gld)">TEAM</text>
+      <!-- base -->
+      <path d="M60 178 h80" stroke="url(#gld)" stroke-width="4" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div class="t1">Team</div>
+    <div class="t2">FT. Laudy</div>
+    <div class="t3">2026 Onboarding</div>
+  </div>
+  <div class="grp"><div class="grp-label">Start Here</div>
+    <button class="navlink" data-view="welcome">Welcome Letter</button>
+    <button class="navlink" data-view="checklist">Onboarding Checklist</button>
+    <button class="navlink" data-view="goals">Blueprint Goal Sheet</button>
+    <button class="navlink" data-view="shadow">Shadowing Log</button>
+  </div>
+  <div class="grp"><div class="grp-label">Sales Scripts</div>
+    <button class="navlink" data-view="runners">Runner&rsquo;s Script</button>
+    <button class="navlink" data-view="fullscript">Full Script</button>
+    <button class="navlink" data-view="objections">Objections</button>
+    <button class="navlink" data-view="approval">Approval &amp; Referral Call</button>
+  </div>
+  <div class="grp"><div class="grp-label">Underwriting</div>
+    <button class="navlink" data-view="meds">Medication Chart</button>
+    <button class="navlink" data-view="hw">Height &amp; Weight</button>
+    <button class="navlink" data-view="age">2026 Age Chart</button>
+    <button class="navlink" data-view="hunt">Scavenger Hunt</button>
+  </div>
+  <div class="grp"><div class="grp-label">Reference</div>
+    <button class="navlink" data-view="vocab">Vocabulary</button>
+    <button class="navlink" data-view="contacts">Contact List</button>
+    <button class="navlink" data-view="license">State License Costs</button>
+  </div>
+  <div class="foot">
+    <div id="authbox" style="margin-bottom:10px">
+      <button class="btn ghost" id="loginBtn" style="width:100%">Agent sign in</button>
+      <div id="whoami" style="display:none">
+        <div style="font-weight:700; color:var(--gold-bright)" id="whoName"></div>
+        <div class="hint" id="whoEmail" style="word-break:break-all"></div>
+        <div class="hint" id="syncState" style="margin:4px 0">Progress syncing to the cloud</div>
+        <button class="themebtn" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
+    <button class="themebtn" id="themeToggle">Toggle light / dark</button>
+    <div style="margin-top:10px">Team FT. Laudy · USHA<br>Fort Lauderdale, FL</div>
+  </div>
+</nav>
+
+<main><div class="page">
+
+<!-- ================= WELCOME ================= -->
+<section class="view" id="view-welcome">
+  <div class="hero">
+    <img class="logoimg" src="logo.png" alt="">
+    <svg viewBox="0 0 200 190" aria-hidden="true"><use href="#crest"/></svg>
+    <div class="eyebrow">Earn more income · Create more impact · Have more freedom</div>
+    <h1>Congratulations &amp; Welcome to Team FT. Laudy!</h1>
+    <p class="sub">Your official 2026 onboarding home — every script, chart, checklist, and contact in one place.</p>
+  </div>
+  <div class="card" id="gateCard">
+    <h3 id="gateTitle">This portal is for Team FT. Laudy agents</h3>
+    <p id="gateMsg" style="margin-top:0">Read the welcome letter below, then create your account to unlock your onboarding — the checklist, scripts, underwriting charts, and everything else. Your team leader will approve your account, and you're in.</p>
+    <div id="gateBtns" style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn" id="gateSignup">Create my account</button>
+      <button class="btn ghost" id="gateLogin">I already have a login</button>
+    </div>
+  </div>
+  <div class="card script">
+    <p>Take a breath and let this sink in: you made it. Out of everyone who wanted a seat on this team, we chose <em>you</em> — because we saw something in you that we build champions out of. Joining Team FT. Laudy isn't signing up for a job. It's stepping into a partnership with people who are fully committed to helping you build a life of abundance, fulfillment, and freedom — and who will never let you settle for less than your best.</p>
+    <p>Here's our promise to you. We will pour everything we have into your success: our time, our training, our leads, our resources, and direct, shoulder-to-shoulder mentorship from leaders who have already walked the road you're starting today. You will never be left to figure it out alone. Every script, every chart, and every tool in this portal exists for one reason — to get you winning as fast as possible. All we ask in return is simple: bring 100% of your effort, your energy, and your heart, every single day. For yourself. For your family. For this team.</p>
+    <p>You made the decision that you want to <strong>Earn more Income</strong>, <strong>Create more Impact</strong>, and <strong>Have more Freedom</strong>. We made the decision to hand you the Team FT. Laudy Blueprint so you can do exactly that. The only question left is the one nobody can answer but you: <em>how bad do you want it?</em> Because we already want it for you more than you know — and we've seen ordinary people do extraordinary things the moment they decided to go all in.</p>
+    <p>Understand what you're really here to do. Every call you make is a family that sleeps better because you protected them. Work harder than you've ever worked. Think bigger than you've ever thought. Let purpose — not pressure — be your fuel. This is not a job. This is not just a career opportunity. This is a lifestyle, a standard, and a brotherhood and sisterhood: the Team FT. Laudy way.</p>
+    <p>So welcome — to you and your family. Your past doesn't decide what happens next; your habits starting today do. When you have questions, reach out to your team leader directly — we're here for you. Welcome to your chosen family. Welcome to your next level. <strong>Welcome to Team FT. Laudy!</strong></p>
+    <div class="sig">
+      <div class="p"><div class="nm">Team FT. Laudy Leadership</div><div class="rl">Fort Lauderdale, FL</div></div>
+    </div>
+  </div>
+  <div class="grid2 members-only">
+    <div class="card"><h3>New here? Start with these</h3>
+      <ol style="margin:0; padding-left:20px">
+        <li><a href="#" data-go="checklist">Complete the Onboarding Checklist</a></li>
+        <li><a href="#" data-go="goals">Fill out your Blueprint Goal Sheet</a></li>
+        <li><a href="#" data-go="runners">Learn the Runner&rsquo;s Script</a></li>
+        <li><a href="#" data-go="shadow">Shadow a leader &amp; log it</a></li>
+      </ol>
+    </div>
+    <div class="card"><h3>Daily field tools</h3>
+      <ul style="margin:0; padding-left:20px">
+        <li><a href="#" data-go="meds">Medication Chart</a> — check any Rx in seconds</li>
+        <li><a href="#" data-go="hw">Height &amp; Weight lookup</a></li>
+        <li><a href="#" data-go="age">2026 Age Chart</a> — birth year ↔ age</li>
+        <li><a href="#" data-go="objections">Objection handlers</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CHECKLIST ================= -->
+<section class="view" id="view-checklist">
+  <div class="page-head"><div class="eyebrow">Start Here</div><h1>Onboarding Checklist</h1>
+  <p class="sub">Work top to bottom. Click <strong>How to do this</strong> on any item for step-by-step instructions. Your progress is saved on this device automatically.</p></div>
+  <div class="progress"><i id="chkbar"></i></div>
+  <div id="chklist"></div>
+  <div class="card">
+    <h3>Business Gmail examples</h3>
+    <p class="hint" style="margin-top:0">Use this as your primary (or) secondary email when creating accounts relating to your business (swap in your own last name):</p>
+    <ul style="margin:0; padding-left:20px">
+      <li>YourName.InsuranceSolutions@gmail.com</li>
+      <li>YourName.HealthcareAdvising@gmail.com</li>
+      <li>YourName.HealthCareSolutions@gmail.com</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= GOALS ================= -->
+<section class="view" id="view-goals">
+  <div class="page-head"><div class="eyebrow">Start Here</div><h1>Blueprint Goal Sheet</h1>
+  <p class="sub">Earn more income. Create more impact. Have more freedom. Everything you type here saves on this device — revisit it monthly.</p></div>
+  <div class="card">
+    <h3>1 · More income: how much will you earn in your first year?</h3>
+    <div id="incomeGoals" style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn ghost inc" data-v="$100,000 +">$100,000 +</button>
+      <button class="btn ghost inc" data-v="$150,000 +">$150,000 +</button>
+      <button class="btn ghost inc" data-v="$200,000 +">$200,000 +</button>
+      <button class="btn ghost inc" data-v="$250,000 +">$250,000 +</button>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>2 · Five goals for the next 12 months</h3><div id="goals12"></div></div>
+    <div class="card"><h3>3 · Five goals for the next 3 years</h3><div id="goals3y"></div></div>
+  </div>
+  <div class="card">
+    <h3>Commitment</h3>
+    <div class="grid2">
+      <div><label class="hint" for="gname">Print name</label><input class="goal" id="gname" data-store="goal-name"></div>
+      <div><label class="hint" for="gsig">Signature (type your name)</label><input class="goal" id="gsig" data-store="goal-sig" style="font-family:Georgia,serif; font-style:italic"></div>
+    </div>
+  </div>
+  <button class="btn" onclick="window.print()">Print goal sheet</button>
+</section>
+
+<!-- ================= SHADOWING ================= -->
+<section class="view" id="view-shadow">
+  <div class="page-head"><div class="eyebrow">Start Here</div><h1>Leader Presentation Shadowing</h1>
+  <p class="sub">Shadow five leader presentations. After each one, log the date, the leader, and what you learned — then have the leader sign off in person.</p></div>
+  <div id="shadowlog"></div>
+  <button class="btn" onclick="window.print()">Print shadowing log</button>
+</section>
+
+<!-- ================= RUNNERS ================= -->
+<section class="view" id="view-runners">
+  <div class="page-head"><div class="eyebrow">Sales Scripts</div><h1>Runner&rsquo;s Script <span class="pill gold">MASTER</span></h1>
+  <p class="sub">Your opening conversation: qualify the prospect, capture health and income, and hand off to your senior advisor.</p></div>
+
+  <div class="say"><div class="who">Opening</div>
+  Hey (Their Name)? Hey (Their Name)! It's (Your Name)! How's it going today? So, I received your request for health insurance quotes. Now, were you looking for just yourself, or for your family as well? <span class="hint">SELF ____ FAMILY ____</span></div>
+  <div class="say">Okay, and what has you looking for coverage — did your premiums go up, did you lose coverage, what's going on?</div>
+
+  <div class="action">Situation follow-ups — pick the column that matches</div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Premiums increased</th><th>No coverage</th><th>Losing coverage</th></tr></thead>
+    <tbody>
+      <tr><td>1) Okay, and what did your premiums go up to?</td><td>1) Okay, so when was the last time you had coverage?</td><td>1) Okay, and when does your coverage end?</td></tr>
+      <tr><td>2) What was that plan running you a month before it went up?</td><td>2) Was that through the marketplace or an employer?</td><td>2) Was that through the Marketplace or an employer? (If employer) — Did they offer you COBRA?</td></tr>
+      <tr><td>3) Was that through an employer or the marketplace?</td><td>3) Okay, and what was that plan running you a month?</td><td>3) Okay, and what was the plan running you a month? (If employer) — Does your new employer not offer coverage, or are you going self-employed?</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="say"><div class="who">Educate</div>
+  So, outside of employer plans, there are two ways to get full health coverage. One way is based on income, which is the public marketplace known as Obamacare, and the other is the private market, which is based on your health.</div>
+
+  <div class="say"><div class="who">Health</div>
+  Okay (Their Name), now how is your health? Are you relatively healthy? Any <strong>medications</strong> prescribed in the last 12 months? (If yes: any other medications?)<br><br>
+  How about any major <strong>pre-existing conditions</strong>, hospitalizations, back issues, or surgeries in the last 5 years? How about any scheduled upcoming surgeries, procedures, tests, or treatments?<br><br>
+  Do you <strong>smoke</strong>? YES / NO<br><br>
+  Now, (Their Name), is there anything else that you haven't mentioned that may show up in your medical report? I just want to make sure that anything pre-existing is covered.</div>
+
+  <div class="action">Medication notes — capture all four columns</div>
+  <div class="tblwrap"><table>
+    <thead><tr><th>Name of medication</th><th>Diagnosis &amp; how often? (daily, or as needed)</th><th>How long? (total time taken)</th><th>PCP, or psychiatrist? (mental-health meds only)</th></tr></thead>
+    <tbody><tr><td>&nbsp;</td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td></tr><tr><td>&nbsp;</td><td></td><td></td><td></td></tr></tbody>
+  </table></div>
+
+  <div class="say"><div class="who">Income</div>
+  Okay, great. Now, just so I can make sure you aren't missing any discounts here, what is your estimated household income for 2026?</div>
+
+  <div class="say"><div class="who">Power statement</div>
+  (Their Name), based on the information you've given me, I can <strong>definitely</strong> put you in a great position moving forward regarding your health coverage. Just to confirm, I have your zip as&hellip;<br><br>
+  Okay, got it! Give me a moment while I bring in my senior advisor to review all your available options!</div>
+
+  <div class="card"><h3>Hand-off sheet</h3>
+  <p class="hint" style="margin-top:0">Capture before you bring in the closer:</p>
+  <ul style="margin:0; padding-left:20px">
+    <li>Names, gender / DOB for each person quoted</li>
+    <li>ZIP, state, phone number(s)</li>
+    <li>Quote &amp; notes · Runner's name</li>
+  </ul></div>
+</section>
+
+<!-- ================= FULL SCRIPT ================= -->
+<section class="view" id="view-fullscript">
+  <div class="page-head"><div class="eyebrow">Sales Scripts</div><h1>2026 Full Script</h1>
+  <p class="sub">The complete presentation, from hello to submitted application, in eight stages. Open each stage as you work the call.</p></div>
+
+  <details class="obj" open><summary>1 · Intro, Educate, Health &amp; Income</summary><div class="body script">
+    <div class="say"><div class="who">Opening</div>Hey [Their Name]? Hey [Their Name]! It's [Your Name]! How's it going today? I see you were looking for health insurance quotes. Were you looking for just yourself or for your family as well?<br><br>Okay, what has you looking for coverage? Did your premiums go up? Did you lose coverage? What's your situation?<br><br>Alright [Their Name], as an advisor, my license gives me access to every plan in the state. I will pull up all of your options, and we will compare the best plans with the major insurance carriers.</div>
+    <div class="say"><div class="who">Educate</div>So, outside of employer plans, there are two ways to get full health coverage. The first way is based on income, which is the public marketplace, known as Obamacare, and the other is the private market, which is based on your health.</div>
+    <div class="say"><div class="who">Health</div>Okay [Their Name], now how is your health? Are you relatively healthy? Any <strong>medications</strong> prescribed in the last 12 months? (If yes: any other medications? What medication, for what condition? Taking it for how long?)<br><br>How about major <strong>pre-existing conditions</strong>, hospitalizations, back issues, or surgeries in the last ten years?<br><br>Do you <strong>smoke</strong>? YES / NO<br><br>Now, [Their Name], is there anything else that you haven't mentioned that may show up in your medical report? I just want to make sure that anything pre-existing is covered.</div>
+    <div class="say"><div class="who">Income</div>As far as your income goes, do you know if you qualify for government assistance for being low income? (If they don't know) Okay, no worries. Do you know your estimated household income this year?</div>
+  </div></details>
+
+  <details class="obj"><summary>2 · EZ App Quote &amp; Power Statement</summary><div class="body script">
+    <div class="action">Build quotes on EZ App and Health Sherpa</div>
+    <div class="say"><div class="who">Power statement</div>Okay, [Their Name], based on the information you've given me and (your/family's) low-risk health history, I can <strong>definitely</strong> put you in a great position moving forward regarding your health coverage. It's a simple process, and I just need some quick information.<br><br>So, I have your Zip Code as __, and your DOB is __? And what's your estimated height and weight? Okay, [Their Name], here is where I need your help the most.</div>
+    <p class="hint">Only ask questions that have not been answered yet:</p>
+    <ol>
+      <li>How often are you going to the doctor, and what kind of doctors do you go to?</li>
+      <li>What are the names of any specific doctors you would like to keep in-network?</li>
+      <li>Do you have any upcoming procedures or treatments?</li>
+      <li>Are you looking for Dental and Vision as well?</li>
+      <li>When are you looking for a policy to begin?</li>
+      <li>And, [Their Name], what do you do for work? <span class="hint">(rapport-building question)</span></li>
+    </ol>
+    <div class="say"><div class="who">Frame</div>Okay [Their Name], so once we find the best solution, we'll submit a free application for the start date of your choice. Applications consist of basic demographic information, the start date for your policy, and a valid form of payment information, obviously. Does that approval process make sense? Okay great!<br><br>Now, I'm starting with the Public Marketplace plans. Have you had a chance to look at Obamacare yet? <span class="hint">(If they are currently on a Marketplace plan, locate it to discuss briefly.)</span></div>
+  </div></details>
+
+  <details class="obj"><summary>3 · Screen Share</summary><div class="body script">
+    <div class="action">Start CrankWheel for screenshare</div>
+    <div class="say">What I like to do is allow my clients the opportunity to review all the options together so I can be fully transparent and you can see everything I'm seeing. I'm sending you a link so you can see my screen.<br><br>[Their Name], what's the best email or phone number to send that link to? (Or explain the URL link) Can you see my background? <span class="hint">(Show picture of self, family, kids)</span></div>
+  </div></details>
+
+  <details class="obj"><summary>4 · Show Your License</summary><div class="body script">
+    <div class="say">This is a copy of my license for the state of [XXX] that allows me to shop all your options. Whatever plan you choose, I will become the licensed advisor that sticks with you for the policy's lifetime. I will handle your customer service, claims, or anything you need!</div>
+  </div></details>
+
+  <details class="obj"><summary>5 · Marketplace</summary><div class="body script">
+    <div class="action">Click on Health Sherpa page</div>
+    <div class="say">Remember, there are two ways to get full health coverage. One is the public marketplace, which is based on income, and the other is the private market, which is based on health. Now, let's start with your plans on the public marketplace, and then we'll pivot to the private plans that I believe are a better fit for you.<br><br>The least expensive plan in your area on the Marketplace is starting at $____ a month with a $____ deductible.<br><br>Now, are you familiar with how deductibles work? <span class="hint">(EXPLAIN ANYWAY)</span> A deductible is the amount of money you must pay before the plan pays any benefits for you. For example, if you are on a plan with a $10,000 deductible, you must spend $10,000 out of your pocket before that health insurance plan starts to pay any benefits. Does that make sense?<br><br>Also, this is an HMO <em>or</em> EPO. Do you know the difference between EPOs, HMOs, and PPOs? <span class="hint">(EXPLAIN ANYWAY)</span> HMOs and EPOs are smaller restricted networks that typically only give you coverage in the county you live in, and you need a referral to see a specialist. So, most people prefer PPOs because they are covered nationwide. No referrals are needed to see a specialist.<br><br>So [Their Name], someone healthy, like yourself, is probably never going to spend $10,000 in a year on medical expenses, so I don't think a plan like this will be in your best interest, wouldn't you agree?</div>
+    <p class="hint">Quickly go over a Gold-level plan and show one with a lower deductible — higher premium:</p>
+    <div class="say">If we try to get that deductible down, I do see a plan here with a deductible of $___, but now our premium is jumping up to $____/month.<br><br>So, [Their Name], these plans are intended for people with major pre-existing conditions or low income. Now, because you are relatively healthy, we CAN look at some private options. If you can qualify based on your health — you'll get lower rates and much better benefits.</div>
+  </div></details>
+
+  <details class="obj"><summary>6 · Presentation — Health Coverage Summary</summary><div class="body script">
+    <div class="action">Open Health Coverage Summary</div>
+    <div class="say">Now, when I am looking at the private options, the plan I see with the best value, based on what we've discussed, is on the UnitedHealthcare Choice Plus PPO network coming in at $___ a month, and this DOES come with no calendar-year deductible. For the right type of benefits, would this price point work for you?<br><br>Have you heard of UnitedHealthcare, [Their Name]? They are the largest and most accepted network in the nation.</div>
+    <div class="action">Search doctors on PPO network portal</div>
+    <div class="say">Let's take a look at the in-network doctors and hospitals in your area. <span class="hint">(Show all primary-care options and hospitals, THEN look up their doctor.)</span> Are there other providers you would like me to look up for you?</div>
+    <div class="action">Click back to Health Coverage Summary</div>
+    <div class="say">Now, because this plan is based on your health, Freedom Life, a UnitedHealthcare company, underwrites it. They're the ones who are going to check to make sure you're healthy and determine your eligibility for coverage. Have you ever applied for private, medically underwritten health insurance before?<br><br>Okay, now let's look at the plan details. You have no calendar-year deductible to satisfy. You will also have built-in doctor visits, urgent-care visits, and chiropractic visits. If you don't use them, you won't lose them — they roll over year after year!</div>
+    <div class="action">Click on EOBs — show two</div>
+    <div class="say">So, the way your plan works is when you go to the doctor, you show them your insurance card, get your treatment, and walk out paying nothing. The doctor's office then sends the bill to the insurance company to apply an in-network contracted rate, which typically reduces the bill between 40&ndash;80% and applies your fixed plan benefits for your visit. Next, you will get an explanation of benefits in the mail with a visit breakdown. Let me show you an example:</div>
+    <div class="say"><div class="who">1st EOB — show free visit</div>As you can see — my client went to the doctor. Total charges for this visit were $___. Now, because they went to a doctor or facility that's in-network with UnitedHealthcare Choice Plus PPO, they received an in-network contracted rate that took off $____. Then, they applied the benefit amount for the services you received, which was $___. So, excluded charges are all that you would be responsible for, and as you can see, my client was not out of pocket anything for this visit.</div>
+    <div class="say"><div class="who">2nd EOB — specialist visit with a charge</div>Now, not all your visits are going to be free. Here is an example of a specialist visit where my client did have a small out-of-pocket cost. Here, my client went to the doctor, and the total charges for this visit were $___. Again, you will see the in-network contracted rate taken off first, then they applied the benefit amounts for the service they just received. So, the excluded charges are all you would be responsible for, and my client was responsible for $___. If you have anything out of pocket, it usually amounts to a small co-pay. Does that make sense? <span class="hint">(Quest Diagnostics or LabCorp are the preferred labs for this policy.)</span></div>
+    <div class="say"><div class="who">Wellness</div>Now of course, you have coverage for preventative-care visits. Things like your physicals, lab work, and immunizations. <span class="hint">If asked — (Women) Pap smears, mammograms, etc. (Men) PSA tests, colonoscopies.</span></div>
+    <div class="say"><div class="who">Accidents</div>Now, let's say you have something happen outside of a regular doctor visit, such as an accident. Your worst-case scenario for any accident or injury will result in a $250 deductible. It doesn't matter if the accident is $5,000 or $50,000 — your worst case will be $250, and the insurance company takes care of the rest! Pretty simple, right? Perfect.</div>
+    <div class="say"><div class="who">Premier Med — highlight $3,000, then 100%</div>Now let's say you have something even bigger happen, like a catastrophic event. God forbid you have cancer, heart attack, stroke, or a major hospitalization. You will have access to upgrade to your $3,000 deductible, with 100% coinsurance for covered services. So whether your bills amount to $50,000 or $5 million — your worst-case scenario is only $3,000. Is that clear?</div>
+    <div class="say"><div class="who">MedGuard</div>This plan includes a critical-illness benefit that will satisfy your deductible, so your worst-case scenario for a covered critical illness would result in NO out-of-pocket expenses. Plus, the remaining benefit ensures you don't have any financial stressors while out of work dealing with a medical hardship.</div>
+    <div class="say"><div class="who">MDLive (association states only)</div>Alright — lastly, your plan comes with MDLive, which gives you unlimited calls to a LIVE doctor 24/7, where they can diagnose you as well as send a prescription to your local pharmacy that you can pick up, typically within the hour, without you even walking into the doctor's office — such as antibiotics, steroid creams, or eyedrops.</div>
+    <div class="callout"><h4>Explain the 3 things not covered</h4>Now, there are 3 things that this plan will not fully cover — 1) Drug and alcohol rehab, 2) Severe or inpatient mental health, and 3) Maternity care&hellip; so none of these things will be an issue for you, correct? Okay great!</div>
+    <div class="say"><div class="who">Recap</div>Just to recap — this is a nationwide PPO plan on the UnitedHealthcare Choice Plus network. You have no calendar-year deductible for your everyday services, a $250 deductible for any accident or injury, and your WORST-CASE SCENARIO would be access to a $3,000 deductible with 100% coinsurance! That's it!<br><br>Okay, so at this point, what questions do you have for me? <span class="hint">(Address all questions confidently, then move directly to the closing statement.)</span></div>
+    <div class="action">Email the Health Coverage Summary through EZ App — click Health Coverage Summary, click Include Quote, type the email address, click Email</div>
+  </div></details>
+
+  <details class="obj"><summary>7 · Close &amp; Application</summary><div class="body script">
+    <div class="say"><div class="who">Closing statement</div>Alright, so here's what will happen next, because you do have to get approved&hellip; We're going to submit your application electronically to the insurance company. Applications consist of:
+    <ul><li>Basic demographic information</li><li>The start date for your policy</li><li>A valid form of payment information, obviously</li><li><strong>Most importantly</strong>, medical questions, which will determine your eligibility for coverage. There is no bloodwork or physicals to be done — they look at your prescription history and medical report to help them make the underwriting decision, and there's a quick verification call to confirm your information.</li></ul></div>
+    <div class="action">Go straight into the app</div>
+    <div class="say">Now, the legal spelling of your first name is ______. And your last name is ____. And the mailing address you want your insurance cards mailed to? What's the best email address for you? And is this the best phone number to reach you at?<br><br>And what state were you born in? And the last four of your social for medical records? <span class="hint">CONFIRM HEIGHT / WEIGHT / DOB</span></div>
+    <div class="say"><div class="who">Effective / start-date page</div>Okay [Their Name], the start date for the policy was ____, correct? <span class="hint">(As soon as approved, or the date the client selected in pre-qualifications.)</span> This is the first day your policy will be active and the same day your monthly premium will be drafted.<br><br>Are you claiming social security, worker's compensation, or disability? Have you applied or had bloodwork done for medically underwritten life insurance?</div>
+    <div class="action">Complete page 5 · Click Calculate · Click Next</div>
+    <div class="say"><div class="who">Page 6 — MedGuard beneficiary</div>Okay, so you are covered for critical illnesses on this policy. If something critical were to happen and you did pass away, the funds would be paid to a beneficiary. Would you like to list a spouse, child, or estate?<br><br><span class="hint">(After asking about beneficiaries:)</span> Also, once you're approved for this plan, you're actually pre-approved for life insurance at $____ for only $___, or $____ for $____. <em>Pause.</em> Which one would you like to do?</div>
+    <div class="action">Page 7: Association — click Next</div>
+    <div class="say"><div class="who">Page 8 — medical questions</div>So we're down to the last three pages of the application. First is the medical questions that will determine your eligibility for coverage. Next is your banking information, which is your routing and account number — you can find that on a check, banking app, or statement. Lastly, we will schedule your verification call so the insurance company can confirm all the information on this application is accurate.<br><br>Now, here are the medical questions we are going to review together. Remember, we will schedule a time for the verifiers to call you afterward. They are very selective about who they will accept.<br><br><span class="hint">(At the medication box:)</span> The first question here is: in the last 12 months, have you been prescribed any medications? Other than what we've already discussed, are there any other medications pertaining to pain, muscle relaxers, ADHD, anxiety, depression&hellip; anything like that? <span class="hint">(After inputting their prescriptions, ask again: anything else you can think of?)</span><br><br><span class="hint">Example: Escitalopram, taken as prescribed for three years. Mild, controlled anxiety — Dr. John Smith, PCP.</span><br><br>Now, I'm going to read you the medical questions. These questions pertain to your health history, so if you have taken EVEN a single medication one time for any condition listed below, please let me know, and we'll talk about it!<br><br><span class="hint">Example of a "YES": Mild anxiety, no therapy or psychiatric treatment, prescribed 2020&ndash;present, Dr. John Smith, PCP.</span></div>
+    <div class="say"><div class="who">Payment / banking page</div>Alright [Their Name], now this is where they will verify the account you'd like your monthly premiums drafted from, starting on (EFFECTIVE DATE).<br><br>What is the name of the bank you're using? You can go ahead with the 9-digit routing code when you're ready. <span class="hint">(If they can't find it: it's the first 9 digits on the bottom left of a check.)</span> Alright, and the account? <span class="hint">(Click "same as primary" for billing address.)</span><br><br><span class="hint">(If they ask about credit card:)</span> Absolutely! You can use a credit or debit card if you would like, but the only drawback is they do charge you about 10% more, and they also process payment immediately upon approval. If you choose this method, you will need to call in to the insurance company on time each month to avoid losing your coverage. Most people use their routing and account for this reason. I'm ready when you are.</div>
+    <div class="say"><div class="who">V-Call schedule page</div>Okay, now we will schedule your verification call. The next availability is ______. Does that work for you? Perfect.</div>
+  </div></details>
+
+  <details class="obj"><summary>8 · Before Submitting — V-Call Prep &amp; Referrals</summary><div class="body script">
+    <div class="say">So, lastly, I will take a few minutes to prepare you for this verification call to ensure the process and approval go smoothly. They will call you within a 15-minute window of when your call is scheduled. The call will last 15&ndash;20 minutes, depending on your answers and the verifier.<br><br>I will text you their contact information to save shortly. Please make sure to save this so the call does not get blocked by spam filters. The first thing they will do is introduce themselves as the verifier for Freedom Life, a UnitedHealthcare company.<br><br>They will validate your basic information — name, payment, start date, etc. It's a little boring, but hang in there. They will also verify that I (Your Name) am the licensed agent you spoke with.<br><br>One of the first things they will cover with you is that this is not a Minimum Essential, ACA, or Obamacare plan. It does not provide full coverage for the 3 things we went over: drug and alcohol rehab, mental-health care, and maternity coverage.<br><br><strong>Most importantly!</strong> They are going to verify those medical questions that we went over in the application. These verifiers are just following a script. Keep it short and simple.<br><br>Now remember, they are not authorized to answer any questions about your coverage. If you do have any, just write them down, and you can text or call me after. If you start asking them questions, they will stop the call, and we will have to restart the whole process again.</div>
+    <div class="say"><div class="who">Recap questions if need be</div>They will ask if you've tested positive for COVID-19 in the last 90 days. That's a no, correct?<br><br>Toward the end, they will ask if you have any upcoming appointments for treatment or symptoms to check on. No, correct?<br><br>They are going to make sure you know there is a <strong>30-day waiting period for preventative wellness visits</strong> — for things like physicals, pap smears, and colonoscopies, wait 30 days so you can receive wellness benefits.<br><br>They'll mention a <strong>12-month wait period on pre-existing conditions that are not disclosed</strong> on the application.<br><br>Lastly, they will ask who has your most recent medical records. We can list your primary care or a local walk-in clinic. They will not reach out to the facility — they just want to know that you have been to a doctor in the last 5 years.</div>
+    <div class="say"><div class="who">With positive energy!</div>You will be receiving an email shortly from US Health Group, which is a private UnitedHealthcare company that offers these medically underwritten plans. It will include the policy documents and the verification-call information. After that call, there is nothing more you need to do. I will track it all for you, and I will let you know the good news when you are approved. Remember to save the verification-call number that I am sending you right now. Please let me know when it is saved into your phone! <span class="hint">(Send the verification-call contact card.)</span><br><br>Do you have any questions for me? Now, before I let you go — my business is primarily based on referrals and building relationships with my clients. Who else do you know that needs help with their health insurance?<br><br>Okay great! I look forward to working with you, [Their Name]. Have a great day. Talk to you soon!</div>
+  </div></details>
+</section>
+
+<!-- ================= OBJECTIONS ================= -->
+<section class="view" id="view-objections">
+  <div class="page-head"><div class="eyebrow">Sales Scripts</div><h1>2026 Objections</h1>
+  <p class="sub">Every common pushback and exactly what to say. Open the objection you're hearing.</p></div>
+
+  <details class="obj"><summary>&ldquo;I got it taken care of&hellip;&rdquo;</summary><div class="body script">
+    <div class="say">Okay, perfect! That's honestly going to make things a lot easier! I'm sure you've gotten a ton of phone calls&hellip; right?<br><br>I totally get it! I know how frustrating that can be. I'll go ahead and close out your file. Just so I can update everything correctly, who did you end up going with: Blue Cross, United, Cigna, Aetna?<br><br>Great! Was this through your employer, marketplace, or the private market? <span class="hint">(Go to the matching category below.)</span></div>
+    <div class="callout"><h4>If they say: &ldquo;Why does that matter / that's none of your business!&rdquo;</h4>
+    I only ask because you're getting a bunch of calls&hellip; right&hellip;? I would love to help slow those down for you. At the moment, it shows you have no coverage at all. So, who did you end up going with&hellip; Blue Cross, United, Cigna, Aetna? Great! Was this through your employer, marketplace, or the private market?</div>
+  </div></details>
+
+  <details class="obj"><summary>&hellip;They went with a Marketplace plan</summary><div class="body script">
+    <div class="say">Great. Were you able to qualify for a subsidy based on being low income? <span class="hint">(Let them respond.)</span> Okay, what is that plan running you a month?<br><br><span class="hint">If the cost is high, REACT and ask:</span> "How many family members are on the plan?"<br><br>(Prospect's Name), it doesn't make any sense for you to be paying that much unless you have major pre-existing conditions! Have you ever heard of private, medically underwritten insurance before? <span class="hint">(Let them respond.)</span><br><br>If you can qualify for these plans, you will receive reduced rates and better benefits for being in relatively good health!</div>
+    <p class="hint">&hellip;Back to script: "Educate" — do NOT ask income, skip to Health.</p>
+  </div></details>
+
+  <details class="obj"><summary>&hellip;They have employer coverage</summary><div class="body script">
+    <div class="say">Okay, perfect. Honestly, that is probably going to be the best fit. Typically, they are going to pay at least half of your premium, and most times, you can't beat the coverage. From my experience, when you start to add on spouses and dependents, those rates can tend to skyrocket. Is that your situation?</div>
+    <p class="hint">&hellip;Back to script: "Educate" — do NOT ask income, skip to Health.</p>
+  </div></details>
+
+  <details class="obj"><summary>&hellip;They bought a short-term (private) plan</summary><div class="body script">
+    <div class="say">No wonder your file is still open! You have enrolled in a short-term plan. Were you only needing coverage for 30&ndash;90 days before enrolling in a major medical option? <span class="hint">(You should know the carrier by now.)</span><br><br><span class="hint">(If YES or NO&hellip;)</span> A short-term plan is usually more affordable while maintaining a PPO network, but it does leave you financially exposed to major medical bills because there is no true max out-of-pocket. Also, they can drop you from coverage during the reset period every 30&ndash;90 days. But, what is that plan running you a month? <span class="hint">(Let them respond.)</span><br><br>(Prospect's Name)! For about the same cost, you could have qualified for full-coverage plans with reduced rates and better benefits, just for being relatively healthy! Let me ask you this: would you consider yourself in good health? Any medications prescribed in the last 12 months?</div>
+    <p class="hint">&hellip;Back to the Health section of the script.</p>
+  </div></details>
+
+  <details class="obj"><summary>&hellip;They joined a health-sharing plan</summary><div class="body script">
+    <div class="say">No wonder your file is still registered as being uninsured! I would assume that you chose a health-sharing plan because it was more affordable than all the other options you looked at, right?<br><br>I would also assume you are in good health and haven't had any major claims on that plan, correct? <span class="hint">(Prospect replies with a no.)</span> Well, that's a good thing!<br><br>(Prospect's Name), I don't think you were aware of the health-based plans in your area that provide you reduced rates and full coverage for about the same price as a health-sharing plan. What's that plan running you a month? How many people are on the policy?<br><br>If you can qualify, the type of coverage you would have wanted is called medically underwritten insurance. Qualifying for it is based on having a decent health history. How is your health, though? Any medications prescribed in the last 12 months?</div>
+  </div></details>
+
+  <details class="obj"><summary>&ldquo;You're the 100th person to call me!&rdquo;</summary><div class="body script">
+    <div class="say">Hey (Prospect's Name), I'm sorry to hear that! I'm sure by now you've already gotten it taken care of&hellip; haven't you?</div>
+    <div class="say"><div class="who">If yes</div>Yeah, that's super frustrating! I'll go ahead and close out your file. Just so I can update everything correctly, who did you end up going with: Blue Cross, United, Cigna, Aetna? Great! Was this through your employer, marketplace, or the private market? <span class="hint">(&hellip;back to their specific "got it taken care of" situation above.)</span></div>
+    <div class="say"><div class="who">If no</div>Honestly, I should have been the only one reaching out to you&hellip; I'll do my part to help stop these calls! Now that I have you for a second&hellip; what had you looking for coverage in the first place? Did your premiums go up, did you lose coverage&hellip; what's going on? <span class="hint">(&hellip;back to script.)</span></div>
+  </div></details>
+
+  <details class="obj"><summary>&ldquo;Who do you work for&hellip;?&rdquo;</summary><div class="body script">
+    <div class="say">Absolutely, that's a great question! My license allows me to access all of the major carriers, such as BCBS, UnitedHealthcare, Cigna, and Aetna. It really depends on what's available in your area and what you're looking for. My job is just to help educate you on all of your options, publicly and privately.<br><br>So what had you looking for coverage to begin with? Did your rates go up, did you lose coverage, what's going on? <span class="hint">(Back to script.)</span></div>
+  </div></details>
+
+  <details class="obj"><summary>&ldquo;Just email me the info&rdquo;</summary><div class="body script">
+    <div class="say">Absolutely! I actually have to email you over everything that we go over. There are between 60&ndash;80 different options in your area.<br><br>What I like to do is take a couple of minutes and narrow them down to 1&ndash;3 options that suit your situation based on making sure your doctor is in network, you like the deductibles, the rates, and co-pays. <span class="hint">(Back to script where you left off.)</span></div>
+  </div></details>
+
+  <details class="obj"><summary>&ldquo;I'm busy&rdquo;</summary><div class="body script">
+    <div class="say">Okay, no worries! You're probably getting a million phone calls, and I'm sure by now you've probably gotten it taken care of&hellip; haven't you?</div>
+    <div class="say"><div class="who">If yes</div>I'll go ahead and close out your file. Just so I can update everything correctly, who did you end up going with: Blue Cross, United, Cigna, Aetna? Great! Was this through your employer, marketplace, or the private market? <span class="hint">(&hellip;back to their "got it taken care of" situation.)</span></div>
+    <div class="say"><div class="who">If no</div>I mean&hellip; now that I have you for a second&hellip; what had you even looking for coverage to begin with? Did your premiums go up, did you lose coverage&hellip; what's going on? <span class="hint">(&hellip;back to script.)</span></div>
+    <div class="callout"><h4>If they are ACTUALLY busy — book the appointment</h4>
+    I only ask because I have access to every plan in the state, so I'll get quotes together that we can review at a later time. So, when would be a better time for us to speak? <span class="hint">(Let them hear you check your schedule.)</span><br><br>
+    Does this afternoon, or this evening work better? Okay, so I have ____ and ____ available today — which time works best for you? <span class="hint">(Let them counter if neither time works.)</span><br><br>
+    Perfect. Before I let you go, let me just confirm some quick information so I've done my homework before our appointment — I have your zip code as ____? And your DOB as ____? And do you have any pre-existing conditions that you need coverage for? <span class="hint">(React positively.)</span> (Prospect's Name), it sounds like you are in really good health! I think you will qualify for exclusive plans that give you reduced rates and better benefits!<br><br>
+    I'm going to text you now from my personal number, so you have my contact info. Please save my number and confirm with an "Okay" so I know you've received my text. I'll shoot you a 60-minute text reminder before our call to confirm that you will be on time. Sounds good?<br><br>
+    Perfect — now what is the best email to send a calendar reminder to? I'll give you a quick call at ____ AM/PM to review options; if for any reason something comes up, please communicate with me so we can respect each other's time. I look forward to helping you then!<br><br>
+    <span class="hint">(OR) Keep going if they don't stop you, and go back to script — "What has you looking for coverage?&hellip;"</span></div>
+  </div></details>
+</section>
+
+<!-- ================= APPROVAL ================= -->
+<section class="view" id="view-approval">
+  <div class="page-head"><div class="eyebrow">Sales Scripts</div><h1>Approval Call &amp; Referral Script</h1>
+  <p class="sub">Deliver the good news, set expectations, and turn every approval into referrals.</p></div>
+  <div class="say"><div class="who">The good news</div>Hey (NAME), it's (YOUR NAME) — great news! Your coverage has been approved — congratulations! Just a quick reminder: your start date is XXX.</div>
+  <div class="say"><div class="who">What happens next</div>You'll be getting an email from USHealth Group to set up your online account. Once you create your password, you'll be able to manage everything about your policy. Your ID cards will be mailed out and should arrive in 1 to 2 weeks. There's nothing else you need to do at this time.</div>
+  <div class="say"><div class="who">Gratitude</div>More importantly, I just want to thank you for trusting me through this process. I'm grateful we had the chance to connect and get you in a great spot with your coverage. If there is anything you need regarding your plan, give me a call or shoot me a text — I'm here to help.</div>
+  <div class="say"><div class="who">The referral ask</div>Now, as I mentioned, most of my clients connect me with their friends or family members who they want to help get affordable coverage as well.<br><br>The cool part is, when someone you refer gets approved, I will send you a <strong>$100 referral bonus</strong> — via whatever method you prefer: Zelle, Venmo, Cash App, totally up to you.<br><br>Here's what makes it super easy: most of my clients just introduce us in a quick three-way text. That way, it's simple, and I can take it from there.<br><br>Who's the first person that comes to mind you want to help?<br><br><span class="hint">(After that)</span> Great — and who else are you thinking about?<br><br><span class="hint">(NO)</span> Okay, no worries. Let me know in the future if there is anyone you think of!</div>
+  <div class="say"><div class="who">Close</div>Thank you (NAME). Remember, I'm here for anything you need. Please do not hesitate to contact me. I look forward to speaking with you soon. Have a great day!</div>
+</section>
+
+<!-- ================= MEDS ================= -->
+<section class="view" id="view-meds">
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Common Medication List</h1>
+  <p class="sub">Type any drug name or condition to check it instantly during a call.</p></div>
+  <input class="searchbox" id="medsearch" type="search" placeholder="Search medication or condition&hellip; e.g. Lisinopril, anxiety" aria-label="Search medications">
+  <div class="tblwrap"><table id="medtable"><thead><tr><th>Drug name</th><th>Condition</th></tr></thead><tbody></tbody></table></div>
+  <div class="grid2">
+    <div class="callout red"><h4>ALWAYS a decline</h4><ul style="margin:6px 0 0; padding-left:18px">
+      <li>Currently taking PAIN PILLS for ongoing pain</li>
+      <li>Any history of INSULIN / DIABETES Rx</li>
+      <li>Any history of BLOOD THINNERS Rx</li>
+      <li>Any history of Bipolar / Schizophrenia Rx</li>
+      <li>Any history of Drug / Alcohol Addiction Rx</li>
+      <li>Any history of Arthritis Rx (NOT over-the-counter)</li>
+      <li>Any history of Overactive / Underactive Bladder Rx</li>
+      <li>History of SEIZURES taking over 1,200&nbsp;mg of daily meds</li>
+    </ul></div>
+    <div>
+      <div class="callout"><h4>High blood pressure rules</h4><ul style="margin:6px 0 0; padding-left:18px">
+        <li>Height &amp; weight must be WITHIN the HBP range (see <a href="#" data-go="hw">Height &amp; Weight chart</a>)</li>
+        <li>Must be taking the same med for OVER A YEAR</li>
+        <li>OKAY to take a water pill with HBP meds</li>
+      </ul>
+      <p style="margin:8px 0 0"><strong>HBP declines:</strong> listing sleep apnea with HBP on the app · taking MORE than 2 HBP meds (not counting a water pill) · older clients (50+) who smoke and take HBP meds.</p></div>
+      <div class="callout green"><h4>Mental health tips</h4><ul style="margin:6px 0 0; padding-left:18px">
+        <li>ADHD meds are OKAY for dependents</li>
+      </ul>
+      <p style="margin:8px 0 0"><strong>Mental-health declines:</strong> listing a DEPENDENT's history of anxiety or depression Rx · currently taking TWO meds for depression OR anxiety · currently taking depression or anxiety meds AND telling the V-Call they are currently in therapy.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= H&W ================= -->
+<section class="view" id="view-hw">
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Height &amp; Weight Chart</h1>
+  <p class="sub">Age 18 to &lt;64.5 years. Use the lookup during a call, or scroll the full charts below.</p></div>
+  <div class="tool">
+    <label for="hwsex">Sex</label>
+    <select id="hwsex"><option value="m">Male</option><option value="f">Female</option></select>
+    <label for="hwheight">Height</label>
+    <select id="hwheight"></select>
+    <span class="result" id="hwresult"></span>
+  </div>
+  <div id="hwtables"></div>
+  <p class="hint">HBP Insurable = the acceptable weight range when the client takes high-blood-pressure medication.</p>
+</section>
+
+<!-- ================= AGE ================= -->
+<section class="view" id="view-age">
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>2026 Age Chart</h1>
+  <p class="sub">Birth year to age for the 2026 plan year, ages 1&ndash;64.</p></div>
+  <div class="tool">
+    <label for="birthyear">Birth year</label>
+    <input id="birthyear" type="number" min="1962" max="2025" placeholder="e.g. 1988" style="width:120px">
+    <span class="result" id="ageresult"></span>
+  </div>
+  <div class="tblwrap"><table id="agetable"><thead><tr><th>Age</th><th>Birth year</th><th>Age</th><th>Birth year</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<!-- ================= HUNT ================= -->
+<section class="view" id="view-hunt">
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Underwriting Scavenger Hunt</h1>
+  <p class="sub">Training exercise: get the Premier Choice/Advantage Underwriting Guideline from your portal (Resources → Underwriting Guides), hit Ctrl+F, and decide for each condition — is the client approvable for an <strong>underwritten</strong> plan, or do they belong on an <strong>ACA / Obamacare</strong> plan? Check your answer for each.</p></div>
+  <div class="progress"><i id="huntbar"></i></div>
+  <div class="tblwrap"><table id="hunttable"><thead><tr><th>Condition</th><th style="text-align:center">Underwritten</th><th style="text-align:center">ACA / Obamacare</th></tr></thead><tbody></tbody></table></div>
+  <p class="hint">Answers save on this device. Review your calls with your FTA or FSL when you're done.</p>
+</section>
+
+<!-- ================= VOCAB ================= -->
+<section class="view" id="view-vocab">
+  <div class="page-head"><div class="eyebrow">Reference</div><h1>2026 Vocabulary List</h1>
+  <p class="sub">The language of the trade — search any term.</p></div>
+  <input class="searchbox" id="vocabsearch" type="search" placeholder="Search terms&hellip; e.g. deductible, PPO, AV" aria-label="Search vocabulary">
+  <div id="vocablist"></div>
+</section>
+
+<!-- ================= CONTACTS ================= -->
+<section class="view" id="view-contacts">
+  <div class="page-head"><div class="eyebrow">Reference</div><h1>Contact List</h1>
+  <p class="sub">Team FT. Laudy leadership and support contacts.</p></div>
+  <div class="card"><h3>Updated list coming soon</h3>
+  <p style="margin:0">The 2026 contact list is being updated. Until it's posted here, ask your team leader for the current leadership and support numbers.</p></div>
+</section>
+
+<!-- ================= LICENSE ================= -->
+<section class="view" id="view-license">
+  <div class="page-head"><div class="eyebrow">Reference</div><h1>2026 State License Cost List</h1>
+  <p class="sub">Non-resident license costs by state, ranked by sales volume. Click a column header to sort.</p></div>
+  <div class="tblwrap"><table id="lictable"><thead><tr>
+    <th data-k="rank" style="cursor:pointer">Sales rank ⇅</th><th data-k="state" style="cursor:pointer">State ⇅</th><th>License type</th>
+    <th data-k="nipr" style="cursor:pointer">NIPR ⇅</th><th data-k="usha" style="cursor:pointer">USHA fee ⇅</th><th data-k="total" style="cursor:pointer">Total ⇅</th>
+  </tr></thead><tbody></tbody></table></div>
+  <div class="callout"><h4>All 30 states</h4>NIPR $2,981.38 + USHA fees $466.00 = <strong>$3,447.38 total</strong></div>
+</section>
+
+</div></main>
+</div>
+
+<div class="modal-backdrop" id="loginModal" hidden>
+  <div class="modal">
+    <h3 class="display" style="margin:0 0 4px; color:var(--gold-bright); font-size:1.3rem" id="liTitle">Agent sign in</h3>
+    <p class="hint" style="margin:0 0 14px" id="liSub">Sign in to unlock your onboarding. Your checklist, goals, and training progress sync to the cloud so your leader can support you.</p>
+    <div id="liNameWrap" hidden>
+      <label class="hint" for="liName">Full name</label>
+      <input class="goal" id="liName" autocomplete="name" style="margin-bottom:10px">
+    </div>
+    <label class="hint" for="liEmail">Email</label>
+    <input class="goal" id="liEmail" type="email" autocomplete="username" style="margin-bottom:10px">
+    <label class="hint" for="liPass">Password</label>
+    <input class="goal" id="liPass" type="password" autocomplete="current-password" style="margin-bottom:14px">
+    <div id="liErr" class="hint" style="color:var(--bad); margin-bottom:10px"></div>
+    <div style="display:flex; gap:10px">
+      <button class="btn" id="liGo">Sign in</button>
+      <button class="btn ghost" id="liCancel">Cancel</button>
+    </div>
+    <p class="hint" style="margin:14px 0 0"><a href="#" id="liSwitch">New to the team? Create your account</a><br>Forgot your password? Ask your team leader.</p>
+  </div>
+</div>
+
+<script>
+/* ---------- data ---------- */
+const MEDS=[["Abilify","Bipolar/Schizophrenia"],["Adderall","ADHD"],["Albuterol","Asthma/Sleep Apnea"],["Allopurinol","Gout"],["Alosetron","Irritable Bowel Syndrome"],["Alprazolam","Anxiety"],["Ambien","Sleep Aid"],["Amlodipine","High Blood Pressure"],["Amphetamine Salt Combo","ADHD"],["Armour Thyroid","Hypothyroidism"],["Ativan","Anxiety"],["Atorvastatin","High Cholesterol"],["Buspirone","Anxiety"],["Chlorpromazine","Bipolar/Schizophrenia"],["Clonazepam","Anxiety"],["Clonidine","HBP/ADHD"],["Concerta","ADHD"],["Cyclobenzaprine","Muscle Relaxer"],["Cymbalta","Anxiety"],["Diazepam","Anxiety"],["Ditropan","Overactive Bladder"],["Effexor","Anxiety"],["Flexeril","Muscle Relaxer"],["Flomax","Enlarged Prostate"],["Fluoxetine","Depression"],["Focalin","ADHD"],["Gabapentin","Pain"],["Harvoni","Hepatitis C"],["Humira","Rheumatoid Arthritis"],["Hydrocodone","Pain"],["Hydrochlorothiazide (HCTZ)","Water Pill (HBP)"],["Insulin","Diabetes"],["Imitrex","Migraines"],["Keppra","Seizures"],["Klonopin","Anxiety"],["Levothyroxine","Hypothyroidism"],["Lexapro","Depression"],["Lipitor","High Cholesterol"],["Lisinopril","High Blood Pressure"],["Lopressor","High Blood Pressure"],["Lorazepam","Anxiety"],["Lortab","Pain"],["Losartan","High Blood Pressure"],["Lunesta","Sleep Aid"],["Meloxicam","Arthritis"],["Metformin (pill)","Diabetes"],["Methylphenidate","ADHD"],["Methadone","Drug Addiction"],["Metoprolol","High Blood Pressure"],["Myrbetriq","Overactive Bladder"],["Naltrexone","Alcohol/Drug Addiction"],["Naproxen","Pain/Migraines"],["NP Thyroid","Hypothyroidism"],["Omeprazole","Heartburn/GERD"],["Oxybutynin","Overactive Bladder"],["Oxycodone","Pain"],["Paroxetine","Depression"],["Percocet","Pain"],["Plavix","Blood Thinner"],["Prednisone","Steroid"],["Prilosec (OTC)","Heartburn/GERD"],["Propranolol","High Blood Pressure"],["Prozac","Depression"],["Risperidone","Bipolar/Schizophrenia"],["Ritalin","ADHD"],["Rizatriptan","Migraines"],["Sertraline","Anxiety"],["Simvastatin","High Cholesterol"],["Strattera","ADHD"],["Synthroid","Hypothyroidism"],["Suboxone","Drug Addiction"],["Tamsulosin","Enlarged Prostate"],["Topamax","Migraines"],["Toprol","High Blood Pressure"],["Tricor","High Cholesterol"],["Tramadol","Pain"],["Trazodone","Depression/Sleep Aid"],["Truvada","HIV/AIDS"],["Valtrex","Herpes"],["Vicodin","Pain"],["Vivitrol","Alcohol/Drug Addiction"],["Vivlodex","Arthritis"],["Vyvanse","ADHD"],["Wellbutrin","Depression"],["Xanax","Anxiety"],["Zocor","High Cholesterol"],["Zoloft","Anxiety/Depression"]];
+const VOCAB=[["FNB","First New Business."],["In Force","Your policy is in effect; client is approved."],["AV — Annualized Volume","The value of the policy being sold (premium × 12 months)."],["OTF","On-the-fly sale."],["OCC / 2CC","One Call Close vs. Two Calls."],["Jetty Thursday","A magical day where things get quickly approved if they are clean apps."],["Taken Rate","Your score with the insurance company on policies submitted vs. “taken” — approved or in the works."],["V-Call","Verification call, second step of the application process."],["APS","“Attending Physician's Statement.” They are pulling medical records from the doctor's office — get with your FTA and ask how you can help expedite the process."],["Underwritten vs. Guaranteed Issue","When a plan requires medical questions and health-history records to be pulled for an approval vs. none at all."],["Posting Deals in the GroupMe #","Monthly premium × 12. Example: $300/month premium × 12 = 3.6#."],["Association (AIBC) (SCA) (ABC)","A supplemental part of our plans — how we make our residual income as well. (Not available in all states, such as MD, NV, UT, KS, SD.) Includes: Accident/Injury Protection · AD&D (accidental death & dismemberment) · 24/7 Telemedicine with MDLive."],["Freedom Life / Enterprise / National Foundation","Underwriting company — varies by state."],["ACA","Affordable Care Act · Obamacare · Marketplace."],["Deductible","The total amount you'll pay for healthcare services before your insurance starts to cover a portion of costs."],["HMO — Health Maintenance Organization","Usually limits coverage to providers within the plan's network, and requires a doctor's referral to see specialists."],["PPO — Preferred Provider Organization","Usually covers some of the cost of out-of-network providers (but not as much as in-network), and doesn't require a referral to see specialists. Nationwide coverage."],["EPO — Exclusive Provider Organization","Usually limits coverage to providers within the plan's network, but doesn't require a referral to see specialists. Exclusively — almost no one accepts it: 1 PCP, 1 OBGYN, 1 cardiologist, etc., so appointments take forever because only one doc is available."],["POS — Point of Service","Like an HMO, but more limited doctor choice. Also requires a referral from your primary-care doctor to see a specialist."],["Max Out of Pocket (MOOP)","The most you'll have to pay for healthcare services during your coverage period (typically 12 months) — your safety net in a major health problem. Monthly premiums don't count toward your out-of-pocket max."],["Co-Pay","Upfront payment provided for the service at hand; doesn't go toward the deductible."],["Co-insurance","The % of coverage after the deductible that is owed by you vs. the insurance company until your max OOP is reached. Most common: 80/20, 70/30. Example: a client has a $1M cancer bill, a $5K deductible, an $8,550 MOOP, and 80/20 co-insurance — they pay the deductible first, then the insurance company pays 80% of the remainder while the client pays 20%, until they reach their MOOP. The deductible usually applies to the MOOP."],["EOB","Explanation of Benefits — not a bill. It explains how the benefits were applied for the service, as well as the in-network repricing applied."],["In-Network vs. Out-of-Network","If a doctor/facility is in-network, your insurance is accepted there. Out-of-network is treated as if you don't even have insurance — they just won't cover you."],["PCP","Primary Care Physician."],["Preventative Care","Yearly wellness: visit · blood work · vaccinations · pap smear / mammogram / colonoscopy."]];
+const LICENSES=[[1,"Texas","Life, Accident, Health & HMO",55.60,10.00],[3,"Georgia *","Life, Accident & Sickness",125.60,16.00],[5,"Colorado","Accident & Health, Life",147.60,0],[6,"North Carolina","Life, Accident & Health or Sickness",149.60,20.00],[7,"Virginia","Health, Life & Annuities",35.60,10.00],[9,"Illinois","Life, Health",362.18,0],[10,"Tennessee","Life, Accident & Health",55.60,15.00],[11,"Maryland","Accident and Health or Sickness, Life",59.60,0],[12,"Ohio","Accident & Health, Life",25.60,30.00],[13,"Indiana","Life, Accident & Health",95.60,0],[14,"Utah","Accident & Health or Sickness, Life",80.60,5.00],[15,"South Carolina","Accident & Health or Sickness, Life",30.60,0],[16,"Louisiana","Accident & Health or Sickness, Life",80.60,30.00],[17,"Missouri","Accident & Health or Sickness, Life",105.60,0],[18,"Michigan","Life, Accident & Health",15.60,5.00],[19,"Oklahoma","Life, Accident & Health or Sickness",125.60,30.00],[20,"Nevada","Life, Health",190.60,15.00],[21,"Kentucky","Health, Life",155.60,50.00],[22,"Kansas","Accident & Health or Sickness, Life",85.60,5.00],[23,"Alabama","Life, Accident & Health or Sickness",86.00,40.00],[24,"Mississippi","Accident & Health or Sickness, Life",106.60,25.00],[25,"Arkansas","Accident, Health & Sickness, Life",81.00,0],[26,"Iowa","Life, Accident & Health",55.60,10.00],[27,"Montana","Life, Disability (Health)",105.60,0],[28,"Nebraska","Life & Annuities, Sickness, Accident & Health",55.60,10.00],[29,"West Virginia","Accident & Health or Sickness, Life",55.60,25.00],[30,"Wyoming","Accident & Health or Sickness, Life",155.60,15.00],[31,"Wisconsin","Life, Accident & Health",155.60,30.00],[32,"South Dakota","Accident & Health or Sickness, Life",35.60,20.00],[33,"Delaware","Accident & Health, Life",105.60,50.00]];
+const HEIGHTS=["4’10”","4’11”","5’","5’1”","5’2”","5’3”","5’4”","5’5”","5’6”","5’7”","5’8”","5’9”","5’10”","5’11”","6’","6’1”","6’2”","6’3”","6’4”","6’5”","6’6”","6’7”","6’8”"];
+const HW_M=[["90-200","168-200","90-90","90-158"],["92-205","174-205","92-92","92-162"],["93-205","179-205","93-93","93-167"],["95-210","185-210","95-98","95-172"],["97-218","192-218","97-101","97-178"],["100-224","198-224","100-104","100-184"],["102-231","204-231","102-108","102-191"],["106-238","211-238","106-111","106-196"],["110-246","217-246","110-114","110-202"],["113-254","224-254","113-118","113-208"],["116-261","230-261","116-122","116-215"],["119-269","237-269","119-125","119-221"],["123-277","244-277","123-129","123-227"],["127-285","251-285","127-133","127-234"],["130-293","258-293","130-136","130-240"],["134-301","265-301","134-140","134-248"],["138-310","273-310","138-144","138-254"],["141-318","280-318","141-148","141-261"],["145-328","288-328","145-152","145-266"],["149-336","295-336","149-156","149-270"],["152-345","303-345","152-160","152-276"],["156-354","311-354","156-164","156-283"],["160-363","319-363","160-168","160-290"]];
+const HW_F=[["90-200","168-200","90-90","90-158"],["92-205","174-205","92-92","92-162"],["94-205","179-205","94-94","94-167"],["95-210","185-210","95-98","95-172"],["97-216","192-216","97-101","98-178"],["100-220","198-220","100-104","100-184"],["102-226","204-226","102-108","102-188"],["106-231","211-231","106-111","106-192"],["109-236","217-236","109-114","109-197"],["112-243","224-243","112-118","112-204"],["115-250","230-250","115-122","115-210"],["117-259","237-259","117-125","117-216"],["119-266","244-266","119-129","119-222"],["122-274","251-274","122-133","122-229"],["123-283","258-283","123-136","123-235"],["126-290","265-290","126-140","126-242"],["130-297","273-297","130-144","130-248"],["141-318","280-318","141-148","141-256"],["145-328","288-328","145-152","145-260"],["149-336","295-336","149-156","149-265"],["152-345","303-345","152-160","152-271"],["156-354","311-354","156-164","156-278"],["160-363","319-363","160-168","160-285"]];
+const HUNT=["Hypothyroidism taking Synthroid 1x daily for 3 years","High blood pressure — female, 45 years old, 5’2” tall, 195 lbs","Herniated disc surgery 5 months ago","Needs surgery NOW (for any ailment)","Taking Meloxicam for rheumatoid arthritis","Knee meniscus tear surgery, 8 months ago","Takes HBP meds, over 50, and a smoker","First-time skin cancer (basal cell) removed 1 year ago","Male — 5’5” tall and weighs 250 lbs","Taking NOW 2 meds for anxiety OR 2 meds for depression","Taking Losartan for HBP for 7 months","Asthma, no hospitalizations, controlled by as-needed Albuterol inhaler","Partial knee replacement","Mental health with drugs and seeing a psychiatrist","Current occupation is a police officer or firefighter","Breast cancer removed 5 years ago","Child taking ADHD meds","Right hip replacement 5 years ago","Current occupation is a bail bondsman","Rotator cuff repair 1 year ago","Currently taking pain meds for back pain","Has taken blood thinners in the past 7 years","History of heart attack","Taking Metformin for diabetes","Child under 18 taking anxiety/depression meds","Has taken Meloxicam for arthritis in the past 7 years","Has taken Suboxone for drug rehab","History of a heart stent","Has taken Gabapentin for nerve pain in the past 7 years","Taking Sumatriptan for migraines as needed","Current occupation is a pilot"];
+const BOOKMARK_HOW=`<ol><li>Open the site in Chrome.</li><li>Click the <strong>star</strong> at the right end of the address bar (or press <strong>Ctrl+D</strong> / <strong>Cmd+D</strong>).</li><li>Set the folder to <strong>Bookmarks bar</strong> and click <strong>Done</strong>.</li><li>If you don't see your bookmarks bar, press <strong>Ctrl+Shift+B</strong> (Cmd+Shift+B on Mac) to show it.</li></ol>`;
+const CHECKLIST=[
+ ["Create your business Gmail","Use it as your primary (or) secondary email for every business account. See the examples below.",
+  `<ol><li>Go to <strong>gmail.com</strong> and click <strong>Create account → For work or my business</strong>.</li><li>Pick a professional address using your last name — see the examples at the bottom of this page (e.g. YourName.InsuranceSolutions@gmail.com).</li><li>Add a recovery phone and email so you never lose access.</li><li>Use this address for every business tool you set up below.</li></ol>`],
+ ["Set up Vanilla Soft","Dialer & lead management.",
+  `<ol><li>Ask your team leader for your Vanilla Soft login.</li><li>Sign in through your team's Vanilla Soft link and change your password on first login.</li><li>Do a test dial with your FTA to confirm your audio and caller ID work.</li></ol>`],
+ ["Set up Next Gen","",
+  `<ol><li>Ask your team leader to send your Next Gen invite to your business Gmail.</li><li>Open the invite email, create your password, and sign in.</li><li>Confirm with your FTA that your account is linked to the team correctly.</li></ol>`],
+ ["Set up Fort Lauderdale USHA","",
+  `<ol><li>Get the Fort Lauderdale USHA link and your credentials from your team leader.</li><li>Sign in and save the login in your browser.</li><li>Look around the portal — this is where team resources and updates live.</li></ol>`],
+ ["Connect your Gmail Calendar","",
+  `<ol><li>Go to <strong>calendar.google.com</strong> while signed in to your business Gmail.</li><li>On your phone, add the same Google account so appointments sync everywhere.</li><li>Turn on notifications — you'll use this calendar for every client appointment and follow-up.</li></ol>`],
+ ["Bookmark: Gmail","Browser bookmarks bar — keep every tool one click away.",`<p>Open <strong>gmail.com</strong> signed in to your business account, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Google Calendar","",`<p>Open <strong>calendar.google.com</strong>, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Google Sheets (Home)","",`<p>Open <strong>sheets.google.com</strong>, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Fort Lauderdale USHA","",`<p>Open the Fort Lauderdale USHA link from your leader, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Next Gen","",`<p>Open your Next Gen login page, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Vanilla Soft","",`<p>Open your Vanilla Soft login page, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: USHA Portal","",`<p>Open the USHA agent portal, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Outlook USHA Email","",`<p>Open your USHA Outlook email in the browser, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: GoodRX","",`<p>Open <strong>goodrx.com</strong> — you'll use it to look up client medications — then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Health Sherpa","",`<p>Open <strong>healthsherpa.com</strong> — you'll use it to quote Marketplace plans — then:</p>${BOOKMARK_HOW}`],
+ ["Fill out your Blueprint Goal Sheet","Under Start Here in this portal.",
+  `<ol><li>Open the <a href="#" data-go="goals">Blueprint Goal Sheet</a> in this portal.</li><li>Pick your first-year income target and write five 12-month and five 3-year goals.</li><li>Type your name and signature, then print a copy for your leader.</li></ol>`],
+ ["Complete 5 leader shadowing sessions","Log each one in the Shadowing Log.",
+  `<ol><li>Ask a leader when you can sit in on their next presentation.</li><li>After each session, open the <a href="#" data-go="shadow">Shadowing Log</a> and record the date, the leader, and what you learned.</li><li>Print the log and have each leader sign their session.</li></ol>`],
+ ["Complete the Underwriting Scavenger Hunt","Under Underwriting in this portal.",
+  `<ol><li>In your USHA portal, open <strong>Resources → Underwriting Guides</strong> and get the Premier Choice/Advantage guideline.</li><li>Press <strong>Ctrl+F</strong> to search it as you work through the <a href="#" data-go="hunt">Scavenger Hunt</a> in this portal.</li><li>Answer Underwritten or ACA for every condition, then review your answers with your FTA or FSL.</li></ol>`]
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const store={get(k,d){try{return JSON.parse(localStorage.getItem("ftlaudy-"+k))??d}catch(e){return d}},set(k,v){localStorage.setItem("ftlaudy-"+k,JSON.stringify(v)); if(k!=="theme"&&k!=="session")Cloud.queue(k,v);}};
+
+/* ---------- cloud sync (Supabase) ---------- */
+const SB_URL="https://zrbqewiccorrdbrbfnjf.supabase.co";
+const SB_KEY="sb_publishable_SqvfT7NOQt00XHyoARDUdw_-Trfr-N1";
+const SB_ANON_JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyYnFld2ljY29ycmRicmJmbmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3NjM3NDUsImV4cCI6MjEwMDMzOTc0NX0.4gx9Gz6DSk-OdkG62nboWBeVZSIuQo76MCcydAG5Xm8";
+let UNLOCKED=false;
+const Cloud={
+  session:null, pending:{}, timer:null,
+  headers(){return {apikey:SB_KEY, Authorization:"Bearer "+this.session.access_token, "Content-Type":"application/json"}},
+  async login(email,password){
+    const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error_description||d.msg||"Sign-in failed — check your email and password.");
+    this.session=d; store.set("session",{refresh_token:d.refresh_token});
+    return d;
+  },
+  async refresh(){
+    const saved=store.get("session",null); if(!saved?.refresh_token)return false;
+    try{
+      const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:saved.refresh_token})});
+      if(!r.ok){localStorage.removeItem("ftlaudy-session");return false;}
+      this.session=await r.json(); store.set("session",{refresh_token:this.session.refresh_token});
+      return true;
+    }catch(e){return false;}
+  },
+  logout(){this.session=null; this.profile=null; localStorage.removeItem("ftlaudy-session");},
+  profile:null,
+  async fetchProfile(){
+    if(!this.session)return null;
+    const r=await fetch(`${SB_URL}/rest/v1/profiles?select=is_admin,approved,full_name&id=eq.${this.session.user.id}`,{headers:this.headers()});
+    if(!r.ok)return null;
+    const rows=await r.json(); this.profile=rows[0]||null; return this.profile;
+  },
+  async register(full_name,email,password){
+    const r=await fetch(`${SB_URL}/functions/v1/manage-agent`,{method:"POST",
+      headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_ANON_JWT,"Content-Type":"application/json"},
+      body:JSON.stringify({action:"register",full_name,email,password})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||"Could not create the account.");
+    return d;
+  },
+  async pull(){
+    if(!this.session)return;
+    const r=await fetch(`${SB_URL}/rest/v1/progress?select=key,value`,{headers:this.headers()});
+    if(!r.ok)return false;
+    let changed=false;
+    for(const row of await r.json()){
+      const v=JSON.stringify(row.value);
+      if(localStorage.getItem("ftlaudy-"+row.key)!==v){localStorage.setItem("ftlaudy-"+row.key,v);changed=true;}
+    }
+    return changed;
+  },
+  queue(k,v){
+    if(!this.session)return;
+    this.pending[k]=v; clearTimeout(this.timer);
+    this.timer=setTimeout(()=>this.flush(),1200);
+    const s=$("#syncState"); if(s)s.textContent="Saving…";
+  },
+  async flush(){
+    if(!this.session)return;
+    const rows=Object.entries(this.pending).map(([key,value])=>({user_id:this.session.user.id,key,value}));
+    if(!rows.length)return; this.pending={};
+    let r=await fetch(`${SB_URL}/rest/v1/progress`,{method:"POST",headers:{...this.headers(),Prefer:"resolution=merge-duplicates"},body:JSON.stringify(rows)});
+    if(r.status===401&&await this.refresh())
+      r=await fetch(`${SB_URL}/rest/v1/progress`,{method:"POST",headers:{...this.headers(),Prefer:"resolution=merge-duplicates"},body:JSON.stringify(rows)});
+    const s=$("#syncState"); if(s)s.textContent=r.ok?"Progress synced to the cloud":"Offline — will retry on next change";
+  }
+};
+
+/* ---------- navigation ---------- */
+function go(view){
+  if(!UNLOCKED&&view!=="welcome"){
+    view="welcome";
+    const gate=$("#gateCard"); if(gate){gate.scrollIntoView({behavior:"smooth"});gate.style.outline="2px solid var(--gold)";setTimeout(()=>gate.style.outline="",1200);}
+  }
+  $$("section.view").forEach(s=>s.classList.toggle("on",s.id==="view-"+view));
+  $$("nav.side .navlink").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+  location.hash=view; window.scrollTo({top:0});
+}
+$$("nav.side .navlink").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
+document.addEventListener("click",e=>{const a=e.target.closest("[data-go]"); if(a){e.preventDefault(); go(a.dataset.go);}});
+window.addEventListener("hashchange",()=>{const v=location.hash.slice(1); if(v&&$("#view-"+v))go(v);});
+
+/* ---------- theme ---------- */
+$("#themeToggle").addEventListener("click",()=>{
+  const r=document.documentElement;
+  const cur=r.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  r.dataset.theme=cur==="dark"?"light":"dark";
+  store.set("theme",r.dataset.theme);
+});
+const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement.dataset.theme=savedTheme;
+
+/* ---------- logo: use logo.png if it exists, else keep the SVG crest ---------- */
+(()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="logo.png";})();
+
+/* ---------- auth UI + approval gate ---------- */
+(()=>{
+  const modal=$("#loginModal");
+  let mode="login";
+  const setMode=m=>{
+    mode=m;
+    $("#liNameWrap").hidden=m==="login";
+    $("#liTitle").textContent=m==="login"?"Agent sign in":"Create your account";
+    $("#liSub").textContent=m==="login"
+      ?"Sign in to unlock your onboarding. Your checklist, goals, and training progress sync to the cloud so your leader can support you."
+      :"Create your account, then your team leader will approve it. Once approved, the full portal unlocks for you.";
+    $("#liGo").textContent=m==="login"?"Sign in":"Create account";
+    $("#liSwitch").textContent=m==="login"?"New to the team? Create your account":"Already have a login? Sign in";
+    $("#liErr").textContent="";
+  };
+  const open=m=>{setMode(m);modal.hidden=false;(m==="login"?$("#liEmail"):$("#liName")).focus();};
+  const applyProfile=()=>{
+    const p=Cloud.profile;
+    UNLOCKED=!!(p&&(p.is_admin||p.approved));
+    document.body.classList.toggle("unlocked",UNLOCKED);
+    if(Cloud.session&&!UNLOCKED){
+      $("#gateTitle").textContent="Account created — waiting on approval";
+      $("#gateMsg").textContent="You're signed in! Your team leader just needs to approve your account, then everything unlocks automatically. Check back soon, or ask your leader to approve you.";
+      $("#gateBtns").style.display="none";
+      $("#syncState").textContent="Waiting for leader approval";
+    }
+  };
+  const showUser=()=>{
+    const u=Cloud.session?.user;
+    $("#loginBtn").style.display=u?"none":"";
+    $("#whoami").style.display=u?"block":"none";
+    if(u){$("#whoName").textContent=u.user_metadata?.full_name||Cloud.profile?.full_name||"Agent";$("#whoEmail").textContent=u.email;}
+  };
+  $("#loginBtn").addEventListener("click",()=>open("login"));
+  $("#gateLogin").addEventListener("click",()=>open("login"));
+  $("#gateSignup").addEventListener("click",()=>open("signup"));
+  $("#liSwitch").addEventListener("click",e=>{e.preventDefault();setMode(mode==="login"?"signup":"login");});
+  $("#liCancel").addEventListener("click",()=>modal.hidden=true);
+  modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
+  $("#liGo").addEventListener("click",async()=>{
+    $("#liErr").textContent="";
+    const email=$("#liEmail").value.trim(), pass=$("#liPass").value;
+    try{
+      if(mode==="signup"){
+        const name=$("#liName").value.trim();
+        if(!name){$("#liErr").textContent="Please enter your full name.";return;}
+        await Cloud.register(name,email,pass);
+      }
+      await Cloud.login(email,pass);
+      await Cloud.fetchProfile();
+      await Cloud.pull();
+      location.reload();
+    }catch(e){$("#liErr").textContent=e.message;}
+  });
+  $("#liPass").addEventListener("keydown",e=>{if(e.key==="Enter")$("#liGo").click();});
+  $("#logoutBtn").addEventListener("click",()=>{Cloud.logout();location.reload();});
+  // resume saved session; re-render once if the cloud has newer progress
+  Cloud.refresh().then(async ok=>{
+    if(!ok)return;
+    await Cloud.fetchProfile();
+    applyProfile(); showUser();
+    const h=location.hash.slice(1);
+    go(UNLOCKED&&h&&$("#view-"+h)?h:"welcome");
+    const changed=await Cloud.pull();
+    if(changed&&!sessionStorage.getItem("ftlaudy-just-pulled")){
+      sessionStorage.setItem("ftlaudy-just-pulled","1");
+      location.reload();
+    }else{sessionStorage.removeItem("ftlaudy-just-pulled");}
+  });
+  applyProfile(); showUser();
+})();
+
+/* ---------- checklist ---------- */
+(()=>{
+  const wrap=$("#chklist"); const done=store.get("checklist",{});
+  wrap.innerHTML=CHECKLIST.map((c,i)=>`<div class="check${done[i]?" done":""}"><input type="checkbox" id="chk${i}" data-i="${i}" ${done[i]?"checked":""}><span style="flex:1"><label for="chk${i}" style="cursor:pointer"><span class="lbl" style="font-weight:600">${esc(c[0])}</span>${c[1]?`<br><span class="hint">${esc(c[1])}</span>`:""}</label>${c[2]?`<details class="how"><summary>How to do this</summary><div class="howbody">${c[2]}</div></details>`:""}</span></div>`).join("");
+  const bar=()=>{const d=store.get("checklist",{});const n=Object.values(d).filter(Boolean).length;$("#chkbar").style.width=(100*n/CHECKLIST.length)+"%";};
+  wrap.addEventListener("change",e=>{if(!e.target.matches("input[type=checkbox]"))return;const i=e.target.dataset.i;const d=store.get("checklist",{});d[i]=e.target.checked;store.set("checklist",d);e.target.closest(".check").classList.toggle("done",e.target.checked);bar();});
+  bar();
+})();
+
+/* ---------- goals ---------- */
+(()=>{
+  const mk=(host,prefix)=>{host.innerHTML=[1,2,3,4,5].map(n=>`<input class="goal" data-store="${prefix}-${n}" placeholder="${n}." style="margin-bottom:8px">`).join("");};
+  mk($("#goals12"),"goal-12mo"); mk($("#goals3y"),"goal-3yr");
+  $$("[data-store]").forEach(el=>{el.value=store.get(el.dataset.store,"");el.addEventListener("input",()=>store.set(el.dataset.store,el.value));});
+  const inc=store.get("goal-income","");
+  $$(".inc").forEach(b=>{if(b.dataset.v===inc){b.classList.remove("ghost")}
+    b.addEventListener("click",()=>{store.set("goal-income",b.dataset.v);$$(".inc").forEach(x=>x.classList.add("ghost"));b.classList.remove("ghost");});});
+})();
+
+/* ---------- shadowing ---------- */
+(()=>{
+  const host=$("#shadowlog");
+  host.innerHTML=[1,2,3,4,5].map(n=>`<div class="card"><h3>Session ${n}</h3>
+    <div class="grid2">
+      <div><label class="hint">Date</label><input class="goal" data-store="shadow-${n}-date" type="date"></div>
+      <div><label class="hint">Name of leader</label><input class="goal" data-store="shadow-${n}-leader"></div>
+    </div>
+    <label class="hint" style="display:block; margin-top:10px">What did you learn?</label>
+    <textarea class="goal" rows="3" data-store="shadow-${n}-notes"></textarea>
+    <p class="hint" style="margin-bottom:0">Leader signature: have your leader sign the printed copy.</p></div>`).join("");
+  host.querySelectorAll("[data-store]").forEach(el=>{el.value=store.get(el.dataset.store,"");el.addEventListener("input",()=>store.set(el.dataset.store,el.value));});
+})();
+
+/* ---------- meds ---------- */
+(()=>{
+  const tb=$("#medtable tbody");
+  const render=q=>{
+    q=(q||"").toLowerCase();
+    tb.innerHTML=MEDS.filter(m=>!q||m[0].toLowerCase().includes(q)||m[1].toLowerCase().includes(q))
+      .map(m=>`<tr><td style="font-weight:600">${esc(m[0])}</td><td>${esc(m[1])}</td></tr>`).join("")
+      ||`<tr><td colspan="2" class="hint">No match — check the underwriting guide or ask your FTA.</td></tr>`;
+  };
+  render(); $("#medsearch").addEventListener("input",e=>render(e.target.value));
+})();
+
+/* ---------- height & weight ---------- */
+(()=>{
+  const sel=$("#hwheight");
+  sel.innerHTML=HEIGHTS.map((h,i)=>`<option value="${i}">${h}</option>`).join("");
+  sel.value="8";
+  const cols=["Acceptable","BMI 35+","BMI ≤18.5","HBP insurable"];
+  const upd=()=>{
+    const sex=$("#hwsex").value, i=+sel.value, row=(sex==="m"?HW_M:HW_F)[i];
+    $("#hwresult").innerHTML=`Acceptable ${row[0]} lbs &nbsp;·&nbsp; <span style="color:var(--bad)">HBP ${row[3]} lbs</span>`;
+  };
+  $("#hwsex").addEventListener("change",upd); sel.addEventListener("change",upd); upd();
+  const tbl=(title,data)=>`<h3 class="display" style="color:var(--gold-bright); margin:18px 0 8px">${title}</h3>
+  <div class="tblwrap"><table><thead><tr><th>Height</th><th>Acceptable weight (18–&lt;64.5 yrs)</th><th>BMI 35+ range</th><th>BMI 18.5 or less</th><th>Weight with HBP — insurable</th></tr></thead>
+  <tbody>${data.map((r,i)=>`<tr><td style="font-weight:600">${HEIGHTS[i]}</td><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--bad); font-weight:600">${r[3]}</td></tr>`).join("")}</tbody></table></div>`;
+  $("#hwtables").innerHTML=tbl("Males (feet and inches / pounds)",HW_M)+tbl("Females (feet and inches / pounds)",HW_F);
+})();
+
+/* ---------- age chart ---------- */
+(()=>{
+  const rows=[]; for(let age=64;age>=33;age--){const age2=age-32; rows.push(`<tr><td>${age}</td><td>${2026-age}</td><td>${age2}</td><td>${2026-age2}</td></tr>`);}
+  $("#agetable tbody").innerHTML=rows.join("");
+  $("#birthyear").addEventListener("input",e=>{
+    const y=+e.target.value; const out=$("#ageresult");
+    if(y>=1962&&y<=2025){out.textContent=`Age in 2026: ${2026-y}`;}
+    else out.textContent=e.target.value?"Outside chart range (1962–2025)":"";
+  });
+})();
+
+/* ---------- scavenger hunt ---------- */
+(()=>{
+  const tb=$("#hunttable tbody"); const saved=store.get("hunt",{});
+  tb.innerHTML=HUNT.map((c,i)=>`<tr><td>${esc(c)}</td>
+    <td style="text-align:center"><input type="radio" name="h${i}" value="uw" ${saved[i]==="uw"?"checked":""} style="accent-color:var(--ok)"></td>
+    <td style="text-align:center"><input type="radio" name="h${i}" value="aca" ${saved[i]==="aca"?"checked":""} style="accent-color:var(--ocean)"></td></tr>`).join("");
+  const bar=()=>{const s=store.get("hunt",{});$("#huntbar").style.width=(100*Object.keys(s).length/HUNT.length)+"%";};
+  tb.addEventListener("change",e=>{const i=e.target.name.slice(1);const s=store.get("hunt",{});s[i]=e.target.value;store.set("hunt",s);bar();});
+  bar();
+})();
+
+/* ---------- vocab ---------- */
+(()=>{
+  const host=$("#vocablist");
+  const render=q=>{
+    q=(q||"").toLowerCase();
+    host.innerHTML=VOCAB.filter(v=>!q||v[0].toLowerCase().includes(q)||v[1].toLowerCase().includes(q))
+      .map(v=>`<div class="card" style="padding:14px 18px; margin-bottom:10px"><strong style="color:var(--gold-bright); font-family:'Palatino Linotype',Palatino,Georgia,serif">${esc(v[0])}</strong><br><span style="max-width:68ch; display:inline-block">${esc(v[1])}</span></div>`).join("")
+      ||`<p class="hint">No matching term.</p>`;
+  };
+  render(); $("#vocabsearch").addEventListener("input",e=>render(e.target.value));
+})();
+
+/* ---------- licenses ---------- */
+(()=>{
+  const tb=$("#lictable tbody"); let sortK="rank", dir=1;
+  const fmt=n=>"$"+n.toFixed(2);
+  const render=()=>{
+    const rows=[...LICENSES].map(l=>({rank:l[0],state:l[1],type:l[2],nipr:l[3],usha:l[4],total:l[3]+l[4]}));
+    rows.sort((a,b)=>{const x=a[sortK],y=b[sortK];return(typeof x==="string"?x.localeCompare(y):x-y)*dir;});
+    tb.innerHTML=rows.map(r=>`<tr><td>${r.rank}</td><td style="font-weight:600">${esc(r.state)}</td><td>${esc(r.type)}</td><td>${fmt(r.nipr)}</td><td>${r.usha?fmt(r.usha):"—"}</td><td style="font-weight:700; color:var(--gold-bright)">${fmt(r.total)}</td></tr>`).join("");
+  };
+  $("#lictable thead").addEventListener("click",e=>{const k=e.target.dataset.k;if(!k)return;dir=k===sortK?-dir:1;sortK=k;render();});
+  render();
+})();
+
+/* ---------- boot ---------- */
+go(location.hash.slice(1)&&$("#view-"+location.hash.slice(1))?location.hash.slice(1):"welcome");
+</script>
