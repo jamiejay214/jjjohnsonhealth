@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Team FT. Laudy — Admin</title>
+<title>Team FT. Laudy — Admin Console</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{
@@ -10,42 +10,86 @@
   --line2:rgba(159,170,191,.16);
   --gold:#d4af5e; --gold-bright:#efd08c; --gold-dim:rgba(212,175,94,.12);
   --text:#ece5d3; --muted:#9daabf; --ocean:#4b9cc4;
-  --ok:#4aa877; --bad:#cf6a5f; --bad-bg:rgba(207,106,95,.12);
+  --ok:#4aa877; --ok-bg:rgba(74,168,119,.14); --bad:#cf6a5f; --bad-bg:rgba(207,106,95,.14);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{margin:0; background:var(--bg); color:var(--text); font:16px/1.6 "Avenir Next","Segoe UI",system-ui,sans-serif}
-h1,h2,h3{font-family:"Palatino Linotype",Palatino,Georgia,serif}
-.wrap{max-width:1060px; margin:0 auto; padding:36px 22px 90px}
-.eyebrow{font-size:.72rem; text-transform:uppercase; letter-spacing:.18em; color:var(--gold); font-weight:600}
-h1{font-size:1.9rem; margin:6px 0 4px}
-.card{background:var(--panel); border:1px solid var(--line2); border-radius:10px; padding:20px 22px; margin:0 0 18px}
-.card h3{margin:0 0 10px; color:var(--gold-bright)}
+body{margin:0; background:var(--bg); color:var(--text); font:15px/1.6 "Avenir Next","Segoe UI",system-ui,sans-serif}
+h1,h2,h3,.display{font-family:"Palatino Linotype",Palatino,Georgia,serif}
+a{color:var(--ocean)}
+.wrap{max-width:1180px; margin:0 auto; padding:30px 22px 90px}
+.eyebrow{font-size:.7rem; text-transform:uppercase; letter-spacing:.18em; color:var(--gold); font-weight:600}
+h1{font-size:1.8rem; margin:4px 0 2px}
+.topbar{display:flex; justify-content:space-between; align-items:flex-end; gap:14px; flex-wrap:wrap; margin-bottom:22px}
+.card{background:var(--panel); border:1px solid var(--line2); border-radius:12px; padding:20px 22px; margin:0 0 18px}
+.card h3{margin:0 0 10px; color:var(--gold-bright); font-size:1.08rem}
 input,select{background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:7px; padding:9px 12px; font:inherit}
-.btn{background:var(--gold); color:#14100a; border:0; cursor:pointer; font:600 .88rem/1 inherit; padding:10px 18px; border-radius:7px}
+.btn{background:var(--gold); color:#14100a; border:0; cursor:pointer; font:600 .85rem/1 inherit; padding:9px 16px; border-radius:7px}
 .btn.ghost{background:transparent; color:var(--gold); border:1px solid var(--gold)}
+.btn.ok{background:var(--ok); color:#08140d}
 .btn.danger{background:transparent; color:var(--bad); border:1px solid var(--bad)}
-.btn:focus-visible,input:focus-visible{outline:2px solid var(--ocean); outline-offset:2px}
-table{border-collapse:collapse; width:100%; font-size:.92rem; font-variant-numeric:tabular-nums}
-.tblwrap{overflow-x:auto; border:1px solid var(--line2); border-radius:10px; background:var(--panel)}
-th{text-align:left; font-size:.7rem; text-transform:uppercase; letter-spacing:.14em; color:var(--gold); padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2); white-space:nowrap}
+.btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ocean); outline-offset:2px}
+/* stat tiles */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:18px}
+.stat{background:var(--panel); border:1px solid var(--line2); border-radius:12px; padding:16px 18px}
+.stat .n{font:700 1.9rem/1.1 "Palatino Linotype",Palatino,Georgia,serif; color:var(--gold-bright); font-variant-numeric:tabular-nums}
+.stat .l{font-size:.74rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:4px}
+.stat.warn .n{color:var(--bad)}
+/* pending queue */
+.pend{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin-bottom:10px}
+/* roster */
+table{border-collapse:collapse; width:100%; font-size:.9rem; font-variant-numeric:tabular-nums}
+.tblwrap{overflow-x:auto; border:1px solid var(--line2); border-radius:12px; background:var(--panel)}
+th{text-align:left; font-size:.68rem; text-transform:uppercase; letter-spacing:.14em; color:var(--gold); padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2); white-space:nowrap}
 td{padding:10px 14px; border-bottom:1px solid var(--line2); vertical-align:middle}
 tr:last-child td{border-bottom:0}
-.meter{width:130px; height:9px; background:var(--panel2); border:1px solid var(--line2); border-radius:99px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:8px}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:var(--gold-dim)}
+.meter{width:110px; height:8px; background:var(--panel2); border:1px solid var(--line2); border-radius:99px; overflow:hidden; display:inline-block; vertical-align:middle; margin-right:8px}
 .meter i{display:block; height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-bright))}
-.hint{font-size:.8rem; color:var(--muted)}
+.meter i.full{background:var(--ok)}
+.pill{display:inline-block; font-size:.68rem; font-weight:700; padding:2px 10px; border-radius:99px; background:var(--gold-dim); color:var(--gold); white-space:nowrap}
+.pill.ok{background:var(--ok-bg); color:var(--ok)}
+.pill.bad{background:var(--bad-bg); color:var(--bad)}
+.hint{font-size:.78rem; color:var(--muted)}
 .err{color:var(--bad); font-size:.85rem; min-height:1.2em}
-.pill{display:inline-block; font-size:.7rem; font-weight:700; padding:2px 10px; border-radius:99px; background:var(--gold-dim); color:var(--gold)}
 .row{display:flex; gap:10px; flex-wrap:wrap; align-items:end}
-.row label{display:block; font-size:.78rem; color:var(--muted); font-weight:600; margin-bottom:4px}
+.row label{display:block; font-size:.76rem; color:var(--muted); font-weight:600; margin-bottom:4px}
 #app{display:none}
+/* drawer */
+.drawer-back{position:fixed; inset:0; background:rgba(4,8,16,.6); z-index:40}
+.drawer-back[hidden]{display:none}
+.drawer{position:fixed; top:0; right:0; bottom:0; width:min(680px,100%); background:var(--bg); border-left:1px solid var(--line); z-index:41; overflow-y:auto; padding:26px 28px; box-shadow:-14px 0 40px rgba(0,0,0,.45)}
+.drawer .close{float:right}
+.kv{display:grid; grid-template-columns:170px 1fr; gap:6px 14px; font-size:.92rem}
+.kv .k{color:var(--muted)}
+.checkrow{display:flex; gap:10px; align-items:baseline; padding:5px 0; border-bottom:1px solid var(--line2); font-size:.92rem}
+.checkrow:last-child{border-bottom:0}
+.tick{font-weight:700; width:1.3em; flex-shrink:0}
+.tick.y{color:var(--ok)} .tick.n{color:var(--muted)}
+.notecard{background:var(--panel2); border:1px solid var(--line2); border-radius:8px; padding:10px 14px; margin-bottom:8px; font-size:.92rem}
+.section-tabs{display:flex; gap:8px; flex-wrap:wrap; margin:16px 0}
+.section-tabs .btn{padding:7px 12px}
+.dsec{display:none} .dsec.on{display:block}
+@media(max-width:700px){.kv{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">Team FT. Laudy · Fort Lauderdale</div>
-  <h1>Onboarding Admin</h1>
-  <p class="hint" style="margin-top:0">Create agent logins and track every new agent's onboarding progress.</p>
+  <div class="topbar">
+    <div>
+      <div class="eyebrow">Team FT. Laudy · Fort Lauderdale</div>
+      <h1>Admin Console</h1>
+      <p class="hint" style="margin:2px 0 0">Approve new agents, create logins, and track every form in their onboarding.</p>
+    </div>
+    <div id="topRight" style="display:none; text-align:right">
+      <span class="pill" id="who"></span><br>
+      <div style="margin-top:8px; display:flex; gap:8px; justify-content:flex-end">
+        <button class="btn ghost" id="refreshGo">Refresh</button>
+        <button class="btn ghost" id="logoutGo">Sign out</button>
+      </div>
+    </div>
+  </div>
 
   <div class="card" id="loginCard">
     <h3>Admin sign in</h3>
@@ -58,50 +102,74 @@ tr:last-child td{border-bottom:0}
   </div>
 
   <div id="app">
+    <div class="stats" id="stats"></div>
+
+    <div class="card" id="pendCard" style="display:none; border-color:var(--gold)">
+      <h3>⚑ Waiting on your approval</h3>
+      <div id="pendList"></div>
+    </div>
+
     <div class="card">
       <h3>Create an agent login</h3>
       <div class="row">
-        <div><label for="nName">Full name</label><input id="nName" style="width:200px"></div>
-        <div><label for="nEmail">Email</label><input id="nEmail" type="email" style="width:240px"></div>
-        <div><label for="nPass">Temporary password</label><input id="nPass" style="width:180px"></div>
+        <div><label for="nName">Full name</label><input id="nName" style="width:190px"></div>
+        <div><label for="nEmail">Email</label><input id="nEmail" type="email" style="width:230px"></div>
+        <div><label for="nPass">Temporary password</label><input id="nPass" style="width:170px"></div>
         <button class="btn" id="createGo">Create login</button>
       </div>
       <p class="err" id="createErr"></p>
-      <p class="hint" style="margin:6px 0 0">Accounts you create here are approved immediately. Agents can also create their own account from the portal — those show up below as <strong>Pending</strong> until you click Approve; until then they can only see the welcome letter.</p>
+      <p class="hint" style="margin:6px 0 0">Accounts you create are approved instantly. Agents who sign themselves up appear above as pending until you approve them — until then they only see the welcome letter.</p>
     </div>
 
-    <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
-      <div><span class="pill" id="who"></span></div>
-      <div style="display:flex; gap:10px">
-        <button class="btn ghost" id="refreshGo">Refresh</button>
-        <button class="btn ghost" id="logoutGo">Sign out</button>
-      </div>
+    <div class="card" style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+      <input id="q" type="search" placeholder="Search agents…" style="flex:1; min-width:200px">
+      <select id="fStatus">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+      </select>
+      <select id="fSort">
+        <option value="new">Newest first</option>
+        <option value="name">Name A–Z</option>
+        <option value="progress">Most progress</option>
+        <option value="stalled">Least progress</option>
+        <option value="active">Recently active</option>
+      </select>
     </div>
 
     <div class="tblwrap"><table>
-      <thead><tr><th>Agent</th><th>Email</th><th>Status</th><th>Checklist</th><th>Scavenger hunt</th><th>Goals</th><th>Shadowing</th><th>Last activity</th><th>Manage</th></tr></thead>
+      <thead><tr><th>Agent</th><th>Status</th><th>Checklist</th><th>Goal sheet</th><th>Shadowing</th><th>Scavenger hunt</th><th>Overall</th><th>Last activity</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
-    <p class="hint">Checklist is out of <span id="nChk">18</span> items · scavenger hunt out of 31 conditions · goals out of 13 fields · shadowing out of 5 sessions.</p>
+    <p class="hint">Click any agent to open their full file — every form, answer, and log entry.</p>
   </div>
+</div>
+
+<div class="drawer-back" id="drawerBack" hidden>
+  <aside class="drawer" id="drawer" role="dialog" aria-label="Agent detail">
+    <button class="btn ghost close" id="drawerClose">Close ✕</button>
+    <div id="drawerBody"></div>
+  </aside>
 </div>
 
 <script>
 const SB_URL="https://zrbqewiccorrdbrbfnjf.supabase.co";
 const SB_KEY="sb_publishable_SqvfT7NOQt00XHyoARDUdw_-Trfr-N1";
-const N_CHECKLIST=18, N_HUNT=31, N_GOALS=13, N_SHADOW=5;
 const $=s=>document.querySelector(s);
-let session=null;
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+let session=null, PROFILES=[], PROG={};
+
+const CHECKLIST=["Create your business Gmail","Set up Vanilla Soft","Set up Next Gen","Set up Fort Lauderdale USHA","Connect your Gmail Calendar","Bookmark: Gmail","Bookmark: Google Calendar","Bookmark: Google Sheets (Home)","Bookmark: Fort Lauderdale USHA","Bookmark: Next Gen","Bookmark: Vanilla Soft","Bookmark: USHA Portal","Bookmark: Outlook USHA Email","Bookmark: GoodRX","Bookmark: Health Sherpa","Fill out your Blueprint Goal Sheet","Complete 5 leader shadowing sessions","Complete the Underwriting Scavenger Hunt"];
+const HUNT=["Hypothyroidism taking Synthroid 1x daily for 3 years","High blood pressure — female, 45 years old, 5’2” tall, 195 lbs","Herniated disc surgery 5 months ago","Needs surgery NOW (for any ailment)","Taking Meloxicam for rheumatoid arthritis","Knee meniscus tear surgery, 8 months ago","Takes HBP meds, over 50, and a smoker","First-time skin cancer (basal cell) removed 1 year ago","Male — 5’5” tall and weighs 250 lbs","Taking NOW 2 meds for anxiety OR 2 meds for depression","Taking Losartan for HBP for 7 months","Asthma, no hospitalizations, controlled by as-needed Albuterol inhaler","Partial knee replacement","Mental health with drugs and seeing a psychiatrist","Current occupation is a police officer or firefighter","Breast cancer removed 5 years ago","Child taking ADHD meds","Right hip replacement 5 years ago","Current occupation is a bail bondsman","Rotator cuff repair 1 year ago","Currently taking pain meds for back pain","Has taken blood thinners in the past 7 years","History of heart attack","Taking Metformin for diabetes","Child under 18 taking anxiety/depression meds","Has taken Meloxicam for arthritis in the past 7 years","Has taken Suboxone for drug rehab","History of a heart stent","Has taken Gabapentin for nerve pain in the past 7 years","Taking Sumatriptan for migraines as needed","Current occupation is a pilot"];
+const N_GOALS=13, N_SHADOW=5;
 
 const H=()=>({apikey:SB_KEY, Authorization:"Bearer "+session.access_token, "Content-Type":"application/json"});
-const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
 
 async function login(email,password){
   const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
   const d=await r.json();
   if(!r.ok)throw new Error(d.error_description||d.msg||"Sign-in failed — check your email and password.");
   session=d; sessionStorage.setItem("ftlaudy-admin-rt",d.refresh_token);
-  return d;
 }
 async function resume(){
   const rt=sessionStorage.getItem("ftlaudy-admin-rt"); if(!rt)return false;
@@ -110,51 +178,162 @@ async function resume(){
   session=await r.json(); sessionStorage.setItem("ftlaudy-admin-rt",session.refresh_token);
   return true;
 }
-async function loadData(){
-  const [pr,pg]=await Promise.all([
-    fetch(`${SB_URL}/rest/v1/profiles?select=id,email,full_name,is_admin,approved,created_at&order=created_at.asc`,{headers:H()}).then(r=>r.json()),
-    fetch(`${SB_URL}/rest/v1/progress?select=user_id,key,value,updated_at`,{headers:H()}).then(r=>r.json())
-  ]);
-  if(!Array.isArray(pr)||pr.length===0||!pr.some(p=>p.is_admin&&p.id===session.user.id)){
-    // not an admin — profiles RLS returns only own row without is_admin
-  }
-  const byUser={};
-  for(const row of (Array.isArray(pg)?pg:[])){
-    (byUser[row.user_id]??={rows:{},last:null}).rows[row.key]=row.value;
-    const t=new Date(row.updated_at);
-    if(!byUser[row.user_id].last||t>byUser[row.user_id].last)byUser[row.user_id].last=t;
-  }
-  const meter=(n,total)=>{const pct=Math.round(100*n/total);return `<span class="meter"><i style="width:${pct}%"></i></span>${n}/${total}`;};
-  $("#rows").innerHTML=(Array.isArray(pr)?pr:[]).map(p=>{
-    const d=byUser[p.id]||{rows:{},last:null};
-    const chk=Object.values(d.rows["checklist"]||{}).filter(Boolean).length;
-    const hunt=Object.keys(d.rows["hunt"]||{}).length;
-    let goals=0; for(const k in d.rows){if(k.startsWith("goal-")&&String(d.rows[k]).trim())goals++;}
-    const shadow=new Set(Object.keys(d.rows).filter(k=>k.startsWith("shadow-")&&String(d.rows[k]).trim()).map(k=>k.split("-")[1])).size;
-    const last=d.last?d.last.toLocaleString():"—";
-    const status=p.is_admin?'<span class="pill">Admin</span>':(p.approved?'<span class="pill" style="color:var(--ok)">Approved</span>':'<span class="pill" style="color:var(--bad)">Pending</span>');
-    return `<tr><td style="font-weight:600">${esc(p.full_name)||"—"}</td>
-      <td>${esc(p.email)}</td>
-      <td>${status}</td>
-      <td>${meter(chk,N_CHECKLIST)}</td><td>${meter(hunt,N_HUNT)}</td>
-      <td>${goals}/${N_GOALS}</td><td>${shadow}/${N_SHADOW}</td>
-      <td class="hint">${last}</td>
-      <td style="white-space:nowrap">${p.is_admin?"":`
-      ${p.approved
-        ?`<button class="btn ghost" style="padding:6px 10px" data-unapprove="${p.id}" data-name="${esc(p.full_name||p.email)}">Revoke</button>`
-        :`<button class="btn" style="padding:6px 10px" data-approve="${p.id}">Approve</button>`}
-      <button class="btn ghost" style="padding:6px 10px" data-reset="${p.id}" data-name="${esc(p.full_name||p.email)}">Reset pw</button>
-      <button class="btn danger" style="padding:6px 10px" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">Remove</button>`}</td></tr>`;
-  }).join("")||`<tr><td colspan="8" class="hint">No agents yet — create the first login above.</td></tr>`;
-}
 async function callFn(body){
   const r=await fetch(`${SB_URL}/functions/v1/manage-agent`,{method:"POST",headers:H(),body:JSON.stringify(body)});
   const d=await r.json();
   if(!r.ok)throw new Error(d.error||"Request failed");
   return d;
 }
+
+/* ---------- data + derived metrics ---------- */
+function agentStats(id){
+  const d=PROG[id]||{rows:{},last:null};
+  const chk=Object.values(d.rows["checklist"]||{}).filter(Boolean).length;
+  const hunt=Object.keys(d.rows["hunt"]||{}).length;
+  let goals=0; for(const k in d.rows){if(k.startsWith("goal-")&&String(d.rows[k]).trim())goals++;}
+  const shadow=new Set(Object.keys(d.rows).filter(k=>k.startsWith("shadow-")&&String(d.rows[k]).trim()).map(k=>k.split("-")[1])).size;
+  const overall=Math.round(100*((chk/CHECKLIST.length)+(hunt/HUNT.length)+(goals/N_GOALS)+(shadow/N_SHADOW))/4);
+  return {chk,hunt,goals,shadow,overall,last:d.last,rows:d.rows};
+}
+async function loadData(){
+  const [pr,pg]=await Promise.all([
+    fetch(`${SB_URL}/rest/v1/profiles?select=id,email,full_name,is_admin,approved,created_at&order=created_at.desc`,{headers:H()}).then(r=>r.json()),
+    fetch(`${SB_URL}/rest/v1/progress?select=user_id,key,value,updated_at`,{headers:H()}).then(r=>r.json())
+  ]);
+  PROFILES=Array.isArray(pr)?pr:[]; PROG={};
+  for(const row of (Array.isArray(pg)?pg:[])){
+    (PROG[row.user_id]??={rows:{},last:null}).rows[row.key]=row.value;
+    const t=new Date(row.updated_at);
+    if(!PROG[row.user_id].last||t>PROG[row.user_id].last)PROG[row.user_id].last=t;
+  }
+  render();
+}
+
+/* ---------- render ---------- */
+function render(){
+  const agents=PROFILES.filter(p=>!p.is_admin);
+  const pending=agents.filter(p=>!p.approved);
+  const week=Date.now()-7*864e5;
+  const activeWeek=agents.filter(p=>agentStats(p.id).last>week).length;
+  const avg=agents.length?Math.round(agents.reduce((s,p)=>s+agentStats(p.id).overall,0)/agents.length):0;
+  const done=agents.filter(p=>agentStats(p.id).overall>=100).length;
+  $("#stats").innerHTML=`
+    <div class="stat"><div class="n">${agents.length}</div><div class="l">Agents</div></div>
+    <div class="stat ${pending.length?"warn":""}"><div class="n">${pending.length}</div><div class="l">Awaiting approval</div></div>
+    <div class="stat"><div class="n">${avg}%</div><div class="l">Avg onboarding progress</div></div>
+    <div class="stat"><div class="n">${activeWeek}</div><div class="l">Active this week</div></div>
+    <div class="stat"><div class="n">${done}</div><div class="l">Fully onboarded</div></div>`;
+
+  $("#pendCard").style.display=pending.length?"block":"none";
+  $("#pendList").innerHTML=pending.map(p=>`
+    <div class="pend">
+      <div><strong>${esc(p.full_name)||"(no name)"}</strong> · <span class="hint">${esc(p.email)} · signed up ${new Date(p.created_at).toLocaleDateString()}</span></div>
+      <div style="display:flex; gap:8px">
+        <button class="btn ok" data-approve="${p.id}">Approve</button>
+        <button class="btn danger" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">Deny &amp; remove</button>
+      </div>
+    </div>`).join("");
+
+  const q=($("#q").value||"").toLowerCase(), fs=$("#fStatus").value, sort=$("#fSort").value;
+  let list=agents.filter(p=>(!q||(p.full_name+" "+p.email).toLowerCase().includes(q))&&(!fs||(fs==="pending"?!p.approved:p.approved)));
+  const S=Object.fromEntries(list.map(p=>[p.id,agentStats(p.id)]));
+  list.sort((a,b)=>{
+    if(sort==="name")return (a.full_name||a.email).localeCompare(b.full_name||b.email);
+    if(sort==="progress")return S[b.id].overall-S[a.id].overall;
+    if(sort==="stalled")return S[a.id].overall-S[b.id].overall;
+    if(sort==="active")return (S[b.id].last||0)-(S[a.id].last||0);
+    return new Date(b.created_at)-new Date(a.created_at);
+  });
+  const meter=(n,total)=>{const pct=Math.round(100*n/total);return `<span class="meter"><i class="${pct>=100?"full":""}" style="width:${pct}%"></i></span>${n}/${total}`;};
+  $("#rows").innerHTML=list.map(p=>{
+    const s=S[p.id];
+    return `<tr data-open="${p.id}">
+      <td><strong>${esc(p.full_name)||"—"}</strong><br><span class="hint">${esc(p.email)}</span></td>
+      <td>${p.approved?'<span class="pill ok">Approved</span>':'<span class="pill bad">Pending</span>'}</td>
+      <td>${meter(s.chk,CHECKLIST.length)}</td>
+      <td>${meter(s.goals,N_GOALS)}</td>
+      <td>${meter(s.shadow,N_SHADOW)}</td>
+      <td>${meter(s.hunt,HUNT.length)}</td>
+      <td><strong style="color:${s.overall>=100?"var(--ok)":"var(--gold-bright)"}">${s.overall}%</strong></td>
+      <td class="hint">${s.last?s.last.toLocaleString():"—"}</td></tr>`;
+  }).join("")||`<tr><td colspan="8" class="hint">No agents match.</td></tr>`;
+}
+
+/* ---------- agent drawer ---------- */
+function openDrawer(id){
+  const p=PROFILES.find(x=>x.id===id); if(!p)return;
+  const s=agentStats(id), r=s.rows;
+  const g=k=>{try{const v=r[k];return typeof v==="string"?v:(v??"");}catch(e){return ""}};
+  const chkState=r["checklist"]||{};
+  const huntState=r["hunt"]||{};
+  const shadowSessions=[1,2,3,4,5].map(n=>({n,date:g(`shadow-${n}-date`),leader:g(`shadow-${n}-leader`),notes:g(`shadow-${n}-notes`)}));
+  $("#drawerBody").innerHTML=`
+    <div class="eyebrow">Agent file</div>
+    <h2 style="margin:4px 0 2px">${esc(p.full_name)||esc(p.email)}</h2>
+    <p class="hint" style="margin:0 0 8px">${esc(p.email)} · joined ${new Date(p.created_at).toLocaleDateString()} · last active ${s.last?s.last.toLocaleString():"never"}</p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 4px">
+      ${p.approved
+        ?`<span class="pill ok">Approved</span><button class="btn danger" data-unapprove="${p.id}" data-name="${esc(p.full_name||p.email)}">Revoke access</button>`
+        :`<span class="pill bad">Pending</span><button class="btn ok" data-approve="${p.id}">Approve</button>`}
+      <button class="btn ghost" data-reset="${p.id}" data-name="${esc(p.full_name||p.email)}">Reset password</button>
+      <button class="btn danger" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">Remove agent</button>
+    </div>
+    <div class="section-tabs">
+      <button class="btn ghost dtab" data-sec="dChk">Checklist ${s.chk}/${CHECKLIST.length}</button>
+      <button class="btn ghost dtab" data-sec="dGoal">Goal sheet ${s.goals}/${N_GOALS}</button>
+      <button class="btn ghost dtab" data-sec="dShadow">Shadowing ${s.shadow}/${N_SHADOW}</button>
+      <button class="btn ghost dtab" data-sec="dHunt">Scavenger hunt ${s.hunt}/${HUNT.length}</button>
+    </div>
+    <div class="dsec on" id="dChk">${CHECKLIST.map((c,i)=>`<div class="checkrow"><span class="tick ${chkState[i]?"y":"n"}">${chkState[i]?"✔":"○"}</span><span>${esc(c)}</span></div>`).join("")}</div>
+    <div class="dsec" id="dGoal">
+      <div class="kv">
+        <span class="k">First-year income goal</span><span>${esc(g("goal-income"))||"<span class='hint'>not chosen</span>"}</span>
+        <span class="k">Printed name</span><span>${esc(g("goal-name"))||"<span class='hint'>—</span>"}</span>
+        <span class="k">Signature</span><span style="font-family:Georgia,serif; font-style:italic">${esc(g("goal-sig"))||"<span class='hint'>—</span>"}</span>
+      </div>
+      <h3 style="margin:14px 0 6px">12-month goals</h3>
+      ${[1,2,3,4,5].map(n=>`<div class="notecard">${n}. ${esc(g("goal-12mo-"+n))||"<span class='hint'>empty</span>"}</div>`).join("")}
+      <h3 style="margin:14px 0 6px">3-year goals</h3>
+      ${[1,2,3,4,5].map(n=>`<div class="notecard">${n}. ${esc(g("goal-3yr-"+n))||"<span class='hint'>empty</span>"}</div>`).join("")}
+    </div>
+    <div class="dsec" id="dShadow">
+      ${shadowSessions.map(x=>`<div class="notecard"><strong>Session ${x.n}</strong> — ${x.date?esc(x.date):"<span class='hint'>no date</span>"} · Leader: ${x.leader?esc(x.leader):"<span class='hint'>—</span>"}<br>${x.notes?esc(x.notes):"<span class='hint'>No notes yet.</span>"}</div>`).join("")}
+    </div>
+    <div class="dsec" id="dHunt">
+      ${HUNT.map((c,i)=>{const a=huntState[i];return `<div class="checkrow"><span class="tick ${a?"y":"n"}">${a?"✔":"○"}</span><span style="flex:1">${esc(c)}</span><span class="pill ${a==="uw"?"ok":a==="aca"?"":"bad"}">${a==="uw"?"Underwritten":a==="aca"?"ACA":"unanswered"}</span></div>`;}).join("")}
+    </div>`;
+  $("#drawerBack").hidden=false;
+  document.querySelectorAll(".dtab").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".dsec").forEach(x=>x.classList.remove("on"));
+    document.getElementById(b.dataset.sec).classList.add("on");
+  }));
+}
+$("#drawerClose").addEventListener("click",()=>$("#drawerBack").hidden=true);
+$("#drawerBack").addEventListener("click",e=>{if(e.target.id==="drawerBack")$("#drawerBack").hidden=true;});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#drawerBack").hidden=true;});
+
+/* ---------- actions (delegated: works in pending list, roster, drawer) ---------- */
+document.addEventListener("click",async e=>{
+  const t=e.target;
+  const aid=t.dataset.approve, uid=t.dataset.unapprove, rid=t.dataset.reset, did=t.dataset.del, name=t.dataset.name;
+  try{
+    if(aid){await callFn({action:"set_approved",user_id:aid,approved:true});$("#drawerBack").hidden=true;await loadData();return;}
+    if(uid){if(!confirm(`Revoke ${name}'s access? They'll only see the welcome letter until re-approved.`))return;
+      await callFn({action:"set_approved",user_id:uid,approved:false});$("#drawerBack").hidden=true;await loadData();return;}
+    if(rid){const pw=prompt(`New temporary password for ${name}:`);if(!pw)return;
+      if(pw.length<8){alert("Password needs at least 8 characters.");return;}
+      await callFn({action:"reset_password",user_id:rid,password:pw});
+      alert("Password updated. Give the agent their new password.");return;}
+    if(did){if(!confirm(`Remove ${name}'s login and all their progress? This can't be undone.`))return;
+      await callFn({action:"delete",user_id:did});$("#drawerBack").hidden=true;await loadData();return;}
+  }catch(err){alert(err.message);return;}
+  const tr=t.closest("tr[data-open]");
+  if(tr)openDrawer(tr.dataset.open);
+});
+
+/* ---------- login flow ---------- */
 async function enter(){
-  $("#loginCard").style.display="none"; $("#app").style.display="block";
+  $("#loginCard").style.display="none"; $("#app").style.display="block"; $("#topRight").style.display="block";
   $("#who").textContent="Signed in as "+session.user.email;
   await loadData();
 }
@@ -172,32 +351,12 @@ $("#createGo").addEventListener("click",async()=>{
   try{
     await callFn({action:"create",email,password,full_name});
     $("#nName").value=$("#nEmail").value=$("#nPass").value="";
-    $("#createErr").textContent="";
     await loadData();
   }catch(e){$("#createErr").textContent=e.message;}
 });
-$("#rows").addEventListener("click",async e=>{
-  const rid=e.target.dataset.reset, did=e.target.dataset.del, name=e.target.dataset.name;
-  const aid=e.target.dataset.approve, uid=e.target.dataset.unapprove;
-  try{
-    if(aid){await callFn({action:"set_approved",user_id:aid,approved:true});await loadData();return;}
-    if(uid){
-      if(!confirm(`Revoke ${name}'s access? They will only see the welcome letter until re-approved.`))return;
-      await callFn({action:"set_approved",user_id:uid,approved:false});await loadData();return;
-    }
-    if(rid){
-      const pw=prompt(`New temporary password for ${name}:`); if(!pw)return;
-      if(pw.length<8){alert("Password needs at least 8 characters.");return;}
-      await callFn({action:"reset_password",user_id:rid,password:pw});
-      alert("Password updated. Give the agent their new password.");
-    }
-    if(did){
-      if(!confirm(`Remove ${name}'s login and progress? This can't be undone.`))return;
-      await callFn({action:"delete",user_id:did});
-      await loadData();
-    }
-  }catch(err){alert(err.message);}
-});
+$("#q").addEventListener("input",render);
+$("#fStatus").addEventListener("change",render);
+$("#fSort").addEventListener("change",render);
 $("#refreshGo").addEventListener("click",loadData);
 $("#logoutGo").addEventListener("click",()=>{sessionStorage.removeItem("ftlaudy-admin-rt");location.reload();});
 resume().then(ok=>{if(ok)enter();});
