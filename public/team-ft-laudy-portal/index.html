@@ -78,6 +78,10 @@ nav.side button.navlink{
   color:var(--text); font:inherit; font-size:.92rem; padding:7px 10px; border-radius:6px;
 }
 nav.side button.navlink:hover{background:var(--gold-dim)}
+body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"]){opacity:.45}
+body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"])::after{content:" 🔒"; font-size:.75em}
+body:not(.unlocked) .members-only{display:none}
+body.unlocked #gateCard{display:none}
 nav.side button.navlink.active{background:var(--gold-dim); color:var(--gold-bright); font-weight:600; box-shadow:inset 2px 0 0 var(--gold)}
 nav.side button.navlink:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible{
   outline:2px solid var(--ocean); outline-offset:2px;
@@ -311,6 +315,14 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <h1>Congratulations &amp; Welcome to Team FT. Laudy!</h1>
     <p class="sub">Your official 2026 onboarding home — every script, chart, checklist, and contact in one place.</p>
   </div>
+  <div class="card" id="gateCard">
+    <h3 id="gateTitle">This portal is for Team FT. Laudy agents</h3>
+    <p id="gateMsg" style="margin-top:0">Read the welcome letter below, then create your account to unlock your onboarding — the checklist, scripts, underwriting charts, and everything else. Your team leader will approve your account, and you're in.</p>
+    <div id="gateBtns" style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn" id="gateSignup">Create my account</button>
+      <button class="btn ghost" id="gateLogin">I already have a login</button>
+    </div>
+  </div>
   <div class="card script">
     <p>Take a breath and let this sink in: you made it. Out of everyone who wanted a seat on this team, we chose <em>you</em> — because we saw something in you that we build champions out of. Joining Team FT. Laudy isn't signing up for a job. It's stepping into a partnership with people who are fully committed to helping you build a life of abundance, fulfillment, and freedom — and who will never let you settle for less than your best.</p>
     <p>Here's our promise to you. We will pour everything we have into your success: our time, our training, our leads, our resources, and direct, shoulder-to-shoulder mentorship from leaders who have already walked the road you're starting today. You will never be left to figure it out alone. Every script, every chart, and every tool in this portal exists for one reason — to get you winning as fast as possible. All we ask in return is simple: bring 100% of your effort, your energy, and your heart, every single day. For yourself. For your family. For this team.</p>
@@ -321,7 +333,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
       <div class="p"><div class="nm">Team FT. Laudy Leadership</div><div class="rl">Fort Lauderdale, FL</div></div>
     </div>
   </div>
-  <div class="grid2">
+  <div class="grid2 members-only">
     <div class="card"><h3>New here? Start with these</h3>
       <ol style="margin:0; padding-left:20px">
         <li><a href="#" data-go="checklist">Complete the Onboarding Checklist</a></li>
@@ -697,8 +709,12 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 
 <div class="modal-backdrop" id="loginModal" hidden>
   <div class="modal">
-    <h3 class="display" style="margin:0 0 4px; color:var(--gold-bright); font-size:1.3rem">Agent sign in</h3>
-    <p class="hint" style="margin:0 0 14px">Sign in with the login your team leader gave you. Your checklist, goals, and training progress will sync to the cloud so your leader can support you.</p>
+    <h3 class="display" style="margin:0 0 4px; color:var(--gold-bright); font-size:1.3rem" id="liTitle">Agent sign in</h3>
+    <p class="hint" style="margin:0 0 14px" id="liSub">Sign in to unlock your onboarding. Your checklist, goals, and training progress sync to the cloud so your leader can support you.</p>
+    <div id="liNameWrap" hidden>
+      <label class="hint" for="liName">Full name</label>
+      <input class="goal" id="liName" autocomplete="name" style="margin-bottom:10px">
+    </div>
     <label class="hint" for="liEmail">Email</label>
     <input class="goal" id="liEmail" type="email" autocomplete="username" style="margin-bottom:10px">
     <label class="hint" for="liPass">Password</label>
@@ -708,7 +724,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
       <button class="btn" id="liGo">Sign in</button>
       <button class="btn ghost" id="liCancel">Cancel</button>
     </div>
-    <p class="hint" style="margin:14px 0 0">No login yet, or forgot your password? Ask your team leader.</p>
+    <p class="hint" style="margin:14px 0 0"><a href="#" id="liSwitch">New to the team? Create your account</a><br>Forgot your password? Ask your team leader.</p>
   </div>
 </div>
 
@@ -759,6 +775,8 @@ const store={get(k,d){try{return JSON.parse(localStorage.getItem("ftlaudy-"+k))?
 /* ---------- cloud sync (Supabase) ---------- */
 const SB_URL="https://zrbqewiccorrdbrbfnjf.supabase.co";
 const SB_KEY="sb_publishable_SqvfT7NOQt00XHyoARDUdw_-Trfr-N1";
+const SB_ANON_JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyYnFld2ljY29ycmRicmJmbmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3NjM3NDUsImV4cCI6MjEwMDMzOTc0NX0.4gx9Gz6DSk-OdkG62nboWBeVZSIuQo76MCcydAG5Xm8";
+let UNLOCKED=false;
 const Cloud={
   session:null, pending:{}, timer:null,
   headers(){return {apikey:SB_KEY, Authorization:"Bearer "+this.session.access_token, "Content-Type":"application/json"}},
@@ -778,7 +796,22 @@ const Cloud={
       return true;
     }catch(e){return false;}
   },
-  logout(){this.session=null; localStorage.removeItem("ftlaudy-session");},
+  logout(){this.session=null; this.profile=null; localStorage.removeItem("ftlaudy-session");},
+  profile:null,
+  async fetchProfile(){
+    if(!this.session)return null;
+    const r=await fetch(`${SB_URL}/rest/v1/profiles?select=is_admin,approved,full_name&id=eq.${this.session.user.id}`,{headers:this.headers()});
+    if(!r.ok)return null;
+    const rows=await r.json(); this.profile=rows[0]||null; return this.profile;
+  },
+  async register(full_name,email,password){
+    const r=await fetch(`${SB_URL}/functions/v1/manage-agent`,{method:"POST",
+      headers:{apikey:SB_KEY,Authorization:"Bearer "+SB_ANON_JWT,"Content-Type":"application/json"},
+      body:JSON.stringify({action:"register",full_name,email,password})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error||"Could not create the account.");
+    return d;
+  },
   async pull(){
     if(!this.session)return;
     const r=await fetch(`${SB_URL}/rest/v1/progress?select=key,value`,{headers:this.headers()});
@@ -809,6 +842,10 @@ const Cloud={
 
 /* ---------- navigation ---------- */
 function go(view){
+  if(!UNLOCKED&&view!=="welcome"){
+    view="welcome";
+    const gate=$("#gateCard"); if(gate){gate.scrollIntoView({behavior:"smooth"});gate.style.outline="2px solid var(--gold)";setTimeout(()=>gate.style.outline="",1200);}
+  }
   $$("section.view").forEach(s=>s.classList.toggle("on",s.id==="view-"+view));
   $$("nav.side .navlink").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
   location.hash=view; window.scrollTo({top:0});
@@ -829,22 +866,56 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 /* ---------- logo: use logo.png if it exists, else keep the SVG crest ---------- */
 (()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="logo.png";})();
 
-/* ---------- auth UI ---------- */
+/* ---------- auth UI + approval gate ---------- */
 (()=>{
   const modal=$("#loginModal");
+  let mode="login";
+  const setMode=m=>{
+    mode=m;
+    $("#liNameWrap").hidden=m==="login";
+    $("#liTitle").textContent=m==="login"?"Agent sign in":"Create your account";
+    $("#liSub").textContent=m==="login"
+      ?"Sign in to unlock your onboarding. Your checklist, goals, and training progress sync to the cloud so your leader can support you."
+      :"Create your account, then your team leader will approve it. Once approved, the full portal unlocks for you.";
+    $("#liGo").textContent=m==="login"?"Sign in":"Create account";
+    $("#liSwitch").textContent=m==="login"?"New to the team? Create your account":"Already have a login? Sign in";
+    $("#liErr").textContent="";
+  };
+  const open=m=>{setMode(m);modal.hidden=false;(m==="login"?$("#liEmail"):$("#liName")).focus();};
+  const applyProfile=()=>{
+    const p=Cloud.profile;
+    UNLOCKED=!!(p&&(p.is_admin||p.approved));
+    document.body.classList.toggle("unlocked",UNLOCKED);
+    if(Cloud.session&&!UNLOCKED){
+      $("#gateTitle").textContent="Account created — waiting on approval";
+      $("#gateMsg").textContent="You're signed in! Your team leader just needs to approve your account, then everything unlocks automatically. Check back soon, or ask your leader to approve you.";
+      $("#gateBtns").style.display="none";
+      $("#syncState").textContent="Waiting for leader approval";
+    }
+  };
   const showUser=()=>{
     const u=Cloud.session?.user;
     $("#loginBtn").style.display=u?"none":"";
     $("#whoami").style.display=u?"block":"none";
-    if(u){$("#whoName").textContent=u.user_metadata?.full_name||"Agent";$("#whoEmail").textContent=u.email;}
+    if(u){$("#whoName").textContent=u.user_metadata?.full_name||Cloud.profile?.full_name||"Agent";$("#whoEmail").textContent=u.email;}
   };
-  $("#loginBtn").addEventListener("click",()=>{modal.hidden=false;$("#liEmail").focus();});
+  $("#loginBtn").addEventListener("click",()=>open("login"));
+  $("#gateLogin").addEventListener("click",()=>open("login"));
+  $("#gateSignup").addEventListener("click",()=>open("signup"));
+  $("#liSwitch").addEventListener("click",e=>{e.preventDefault();setMode(mode==="login"?"signup":"login");});
   $("#liCancel").addEventListener("click",()=>modal.hidden=true);
   modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
   $("#liGo").addEventListener("click",async()=>{
     $("#liErr").textContent="";
+    const email=$("#liEmail").value.trim(), pass=$("#liPass").value;
     try{
-      await Cloud.login($("#liEmail").value.trim(),$("#liPass").value);
+      if(mode==="signup"){
+        const name=$("#liName").value.trim();
+        if(!name){$("#liErr").textContent="Please enter your full name.";return;}
+        await Cloud.register(name,email,pass);
+      }
+      await Cloud.login(email,pass);
+      await Cloud.fetchProfile();
       await Cloud.pull();
       location.reload();
     }catch(e){$("#liErr").textContent=e.message;}
@@ -854,14 +925,17 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   // resume saved session; re-render once if the cloud has newer progress
   Cloud.refresh().then(async ok=>{
     if(!ok)return;
-    showUser();
+    await Cloud.fetchProfile();
+    applyProfile(); showUser();
+    const h=location.hash.slice(1);
+    go(UNLOCKED&&h&&$("#view-"+h)?h:"welcome");
     const changed=await Cloud.pull();
     if(changed&&!sessionStorage.getItem("ftlaudy-just-pulled")){
       sessionStorage.setItem("ftlaudy-just-pulled","1");
       location.reload();
     }else{sessionStorage.removeItem("ftlaudy-just-pulled");}
   });
-  showUser();
+  applyProfile(); showUser();
 })();
 
 /* ---------- checklist ---------- */

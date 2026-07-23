@@ -67,7 +67,7 @@ tr:last-child td{border-bottom:0}
         <button class="btn" id="createGo">Create login</button>
       </div>
       <p class="err" id="createErr"></p>
-      <p class="hint" style="margin:6px 0 0">Give the agent their email + temporary password. They sign in from the portal sidebar ("Agent sign in") and their progress starts syncing here automatically.</p>
+      <p class="hint" style="margin:6px 0 0">Accounts you create here are approved immediately. Agents can also create their own account from the portal — those show up below as <strong>Pending</strong> until you click Approve; until then they can only see the welcome letter.</p>
     </div>
 
     <div class="card" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px">
@@ -79,7 +79,7 @@ tr:last-child td{border-bottom:0}
     </div>
 
     <div class="tblwrap"><table>
-      <thead><tr><th>Agent</th><th>Email</th><th>Checklist</th><th>Scavenger hunt</th><th>Goals</th><th>Shadowing</th><th>Last activity</th><th>Manage</th></tr></thead>
+      <thead><tr><th>Agent</th><th>Email</th><th>Status</th><th>Checklist</th><th>Scavenger hunt</th><th>Goals</th><th>Shadowing</th><th>Last activity</th><th>Manage</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
     <p class="hint">Checklist is out of <span id="nChk">18</span> items · scavenger hunt out of 31 conditions · goals out of 13 fields · shadowing out of 5 sessions.</p>
@@ -112,7 +112,7 @@ async function resume(){
 }
 async function loadData(){
   const [pr,pg]=await Promise.all([
-    fetch(`${SB_URL}/rest/v1/profiles?select=id,email,full_name,is_admin,created_at&order=created_at.asc`,{headers:H()}).then(r=>r.json()),
+    fetch(`${SB_URL}/rest/v1/profiles?select=id,email,full_name,is_admin,approved,created_at&order=created_at.asc`,{headers:H()}).then(r=>r.json()),
     fetch(`${SB_URL}/rest/v1/progress?select=user_id,key,value,updated_at`,{headers:H()}).then(r=>r.json())
   ]);
   if(!Array.isArray(pr)||pr.length===0||!pr.some(p=>p.is_admin&&p.id===session.user.id)){
@@ -132,12 +132,18 @@ async function loadData(){
     let goals=0; for(const k in d.rows){if(k.startsWith("goal-")&&String(d.rows[k]).trim())goals++;}
     const shadow=new Set(Object.keys(d.rows).filter(k=>k.startsWith("shadow-")&&String(d.rows[k]).trim()).map(k=>k.split("-")[1])).size;
     const last=d.last?d.last.toLocaleString():"—";
-    return `<tr><td style="font-weight:600">${esc(p.full_name)||"—"} ${p.is_admin?'<span class="pill">Admin</span>':""}</td>
+    const status=p.is_admin?'<span class="pill">Admin</span>':(p.approved?'<span class="pill" style="color:var(--ok)">Approved</span>':'<span class="pill" style="color:var(--bad)">Pending</span>');
+    return `<tr><td style="font-weight:600">${esc(p.full_name)||"—"}</td>
       <td>${esc(p.email)}</td>
+      <td>${status}</td>
       <td>${meter(chk,N_CHECKLIST)}</td><td>${meter(hunt,N_HUNT)}</td>
       <td>${goals}/${N_GOALS}</td><td>${shadow}/${N_SHADOW}</td>
       <td class="hint">${last}</td>
-      <td style="white-space:nowrap">${p.is_admin?"":`<button class="btn ghost" style="padding:6px 10px" data-reset="${p.id}" data-name="${esc(p.full_name||p.email)}">Reset pw</button>
+      <td style="white-space:nowrap">${p.is_admin?"":`
+      ${p.approved
+        ?`<button class="btn ghost" style="padding:6px 10px" data-unapprove="${p.id}" data-name="${esc(p.full_name||p.email)}">Revoke</button>`
+        :`<button class="btn" style="padding:6px 10px" data-approve="${p.id}">Approve</button>`}
+      <button class="btn ghost" style="padding:6px 10px" data-reset="${p.id}" data-name="${esc(p.full_name||p.email)}">Reset pw</button>
       <button class="btn danger" style="padding:6px 10px" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">Remove</button>`}</td></tr>`;
   }).join("")||`<tr><td colspan="8" class="hint">No agents yet — create the first login above.</td></tr>`;
 }
@@ -172,7 +178,13 @@ $("#createGo").addEventListener("click",async()=>{
 });
 $("#rows").addEventListener("click",async e=>{
   const rid=e.target.dataset.reset, did=e.target.dataset.del, name=e.target.dataset.name;
+  const aid=e.target.dataset.approve, uid=e.target.dataset.unapprove;
   try{
+    if(aid){await callFn({action:"set_approved",user_id:aid,approved:true});await loadData();return;}
+    if(uid){
+      if(!confirm(`Revoke ${name}'s access? They will only see the welcome letter until re-approved.`))return;
+      await callFn({action:"set_approved",user_id:uid,approved:false});await loadData();return;
+    }
     if(rid){
       const pw=prompt(`New temporary password for ${name}:`); if(!pw)return;
       if(pw.length<8){alert("Password needs at least 8 characters.");return;}
