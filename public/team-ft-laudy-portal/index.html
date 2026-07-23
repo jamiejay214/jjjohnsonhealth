@@ -101,8 +101,8 @@ section.view.on{display:block}
   display:inline-block; background:var(--gold); color:#14100a; border:0; cursor:pointer;
   font:600 .88rem/1 "Avenir Next","Segoe UI",system-ui,sans-serif; padding:10px 18px; border-radius:7px;
 }
-:root[data-theme="light"] .btn{color:#fdfbf3}
-@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .btn{color:#fdfbf3} }
+:root[data-theme="light"] .btn:not(.ghost){color:#fdfbf3}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]) .btn:not(.ghost){color:#fdfbf3} }
 .btn.ghost{background:transparent; color:var(--gold); border:1px solid var(--gold)}
 .searchbox{
   width:100%; max-width:420px; background:var(--panel2); color:var(--text);
@@ -201,6 +201,9 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   nav.side .grp{display:inline-block; vertical-align:top}
   main{padding:22px 18px 70px}
 }
+.modal-backdrop{position:fixed; inset:0; background:rgba(4,8,16,.66); display:flex; align-items:center; justify-content:center; z-index:50; padding:18px}
+.modal-backdrop[hidden]{display:none}
+.modal{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:24px 26px; max-width:380px; width:100%; box-shadow:var(--shadow)}
 @media print{
   nav.side,.topbar,.searchbox,.tool,.themebtn,.btn{display:none !important}
   body{background:#fff; color:#000}
@@ -283,6 +286,15 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <button class="navlink" data-view="license">State License Costs</button>
   </div>
   <div class="foot">
+    <div id="authbox" style="margin-bottom:10px">
+      <button class="btn ghost" id="loginBtn" style="width:100%">Agent sign in</button>
+      <div id="whoami" style="display:none">
+        <div style="font-weight:700; color:var(--gold-bright)" id="whoName"></div>
+        <div class="hint" id="whoEmail" style="word-break:break-all"></div>
+        <div class="hint" id="syncState" style="margin:4px 0">Progress syncing to the cloud</div>
+        <button class="themebtn" id="logoutBtn">Sign out</button>
+      </div>
+    </div>
     <button class="themebtn" id="themeToggle">Toggle light / dark</button>
     <div style="margin-top:10px">Team FT. Laudy · USHA<br>Fort Lauderdale, FL</div>
   </div>
@@ -300,11 +312,11 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <p class="sub">Your official 2026 onboarding home — every script, chart, checklist, and contact in one place.</p>
   </div>
   <div class="card script">
-    <p>We're excited for the opportunity to partner together and to help you build a life of abundance, fulfillment, and freedom. Becoming partners is a privilege and we're very selective with who enters our community. We feel grateful for the privilege of leading you to become the best version of yourself and to maximize your full potential. We're committed to giving you 100% of what we have to offer, which will rapidly help you achieve massive personal and professional development. We believe that you have what it takes to excel with our agency. We ask that you give yourself, your family, and our organization 100% of your full effort, energy, and dedication to success.</p>
-    <p>We appreciate your commitment and vision to grow as a sales professional within our organization. We're determined to help you achieve your vision of success and to bring your dreams to reality. We're going to heavily invest our own financial support into you in the form of time, education, training, leads, resources, and direct mentorship from the #1 leadership team in the history of the private health insurance space.</p>
-    <p>You've made a decision that you want to <strong>Earn more Income</strong>, <strong>Create more Impact</strong>, and <strong>Have more Freedom</strong> in your life. We've made a decision to provide you the Team FT. Laudy Blueprint so you can do exactly that. What you must really decide now is: how bad do you want it? We want it for you more than you know.</p>
-    <p>To achieve what you desire, you must decide to work harder than you have ever worked and think bigger than you have ever thought. You must be fueled by a strong purpose of helping others and making a difference in the world. To be clear, this is not a job. This is not just a life-changing career opportunity. This is the Team FT. Laudy lifestyle.</p>
-    <p>Thank you again, to you and your family, for becoming a valued member of our FT. Laudy family. If you have any questions we're here to help — feel free to reach out to your team leader directly. Welcome to your chosen family. Welcome to your next level. <strong>Welcome to Team FT. Laudy!</strong></p>
+    <p>Take a breath and let this sink in: you made it. Out of everyone who wanted a seat on this team, we chose <em>you</em> — because we saw something in you that we build champions out of. Joining Team FT. Laudy isn't signing up for a job. It's stepping into a partnership with people who are fully committed to helping you build a life of abundance, fulfillment, and freedom — and who will never let you settle for less than your best.</p>
+    <p>Here's our promise to you. We will pour everything we have into your success: our time, our training, our leads, our resources, and direct, shoulder-to-shoulder mentorship from leaders who have already walked the road you're starting today. You will never be left to figure it out alone. Every script, every chart, and every tool in this portal exists for one reason — to get you winning as fast as possible. All we ask in return is simple: bring 100% of your effort, your energy, and your heart, every single day. For yourself. For your family. For this team.</p>
+    <p>You made the decision that you want to <strong>Earn more Income</strong>, <strong>Create more Impact</strong>, and <strong>Have more Freedom</strong>. We made the decision to hand you the Team FT. Laudy Blueprint so you can do exactly that. The only question left is the one nobody can answer but you: <em>how bad do you want it?</em> Because we already want it for you more than you know — and we've seen ordinary people do extraordinary things the moment they decided to go all in.</p>
+    <p>Understand what you're really here to do. Every call you make is a family that sleeps better because you protected them. Work harder than you've ever worked. Think bigger than you've ever thought. Let purpose — not pressure — be your fuel. This is not a job. This is not just a career opportunity. This is a lifestyle, a standard, and a brotherhood and sisterhood: the Team FT. Laudy way.</p>
+    <p>So welcome — to you and your family. Your past doesn't decide what happens next; your habits starting today do. When you have questions, reach out to your team leader directly — we're here for you. Welcome to your chosen family. Welcome to your next level. <strong>Welcome to Team FT. Laudy!</strong></p>
     <div class="sig">
       <div class="p"><div class="nm">Team FT. Laudy Leadership</div><div class="rl">Fort Lauderdale, FL</div></div>
     </div>
@@ -683,6 +695,23 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 </div></main>
 </div>
 
+<div class="modal-backdrop" id="loginModal" hidden>
+  <div class="modal">
+    <h3 class="display" style="margin:0 0 4px; color:var(--gold-bright); font-size:1.3rem">Agent sign in</h3>
+    <p class="hint" style="margin:0 0 14px">Sign in with the login your team leader gave you. Your checklist, goals, and training progress will sync to the cloud so your leader can support you.</p>
+    <label class="hint" for="liEmail">Email</label>
+    <input class="goal" id="liEmail" type="email" autocomplete="username" style="margin-bottom:10px">
+    <label class="hint" for="liPass">Password</label>
+    <input class="goal" id="liPass" type="password" autocomplete="current-password" style="margin-bottom:14px">
+    <div id="liErr" class="hint" style="color:var(--bad); margin-bottom:10px"></div>
+    <div style="display:flex; gap:10px">
+      <button class="btn" id="liGo">Sign in</button>
+      <button class="btn ghost" id="liCancel">Cancel</button>
+    </div>
+    <p class="hint" style="margin:14px 0 0">No login yet, or forgot your password? Ask your team leader.</p>
+  </div>
+</div>
+
 <script>
 /* ---------- data ---------- */
 const MEDS=[["Abilify","Bipolar/Schizophrenia"],["Adderall","ADHD"],["Albuterol","Asthma/Sleep Apnea"],["Allopurinol","Gout"],["Alosetron","Irritable Bowel Syndrome"],["Alprazolam","Anxiety"],["Ambien","Sleep Aid"],["Amlodipine","High Blood Pressure"],["Amphetamine Salt Combo","ADHD"],["Armour Thyroid","Hypothyroidism"],["Ativan","Anxiety"],["Atorvastatin","High Cholesterol"],["Buspirone","Anxiety"],["Chlorpromazine","Bipolar/Schizophrenia"],["Clonazepam","Anxiety"],["Clonidine","HBP/ADHD"],["Concerta","ADHD"],["Cyclobenzaprine","Muscle Relaxer"],["Cymbalta","Anxiety"],["Diazepam","Anxiety"],["Ditropan","Overactive Bladder"],["Effexor","Anxiety"],["Flexeril","Muscle Relaxer"],["Flomax","Enlarged Prostate"],["Fluoxetine","Depression"],["Focalin","ADHD"],["Gabapentin","Pain"],["Harvoni","Hepatitis C"],["Humira","Rheumatoid Arthritis"],["Hydrocodone","Pain"],["Hydrochlorothiazide (HCTZ)","Water Pill (HBP)"],["Insulin","Diabetes"],["Imitrex","Migraines"],["Keppra","Seizures"],["Klonopin","Anxiety"],["Levothyroxine","Hypothyroidism"],["Lexapro","Depression"],["Lipitor","High Cholesterol"],["Lisinopril","High Blood Pressure"],["Lopressor","High Blood Pressure"],["Lorazepam","Anxiety"],["Lortab","Pain"],["Losartan","High Blood Pressure"],["Lunesta","Sleep Aid"],["Meloxicam","Arthritis"],["Metformin (pill)","Diabetes"],["Methylphenidate","ADHD"],["Methadone","Drug Addiction"],["Metoprolol","High Blood Pressure"],["Myrbetriq","Overactive Bladder"],["Naltrexone","Alcohol/Drug Addiction"],["Naproxen","Pain/Migraines"],["NP Thyroid","Hypothyroidism"],["Omeprazole","Heartburn/GERD"],["Oxybutynin","Overactive Bladder"],["Oxycodone","Pain"],["Paroxetine","Depression"],["Percocet","Pain"],["Plavix","Blood Thinner"],["Prednisone","Steroid"],["Prilosec (OTC)","Heartburn/GERD"],["Propranolol","High Blood Pressure"],["Prozac","Depression"],["Risperidone","Bipolar/Schizophrenia"],["Ritalin","ADHD"],["Rizatriptan","Migraines"],["Sertraline","Anxiety"],["Simvastatin","High Cholesterol"],["Strattera","ADHD"],["Synthroid","Hypothyroidism"],["Suboxone","Drug Addiction"],["Tamsulosin","Enlarged Prostate"],["Topamax","Migraines"],["Toprol","High Blood Pressure"],["Tricor","High Cholesterol"],["Tramadol","Pain"],["Trazodone","Depression/Sleep Aid"],["Truvada","HIV/AIDS"],["Valtrex","Herpes"],["Vicodin","Pain"],["Vivitrol","Alcohol/Drug Addiction"],["Vivlodex","Arthritis"],["Vyvanse","ADHD"],["Wellbutrin","Depression"],["Xanax","Anxiety"],["Zocor","High Cholesterol"],["Zoloft","Anxiety/Depression"]];
@@ -725,7 +754,58 @@ const CHECKLIST=[
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
-const store={get(k,d){try{return JSON.parse(localStorage.getItem("ftlaudy-"+k))??d}catch(e){return d}},set(k,v){localStorage.setItem("ftlaudy-"+k,JSON.stringify(v))}};
+const store={get(k,d){try{return JSON.parse(localStorage.getItem("ftlaudy-"+k))??d}catch(e){return d}},set(k,v){localStorage.setItem("ftlaudy-"+k,JSON.stringify(v)); if(k!=="theme"&&k!=="session")Cloud.queue(k,v);}};
+
+/* ---------- cloud sync (Supabase) ---------- */
+const SB_URL="https://zrbqewiccorrdbrbfnjf.supabase.co";
+const SB_KEY="sb_publishable_SqvfT7NOQt00XHyoARDUdw_-Trfr-N1";
+const Cloud={
+  session:null, pending:{}, timer:null,
+  headers(){return {apikey:SB_KEY, Authorization:"Bearer "+this.session.access_token, "Content-Type":"application/json"}},
+  async login(email,password){
+    const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+    const d=await r.json();
+    if(!r.ok)throw new Error(d.error_description||d.msg||"Sign-in failed — check your email and password.");
+    this.session=d; store.set("session",{refresh_token:d.refresh_token});
+    return d;
+  },
+  async refresh(){
+    const saved=store.get("session",null); if(!saved?.refresh_token)return false;
+    try{
+      const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`,{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:saved.refresh_token})});
+      if(!r.ok){localStorage.removeItem("ftlaudy-session");return false;}
+      this.session=await r.json(); store.set("session",{refresh_token:this.session.refresh_token});
+      return true;
+    }catch(e){return false;}
+  },
+  logout(){this.session=null; localStorage.removeItem("ftlaudy-session");},
+  async pull(){
+    if(!this.session)return;
+    const r=await fetch(`${SB_URL}/rest/v1/progress?select=key,value`,{headers:this.headers()});
+    if(!r.ok)return false;
+    let changed=false;
+    for(const row of await r.json()){
+      const v=JSON.stringify(row.value);
+      if(localStorage.getItem("ftlaudy-"+row.key)!==v){localStorage.setItem("ftlaudy-"+row.key,v);changed=true;}
+    }
+    return changed;
+  },
+  queue(k,v){
+    if(!this.session)return;
+    this.pending[k]=v; clearTimeout(this.timer);
+    this.timer=setTimeout(()=>this.flush(),1200);
+    const s=$("#syncState"); if(s)s.textContent="Saving…";
+  },
+  async flush(){
+    if(!this.session)return;
+    const rows=Object.entries(this.pending).map(([key,value])=>({user_id:this.session.user.id,key,value}));
+    if(!rows.length)return; this.pending={};
+    let r=await fetch(`${SB_URL}/rest/v1/progress`,{method:"POST",headers:{...this.headers(),Prefer:"resolution=merge-duplicates"},body:JSON.stringify(rows)});
+    if(r.status===401&&await this.refresh())
+      r=await fetch(`${SB_URL}/rest/v1/progress`,{method:"POST",headers:{...this.headers(),Prefer:"resolution=merge-duplicates"},body:JSON.stringify(rows)});
+    const s=$("#syncState"); if(s)s.textContent=r.ok?"Progress synced to the cloud":"Offline — will retry on next change";
+  }
+};
 
 /* ---------- navigation ---------- */
 function go(view){
@@ -748,6 +828,41 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 
 /* ---------- logo: use logo.png if it exists, else keep the SVG crest ---------- */
 (()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="logo.png";})();
+
+/* ---------- auth UI ---------- */
+(()=>{
+  const modal=$("#loginModal");
+  const showUser=()=>{
+    const u=Cloud.session?.user;
+    $("#loginBtn").style.display=u?"none":"";
+    $("#whoami").style.display=u?"block":"none";
+    if(u){$("#whoName").textContent=u.user_metadata?.full_name||"Agent";$("#whoEmail").textContent=u.email;}
+  };
+  $("#loginBtn").addEventListener("click",()=>{modal.hidden=false;$("#liEmail").focus();});
+  $("#liCancel").addEventListener("click",()=>modal.hidden=true);
+  modal.addEventListener("click",e=>{if(e.target===modal)modal.hidden=true;});
+  $("#liGo").addEventListener("click",async()=>{
+    $("#liErr").textContent="";
+    try{
+      await Cloud.login($("#liEmail").value.trim(),$("#liPass").value);
+      await Cloud.pull();
+      location.reload();
+    }catch(e){$("#liErr").textContent=e.message;}
+  });
+  $("#liPass").addEventListener("keydown",e=>{if(e.key==="Enter")$("#liGo").click();});
+  $("#logoutBtn").addEventListener("click",()=>{Cloud.logout();location.reload();});
+  // resume saved session; re-render once if the cloud has newer progress
+  Cloud.refresh().then(async ok=>{
+    if(!ok)return;
+    showUser();
+    const changed=await Cloud.pull();
+    if(changed&&!sessionStorage.getItem("ftlaudy-just-pulled")){
+      sessionStorage.setItem("ftlaudy-just-pulled","1");
+      location.reload();
+    }else{sessionStorage.removeItem("ftlaudy-just-pulled");}
+  });
+  showUser();
+})();
 
 /* ---------- checklist ---------- */
 (()=>{
