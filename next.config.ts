@@ -26,6 +26,24 @@ const nextConfig: NextConfig = {
       fallback: [],
     };
   },
+  // Always revalidate the portal + admin pages so agents and the admin get the
+  // latest version immediately instead of a stale browser/CDN cache.
+  async headers() {
+    const noCache = [
+      { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+    ];
+    const onHosts = (source: string) =>
+      TEAMFTL_HOSTS.map((value) => ({
+        source,
+        has: [{ type: "host" as const, value }],
+        headers: noCache,
+      }));
+    return [
+      { source: "/team-ft-laudy-portal/:path*", headers: noCache },
+      ...onHosts("/"),
+      ...onHosts("/admin"),
+    ];
+  },
 };
 
 export default nextConfig;
