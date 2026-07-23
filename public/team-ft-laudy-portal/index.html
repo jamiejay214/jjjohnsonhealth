@@ -147,7 +147,16 @@ details.obj summary::before{content:"+"; display:inline-block; width:1.2em; colo
 details.obj[open] summary::before{content:"–"}
 details.obj .body{padding:2px 18px 16px 18px; border-top:1px solid var(--line2)}
 /* checklist */
-.check{display:flex; gap:12px; align-items:flex-start; padding:10px 14px; border:1px solid var(--line2); border-radius:8px; background:var(--panel); margin:0 0 8px; cursor:pointer}
+.check{display:flex; gap:12px; align-items:flex-start; padding:10px 14px; border:1px solid var(--line2); border-radius:8px; background:var(--panel); margin:0 0 8px}
+details.how{margin-top:6px}
+details.how summary{cursor:pointer; list-style:none; font-size:.8rem; font-weight:700; color:var(--gold); letter-spacing:.04em}
+details.how summary::-webkit-details-marker{display:none}
+details.how summary::before{content:"▸ "}
+details.how[open] summary::before{content:"▾ "}
+details.how .howbody{font-size:.9rem; color:var(--muted); border-left:2px solid var(--line); margin-top:6px; padding:2px 0 2px 14px; max-width:64ch}
+details.how .howbody ol{margin:6px 0; padding-left:18px}
+details.how .howbody p{margin:6px 0}
+.check.done details.how{display:none}
 .check input{margin-top:5px; accent-color:var(--gold); width:16px; height:16px; flex-shrink:0}
 .check.done{opacity:.55}
 .check.done .lbl{text-decoration:line-through}
@@ -180,6 +189,12 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 .sig .nm{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-weight:700; font-size:1.05rem; color:var(--gold-bright)}
 .sig .rl{font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
 .themebtn{background:none; border:1px solid var(--line); color:var(--muted); border-radius:7px; padding:6px 12px; cursor:pointer; font:inherit; font-size:.8rem}
+/* real logo file replaces the SVG crest when logo.png exists next to this page */
+.logoimg{display:none; max-width:100%; border-radius:10px}
+body.has-logo .logoimg{display:block; margin:0 auto 10px}
+body.has-logo .brand .logoimg{width:120px}
+body.has-logo .hero .logoimg{width:190px}
+body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 @media(max-width:900px){
   .shell{flex-direction:column}
   nav.side{position:static; width:100%; height:auto; border-right:0; border-bottom:1px solid var(--line)}
@@ -197,6 +212,7 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 <div class="shell">
 <nav class="side" id="sidenav">
   <div class="brand">
+    <img class="logoimg" src="logo.png" alt="Team FT. Laudy logo">
     <svg viewBox="0 0 200 190" role="img" aria-label="Team FT. Laudy crest">
       <g id="crest">
       <defs>
@@ -277,6 +293,7 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 <!-- ================= WELCOME ================= -->
 <section class="view" id="view-welcome">
   <div class="hero">
+    <img class="logoimg" src="logo.png" alt="">
     <svg viewBox="0 0 200 190" aria-hidden="true"><use href="#crest"/></svg>
     <div class="eyebrow">Earn more income · Create more impact · Have more freedom</div>
     <h1>Congratulations &amp; Welcome to Team FT. Laudy!</h1>
@@ -287,10 +304,9 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
     <p>We appreciate your commitment and vision to grow as a sales professional within our organization. We're determined to help you achieve your vision of success and to bring your dreams to reality. We're going to heavily invest our own financial support into you in the form of time, education, training, leads, resources, and direct mentorship from the #1 leadership team in the history of the private health insurance space.</p>
     <p>You've made a decision that you want to <strong>Earn more Income</strong>, <strong>Create more Impact</strong>, and <strong>Have more Freedom</strong> in your life. We've made a decision to provide you the Team FT. Laudy Blueprint so you can do exactly that. What you must really decide now is: how bad do you want it? We want it for you more than you know.</p>
     <p>To achieve what you desire, you must decide to work harder than you have ever worked and think bigger than you have ever thought. You must be fueled by a strong purpose of helping others and making a difference in the world. To be clear, this is not a job. This is not just a life-changing career opportunity. This is the Team FT. Laudy lifestyle.</p>
-    <p>Thank you again, to you and your family, for becoming a valued member of our FT. Laudy family. If you have any questions we're here to help — feel free to call us directly. Welcome to your chosen family. Welcome to your next level. <strong>Welcome to Team FT. Laudy!</strong></p>
+    <p>Thank you again, to you and your family, for becoming a valued member of our FT. Laudy family. If you have any questions we're here to help — feel free to reach out to your team leader directly. Welcome to your chosen family. Welcome to your next level. <strong>Welcome to Team FT. Laudy!</strong></p>
     <div class="sig">
-      <div class="p"><div class="nm">Austin Baker</div><div class="rl">Regional Sales Leader</div><a href="tel:8132448780">813-244-8780</a></div>
-      <div class="p"><div class="nm">Max Willett</div><div class="rl">Divisional Sales Leader</div><a href="tel:4017436075">401-743-6075</a></div>
+      <div class="p"><div class="nm">Team FT. Laudy Leadership</div><div class="rl">Fort Lauderdale, FL</div></div>
     </div>
   </div>
   <div class="grid2">
@@ -316,16 +332,16 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 <!-- ================= CHECKLIST ================= -->
 <section class="view" id="view-checklist">
   <div class="page-head"><div class="eyebrow">Start Here</div><h1>Onboarding Checklist</h1>
-  <p class="sub">Work top to bottom. Your progress is saved on this device automatically.</p></div>
+  <p class="sub">Work top to bottom. Click <strong>How to do this</strong> on any item for step-by-step instructions. Your progress is saved on this device automatically.</p></div>
   <div class="progress"><i id="chkbar"></i></div>
   <div id="chklist"></div>
   <div class="card">
     <h3>Business Gmail examples</h3>
-    <p class="hint" style="margin-top:0">Use this as your primary (or) secondary email when creating accounts relating to your business:</p>
+    <p class="hint" style="margin-top:0">Use this as your primary (or) secondary email when creating accounts relating to your business (swap in your own last name):</p>
     <ul style="margin:0; padding-left:20px">
-      <li>Baker.InsuranceSolutions@gmail.com</li>
-      <li>Baker.HealthcareAdvising@gmail.com</li>
-      <li>Baker.HealthCareSolutions@gmail.com</li>
+      <li>YourName.InsuranceSolutions@gmail.com</li>
+      <li>YourName.HealthcareAdvising@gmail.com</li>
+      <li>YourName.HealthCareSolutions@gmail.com</li>
     </ul>
   </div>
 </section>
@@ -648,9 +664,9 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 <!-- ================= CONTACTS ================= -->
 <section class="view" id="view-contacts">
   <div class="page-head"><div class="eyebrow">Reference</div><h1>Contact List</h1>
-  <p class="sub">Tap a number to call, tap an email to write. Search by name or role.</p></div>
-  <input class="searchbox" id="consearch" type="search" placeholder="Search people&hellip;" aria-label="Search contacts">
-  <div class="tblwrap"><table id="contable"><thead><tr><th>Role</th><th>Name</th><th>Phone</th><th>Email</th></tr></thead><tbody></tbody></table></div>
+  <p class="sub">Team FT. Laudy leadership and support contacts.</p></div>
+  <div class="card"><h3>Updated list coming soon</h3>
+  <p style="margin:0">The 2026 contact list is being updated. Until it's posted here, ask your team leader for the current leadership and support numbers.</p></div>
 </section>
 
 <!-- ================= LICENSE ================= -->
@@ -671,31 +687,39 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 /* ---------- data ---------- */
 const MEDS=[["Abilify","Bipolar/Schizophrenia"],["Adderall","ADHD"],["Albuterol","Asthma/Sleep Apnea"],["Allopurinol","Gout"],["Alosetron","Irritable Bowel Syndrome"],["Alprazolam","Anxiety"],["Ambien","Sleep Aid"],["Amlodipine","High Blood Pressure"],["Amphetamine Salt Combo","ADHD"],["Armour Thyroid","Hypothyroidism"],["Ativan","Anxiety"],["Atorvastatin","High Cholesterol"],["Buspirone","Anxiety"],["Chlorpromazine","Bipolar/Schizophrenia"],["Clonazepam","Anxiety"],["Clonidine","HBP/ADHD"],["Concerta","ADHD"],["Cyclobenzaprine","Muscle Relaxer"],["Cymbalta","Anxiety"],["Diazepam","Anxiety"],["Ditropan","Overactive Bladder"],["Effexor","Anxiety"],["Flexeril","Muscle Relaxer"],["Flomax","Enlarged Prostate"],["Fluoxetine","Depression"],["Focalin","ADHD"],["Gabapentin","Pain"],["Harvoni","Hepatitis C"],["Humira","Rheumatoid Arthritis"],["Hydrocodone","Pain"],["Hydrochlorothiazide (HCTZ)","Water Pill (HBP)"],["Insulin","Diabetes"],["Imitrex","Migraines"],["Keppra","Seizures"],["Klonopin","Anxiety"],["Levothyroxine","Hypothyroidism"],["Lexapro","Depression"],["Lipitor","High Cholesterol"],["Lisinopril","High Blood Pressure"],["Lopressor","High Blood Pressure"],["Lorazepam","Anxiety"],["Lortab","Pain"],["Losartan","High Blood Pressure"],["Lunesta","Sleep Aid"],["Meloxicam","Arthritis"],["Metformin (pill)","Diabetes"],["Methylphenidate","ADHD"],["Methadone","Drug Addiction"],["Metoprolol","High Blood Pressure"],["Myrbetriq","Overactive Bladder"],["Naltrexone","Alcohol/Drug Addiction"],["Naproxen","Pain/Migraines"],["NP Thyroid","Hypothyroidism"],["Omeprazole","Heartburn/GERD"],["Oxybutynin","Overactive Bladder"],["Oxycodone","Pain"],["Paroxetine","Depression"],["Percocet","Pain"],["Plavix","Blood Thinner"],["Prednisone","Steroid"],["Prilosec (OTC)","Heartburn/GERD"],["Propranolol","High Blood Pressure"],["Prozac","Depression"],["Risperidone","Bipolar/Schizophrenia"],["Ritalin","ADHD"],["Rizatriptan","Migraines"],["Sertraline","Anxiety"],["Simvastatin","High Cholesterol"],["Strattera","ADHD"],["Synthroid","Hypothyroidism"],["Suboxone","Drug Addiction"],["Tamsulosin","Enlarged Prostate"],["Topamax","Migraines"],["Toprol","High Blood Pressure"],["Tricor","High Cholesterol"],["Tramadol","Pain"],["Trazodone","Depression/Sleep Aid"],["Truvada","HIV/AIDS"],["Valtrex","Herpes"],["Vicodin","Pain"],["Vivitrol","Alcohol/Drug Addiction"],["Vivlodex","Arthritis"],["Vyvanse","ADHD"],["Wellbutrin","Depression"],["Xanax","Anxiety"],["Zocor","High Cholesterol"],["Zoloft","Anxiety/Depression"]];
 const VOCAB=[["FNB","First New Business."],["In Force","Your policy is in effect; client is approved."],["AV — Annualized Volume","The value of the policy being sold (premium × 12 months)."],["OTF","On-the-fly sale."],["OCC / 2CC","One Call Close vs. Two Calls."],["Jetty Thursday","A magical day where things get quickly approved if they are clean apps."],["Taken Rate","Your score with the insurance company on policies submitted vs. “taken” — approved or in the works."],["V-Call","Verification call, second step of the application process."],["APS","“Attending Physician's Statement.” They are pulling medical records from the doctor's office — get with your FTA and ask how you can help expedite the process."],["Underwritten vs. Guaranteed Issue","When a plan requires medical questions and health-history records to be pulled for an approval vs. none at all."],["Posting Deals in the GroupMe #","Monthly premium × 12. Example: $300/month premium × 12 = 3.6#."],["Association (AIBC) (SCA) (ABC)","A supplemental part of our plans — how we make our residual income as well. (Not available in all states, such as MD, NV, UT, KS, SD.) Includes: Accident/Injury Protection · AD&D (accidental death & dismemberment) · 24/7 Telemedicine with MDLive."],["Freedom Life / Enterprise / National Foundation","Underwriting company — varies by state."],["ACA","Affordable Care Act · Obamacare · Marketplace."],["Deductible","The total amount you'll pay for healthcare services before your insurance starts to cover a portion of costs."],["HMO — Health Maintenance Organization","Usually limits coverage to providers within the plan's network, and requires a doctor's referral to see specialists."],["PPO — Preferred Provider Organization","Usually covers some of the cost of out-of-network providers (but not as much as in-network), and doesn't require a referral to see specialists. Nationwide coverage."],["EPO — Exclusive Provider Organization","Usually limits coverage to providers within the plan's network, but doesn't require a referral to see specialists. Exclusively — almost no one accepts it: 1 PCP, 1 OBGYN, 1 cardiologist, etc., so appointments take forever because only one doc is available."],["POS — Point of Service","Like an HMO, but more limited doctor choice. Also requires a referral from your primary-care doctor to see a specialist."],["Max Out of Pocket (MOOP)","The most you'll have to pay for healthcare services during your coverage period (typically 12 months) — your safety net in a major health problem. Monthly premiums don't count toward your out-of-pocket max."],["Co-Pay","Upfront payment provided for the service at hand; doesn't go toward the deductible."],["Co-insurance","The % of coverage after the deductible that is owed by you vs. the insurance company until your max OOP is reached. Most common: 80/20, 70/30. Example: a client has a $1M cancer bill, a $5K deductible, an $8,550 MOOP, and 80/20 co-insurance — they pay the deductible first, then the insurance company pays 80% of the remainder while the client pays 20%, until they reach their MOOP. The deductible usually applies to the MOOP."],["EOB","Explanation of Benefits — not a bill. It explains how the benefits were applied for the service, as well as the in-network repricing applied."],["In-Network vs. Out-of-Network","If a doctor/facility is in-network, your insurance is accepted there. Out-of-network is treated as if you don't even have insurance — they just won't cover you."],["PCP","Primary Care Physician."],["Preventative Care","Yearly wellness: visit · blood work · vaccinations · pap smear / mammogram / colonoscopy."]];
-const CONTACTS=[["Senior Regional Sales Leader","Jason Greif","813.309.2208","Jason.Greif@ushadvisors.com"],["Regional Sales Leader","Austin Baker","813.244.8780","Austin.Baker@ushadvisors.com"],["Divisional Sales Leader","Max Willett","401.743.6075","Thomas.Willett@ushadvisors.com"],["Satellite Sales Leader","Brian Fuller","813.599.8726","Brian.Fuller2@ushadvisors.com"],["Satellite Sales Leader","Chad Douglas","269.985.8874","Chad.Douglas@ushadvisors.com"],["Satellite Sales Leader","Seth Groff","865.776.9231","Seth.Groff@ushadvisors.com"],["Satellite Sales Leader","Jared Winsey","813.380.5909","Jared.Winsey@ushadvisors.com"],["FSL","Stephen Buckley","774.991.1647","Stephen.Buckley@ushadvisors.com"],["FSL","Jaydin Cowans","631.994.5369","Jaydin.Cowans@ushadvisors.com"],["FSL","Luis Villacis","973.223.6897","Luis.Villacis@ushadvisors.com"],["FSL","Lucas Rodrigues","813.431.1958","Lucas.Rodrigues@ushadvisors.com"],["FSL","Chris Mueller","352.502.2946","Christopher.Mueller@ushadvisors.com"],["FSL","Scotty Binsack","631.714.9087","Scott.Binsack@ushadvisors.com"],["FSL","Billy Pickhardt","239.980.1446","William.Pickhardt@ushadvisors.com"],["FSL","Elliott Leniton","813.843.5573","Elliott.Leniton@ushadvisors.com"],["FTA","Connor Flaharty","727.200.2574","Connor.Flaharty@ushadvisors.com"],["FTA","Alan Degen","813.777.4743","Alan.Degen@ushadvisors.com"],["FTA","Giuseppe Bologna","813.381.8179","Giuseppe.Bologna@ushadvisor.com"],["FTA","Charlie Badish","248.295.1037","Charleston.Badish@ushadvisors.com"],["FTA","Ryan Davila","847.421.5172","Ryan.Davila@ushadvisors.com"],["FTA","Cody Bishop","941.421.8196","Cody.Bishop@ushadvisors.com"],["FTA","Nick Barnett","813.481.2052","Nicholas.Barnett@Ushadvisors.com"],["FTA","Eric Ferenbach","618.954.1044","Eric.Ferenbach@ushadvisors.com"],["FTA","Estefany Rodriguez","262.364.8353","Estefany.Gonzalez@ushadvisors.com"],["FTA","Manny Lopez","757.281.8178","Emmanuel.Lopez@ushadvisors.com"],["FTA","Emily Jacobsen","610.849.6472","Emily.Jacobsen@ushadvisors.com"],["FTA","Kensington Schoeve","214.766.2926","Kensington.Schoeve@ushadvisors.com"],["FTA","Megan Powell","270.484.1560","Megan.Powell@ushadvisors.com"],["FTA","Derek Martelle","518.491.2626","Derek.Martelle@ushadvisors.com"],["FTA","Alex Nesel","845.853.3719","Alexander.Nesel@ushadvisors.com"],["FTA","Chris Otero","407.417.3415","Christopher.Otero@ushadvisors.com"],["FTA","Luke Kozlowski","727.804.1502","Luke.Kozlowski@ushadvisors.com"],["FTA","Yon Golden","727.608.9516","Yonatan.Golden@ushadvisors.com"],["FTA","Blake Berent","989.323.7025","Blakeberent21@gmail.com"],["FTA","Ryan Michalek","630.981.4560","Ryan.Michalek@ushadivsors.com"],["FTA","Jonah Luna","620.705.2440","Jonah.Luna@ushadvisors.com"],["FTA","Austin Woryn","813.853.3958","Austin.Woryn@ushadvisors.com"],["FTA","Daniel Mead","732.413.5308","Daniel.Mead@ushadvisors.com"],["FTA","Joe Mombrea","716.725.4866","Joseph.Mombrea@ushadvisors.com"],["FTA","Josh Oldham","813.424.7052","Joshua.Oldham@ushadvisors.com"],["FTA","Stephanie Freitag","727.405.9404","Stephanie.Freitag@ushadvisors.com"],["Executive Assistant","Janesse Ortiz","813.767.2100","Superiorassist90@gmail.com"],["Vanilla Soft Manager","Kyle Oliver","813.784.4454","closersregion@gmail.com"],["USHA/Freedom Life — Customer Service","","800.387.9027","cs@ushealthgroup.com"],["USHA/Freedom Life — IT Support","","800.606.4492",""],["USHA/Freedom Life — Recall","","800.984.3507",""],["USHA/Freedom Life — Add-On Dept","","817.878.3689",""]];
 const LICENSES=[[1,"Texas","Life, Accident, Health & HMO",55.60,10.00],[3,"Georgia *","Life, Accident & Sickness",125.60,16.00],[5,"Colorado","Accident & Health, Life",147.60,0],[6,"North Carolina","Life, Accident & Health or Sickness",149.60,20.00],[7,"Virginia","Health, Life & Annuities",35.60,10.00],[9,"Illinois","Life, Health",362.18,0],[10,"Tennessee","Life, Accident & Health",55.60,15.00],[11,"Maryland","Accident and Health or Sickness, Life",59.60,0],[12,"Ohio","Accident & Health, Life",25.60,30.00],[13,"Indiana","Life, Accident & Health",95.60,0],[14,"Utah","Accident & Health or Sickness, Life",80.60,5.00],[15,"South Carolina","Accident & Health or Sickness, Life",30.60,0],[16,"Louisiana","Accident & Health or Sickness, Life",80.60,30.00],[17,"Missouri","Accident & Health or Sickness, Life",105.60,0],[18,"Michigan","Life, Accident & Health",15.60,5.00],[19,"Oklahoma","Life, Accident & Health or Sickness",125.60,30.00],[20,"Nevada","Life, Health",190.60,15.00],[21,"Kentucky","Health, Life",155.60,50.00],[22,"Kansas","Accident & Health or Sickness, Life",85.60,5.00],[23,"Alabama","Life, Accident & Health or Sickness",86.00,40.00],[24,"Mississippi","Accident & Health or Sickness, Life",106.60,25.00],[25,"Arkansas","Accident, Health & Sickness, Life",81.00,0],[26,"Iowa","Life, Accident & Health",55.60,10.00],[27,"Montana","Life, Disability (Health)",105.60,0],[28,"Nebraska","Life & Annuities, Sickness, Accident & Health",55.60,10.00],[29,"West Virginia","Accident & Health or Sickness, Life",55.60,25.00],[30,"Wyoming","Accident & Health or Sickness, Life",155.60,15.00],[31,"Wisconsin","Life, Accident & Health",155.60,30.00],[32,"South Dakota","Accident & Health or Sickness, Life",35.60,20.00],[33,"Delaware","Accident & Health, Life",105.60,50.00]];
 const HEIGHTS=["4’10”","4’11”","5’","5’1”","5’2”","5’3”","5’4”","5’5”","5’6”","5’7”","5’8”","5’9”","5’10”","5’11”","6’","6’1”","6’2”","6’3”","6’4”","6’5”","6’6”","6’7”","6’8”"];
 const HW_M=[["90-200","168-200","90-90","90-158"],["92-205","174-205","92-92","92-162"],["93-205","179-205","93-93","93-167"],["95-210","185-210","95-98","95-172"],["97-218","192-218","97-101","97-178"],["100-224","198-224","100-104","100-184"],["102-231","204-231","102-108","102-191"],["106-238","211-238","106-111","106-196"],["110-246","217-246","110-114","110-202"],["113-254","224-254","113-118","113-208"],["116-261","230-261","116-122","116-215"],["119-269","237-269","119-125","119-221"],["123-277","244-277","123-129","123-227"],["127-285","251-285","127-133","127-234"],["130-293","258-293","130-136","130-240"],["134-301","265-301","134-140","134-248"],["138-310","273-310","138-144","138-254"],["141-318","280-318","141-148","141-261"],["145-328","288-328","145-152","145-266"],["149-336","295-336","149-156","149-270"],["152-345","303-345","152-160","152-276"],["156-354","311-354","156-164","156-283"],["160-363","319-363","160-168","160-290"]];
 const HW_F=[["90-200","168-200","90-90","90-158"],["92-205","174-205","92-92","92-162"],["94-205","179-205","94-94","94-167"],["95-210","185-210","95-98","95-172"],["97-216","192-216","97-101","98-178"],["100-220","198-220","100-104","100-184"],["102-226","204-226","102-108","102-188"],["106-231","211-231","106-111","106-192"],["109-236","217-236","109-114","109-197"],["112-243","224-243","112-118","112-204"],["115-250","230-250","115-122","115-210"],["117-259","237-259","117-125","117-216"],["119-266","244-266","119-129","119-222"],["122-274","251-274","122-133","122-229"],["123-283","258-283","123-136","123-235"],["126-290","265-290","126-140","126-242"],["130-297","273-297","130-144","130-248"],["141-318","280-318","141-148","141-256"],["145-328","288-328","145-152","145-260"],["149-336","295-336","149-156","149-265"],["152-345","303-345","152-160","152-271"],["156-354","311-354","156-164","156-278"],["160-363","319-363","160-168","160-285"]];
 const HUNT=["Hypothyroidism taking Synthroid 1x daily for 3 years","High blood pressure — female, 45 years old, 5’2” tall, 195 lbs","Herniated disc surgery 5 months ago","Needs surgery NOW (for any ailment)","Taking Meloxicam for rheumatoid arthritis","Knee meniscus tear surgery, 8 months ago","Takes HBP meds, over 50, and a smoker","First-time skin cancer (basal cell) removed 1 year ago","Male — 5’5” tall and weighs 250 lbs","Taking NOW 2 meds for anxiety OR 2 meds for depression","Taking Losartan for HBP for 7 months","Asthma, no hospitalizations, controlled by as-needed Albuterol inhaler","Partial knee replacement","Mental health with drugs and seeing a psychiatrist","Current occupation is a police officer or firefighter","Breast cancer removed 5 years ago","Child taking ADHD meds","Right hip replacement 5 years ago","Current occupation is a bail bondsman","Rotator cuff repair 1 year ago","Currently taking pain meds for back pain","Has taken blood thinners in the past 7 years","History of heart attack","Taking Metformin for diabetes","Child under 18 taking anxiety/depression meds","Has taken Meloxicam for arthritis in the past 7 years","Has taken Suboxone for drug rehab","History of a heart stent","Has taken Gabapentin for nerve pain in the past 7 years","Taking Sumatriptan for migraines as needed","Current occupation is a pilot"];
+const BOOKMARK_HOW=`<ol><li>Open the site in Chrome.</li><li>Click the <strong>star</strong> at the right end of the address bar (or press <strong>Ctrl+D</strong> / <strong>Cmd+D</strong>).</li><li>Set the folder to <strong>Bookmarks bar</strong> and click <strong>Done</strong>.</li><li>If you don't see your bookmarks bar, press <strong>Ctrl+Shift+B</strong> (Cmd+Shift+B on Mac) to show it.</li></ol>`;
 const CHECKLIST=[
- ["Create your business Gmail","Use it as your primary (or) secondary email for every business account. See the examples below."],
- ["Set up Vanilla Soft","Dialer & lead management."],
- ["Set up Next Gen",""],
- ["Set up Tampa USHA",""],
- ["Connect your Gmail Calendar",""],
- ["Bookmark: Gmail","Browser bookmarks bar — keep every tool one click away."],
- ["Bookmark: Google Calendar",""],
- ["Bookmark: Google Sheets (Home)",""],
- ["Bookmark: Tampa USHA",""],
- ["Bookmark: Next Gen",""],
- ["Bookmark: Vanilla Soft",""],
- ["Bookmark: USHA Portal",""],
- ["Bookmark: Outlook USHA Email",""],
- ["Bookmark: GoodRX",""],
- ["Bookmark: Health Sherpa",""],
- ["Fill out your Blueprint Goal Sheet","Under Start Here in this portal."],
- ["Complete 5 leader shadowing sessions","Log each one in the Shadowing Log."],
- ["Complete the Underwriting Scavenger Hunt","Under Underwriting in this portal."]
+ ["Create your business Gmail","Use it as your primary (or) secondary email for every business account. See the examples below.",
+  `<ol><li>Go to <strong>gmail.com</strong> and click <strong>Create account → For work or my business</strong>.</li><li>Pick a professional address using your last name — see the examples at the bottom of this page (e.g. YourName.InsuranceSolutions@gmail.com).</li><li>Add a recovery phone and email so you never lose access.</li><li>Use this address for every business tool you set up below.</li></ol>`],
+ ["Set up Vanilla Soft","Dialer & lead management.",
+  `<ol><li>Ask your team leader for your Vanilla Soft login.</li><li>Sign in through your team's Vanilla Soft link and change your password on first login.</li><li>Do a test dial with your FTA to confirm your audio and caller ID work.</li></ol>`],
+ ["Set up Next Gen","",
+  `<ol><li>Ask your team leader to send your Next Gen invite to your business Gmail.</li><li>Open the invite email, create your password, and sign in.</li><li>Confirm with your FTA that your account is linked to the team correctly.</li></ol>`],
+ ["Set up Fort Lauderdale USHA","",
+  `<ol><li>Get the Fort Lauderdale USHA link and your credentials from your team leader.</li><li>Sign in and save the login in your browser.</li><li>Look around the portal — this is where team resources and updates live.</li></ol>`],
+ ["Connect your Gmail Calendar","",
+  `<ol><li>Go to <strong>calendar.google.com</strong> while signed in to your business Gmail.</li><li>On your phone, add the same Google account so appointments sync everywhere.</li><li>Turn on notifications — you'll use this calendar for every client appointment and follow-up.</li></ol>`],
+ ["Bookmark: Gmail","Browser bookmarks bar — keep every tool one click away.",`<p>Open <strong>gmail.com</strong> signed in to your business account, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Google Calendar","",`<p>Open <strong>calendar.google.com</strong>, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Google Sheets (Home)","",`<p>Open <strong>sheets.google.com</strong>, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Fort Lauderdale USHA","",`<p>Open the Fort Lauderdale USHA link from your leader, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Next Gen","",`<p>Open your Next Gen login page, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Vanilla Soft","",`<p>Open your Vanilla Soft login page, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: USHA Portal","",`<p>Open the USHA agent portal, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Outlook USHA Email","",`<p>Open your USHA Outlook email in the browser, then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: GoodRX","",`<p>Open <strong>goodrx.com</strong> — you'll use it to look up client medications — then:</p>${BOOKMARK_HOW}`],
+ ["Bookmark: Health Sherpa","",`<p>Open <strong>healthsherpa.com</strong> — you'll use it to quote Marketplace plans — then:</p>${BOOKMARK_HOW}`],
+ ["Fill out your Blueprint Goal Sheet","Under Start Here in this portal.",
+  `<ol><li>Open the <a href="#" data-go="goals">Blueprint Goal Sheet</a> in this portal.</li><li>Pick your first-year income target and write five 12-month and five 3-year goals.</li><li>Type your name and signature, then print a copy for your leader.</li></ol>`],
+ ["Complete 5 leader shadowing sessions","Log each one in the Shadowing Log.",
+  `<ol><li>Ask a leader when you can sit in on their next presentation.</li><li>After each session, open the <a href="#" data-go="shadow">Shadowing Log</a> and record the date, the leader, and what you learned.</li><li>Print the log and have each leader sign their session.</li></ol>`],
+ ["Complete the Underwriting Scavenger Hunt","Under Underwriting in this portal.",
+  `<ol><li>In your USHA portal, open <strong>Resources → Underwriting Guides</strong> and get the Premier Choice/Advantage guideline.</li><li>Press <strong>Ctrl+F</strong> to search it as you work through the <a href="#" data-go="hunt">Scavenger Hunt</a> in this portal.</li><li>Answer Underwritten or ACA for every condition, then review your answers with your FTA or FSL.</li></ol>`]
 ];
 
 /* ---------- helpers ---------- */
@@ -722,12 +746,15 @@ $("#themeToggle").addEventListener("click",()=>{
 });
 const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement.dataset.theme=savedTheme;
 
+/* ---------- logo: use logo.png if it exists, else keep the SVG crest ---------- */
+(()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="logo.png";})();
+
 /* ---------- checklist ---------- */
 (()=>{
   const wrap=$("#chklist"); const done=store.get("checklist",{});
-  wrap.innerHTML=CHECKLIST.map((c,i)=>`<label class="check${done[i]?" done":""}"><input type="checkbox" data-i="${i}" ${done[i]?"checked":""}><span><span class="lbl" style="font-weight:600">${esc(c[0])}</span>${c[1]?`<br><span class="hint">${esc(c[1])}</span>`:""}</span></label>`).join("");
+  wrap.innerHTML=CHECKLIST.map((c,i)=>`<div class="check${done[i]?" done":""}"><input type="checkbox" id="chk${i}" data-i="${i}" ${done[i]?"checked":""}><span style="flex:1"><label for="chk${i}" style="cursor:pointer"><span class="lbl" style="font-weight:600">${esc(c[0])}</span>${c[1]?`<br><span class="hint">${esc(c[1])}</span>`:""}</label>${c[2]?`<details class="how"><summary>How to do this</summary><div class="howbody">${c[2]}</div></details>`:""}</span></div>`).join("");
   const bar=()=>{const d=store.get("checklist",{});const n=Object.values(d).filter(Boolean).length;$("#chkbar").style.width=(100*n/CHECKLIST.length)+"%";};
-  wrap.addEventListener("change",e=>{const i=e.target.dataset.i;const d=store.get("checklist",{});d[i]=e.target.checked;store.set("checklist",d);e.target.closest(".check").classList.toggle("done",e.target.checked);bar();});
+  wrap.addEventListener("change",e=>{if(!e.target.matches("input[type=checkbox]"))return;const i=e.target.dataset.i;const d=store.get("checklist",{});d[i]=e.target.checked;store.set("checklist",d);e.target.closest(".check").classList.toggle("done",e.target.checked);bar();});
   bar();
 })();
 
@@ -816,19 +843,6 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
       ||`<p class="hint">No matching term.</p>`;
   };
   render(); $("#vocabsearch").addEventListener("input",e=>render(e.target.value));
-})();
-
-/* ---------- contacts ---------- */
-(()=>{
-  const tb=$("#contable tbody");
-  const render=q=>{
-    q=(q||"").toLowerCase();
-    tb.innerHTML=CONTACTS.filter(c=>!q||c.join(" ").toLowerCase().includes(q))
-      .map(c=>`<tr><td>${esc(c[0])}</td><td style="font-weight:600">${esc(c[1])}</td>
-      <td class="contact-links"><a href="tel:${c[2].replace(/\D/g,"")}">${c[2]}</a></td>
-      <td class="contact-links">${c[3]?`<a href="mailto:${c[3]}">${esc(c[3])}</a>`:""}</td></tr>`).join("");
-  };
-  render(); $("#consearch").addEventListener("input",e=>render(e.target.value));
 })();
 
 /* ---------- licenses ---------- */
