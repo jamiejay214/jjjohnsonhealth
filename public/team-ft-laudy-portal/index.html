@@ -179,6 +179,20 @@ textarea.goal, input.goal{
 .hint{font-size:.8rem; color:var(--muted)}
 .contact-links a{white-space:nowrap}
 mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
+.medlegend{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px}
+.medfilter{background:var(--panel); border:1px solid var(--line2); color:var(--muted); border-radius:99px; padding:7px 14px; cursor:pointer; font:600 .82rem/1 inherit; display:inline-flex; align-items:center; gap:7px}
+.medfilter:hover{border-color:var(--gold)}
+.medfilter.active{background:var(--gold-dim); border-color:var(--gold); color:var(--gold-bright)}
+.medfilter:focus-visible{outline:2px solid var(--ocean); outline-offset:2px}
+.dot{width:10px; height:10px; border-radius:99px; display:inline-block}
+.dot.bad{background:var(--bad)} .dot.warn{background:var(--gold)} .dot.good{background:var(--ok)}
+tr.m-decline td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
+tr.m-caution td:first-child{box-shadow:inset 3px 0 0 var(--gold)}
+tr.m-ok td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+.uwtag{font-size:.72rem; font-weight:700; letter-spacing:.03em; padding:2px 9px; border-radius:99px; white-space:nowrap}
+.uwtag.decline{background:var(--bad-bg); color:var(--bad)}
+.uwtag.caution{background:var(--gold-dim); color:var(--gold)}
+.uwtag.ok{background:var(--ok-bg); color:var(--ok)}
 /* hero (welcome) */
 .hero{
   text-align:center; padding:34px 20px 30px; margin:0 0 26px;
@@ -612,9 +626,16 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 <!-- ================= MEDS ================= -->
 <section class="view" id="view-meds">
   <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Common Medication List</h1>
-  <p class="sub">Type any drug name or condition to check it instantly during a call.</p></div>
+  <p class="sub">Type any drug name or condition to check it instantly during a call. Each medication is flagged by the chart's own underwriting rules.</p></div>
   <input class="searchbox" id="medsearch" type="search" placeholder="Search medication or condition&hellip; e.g. Lisinopril, anxiety" aria-label="Search medications">
-  <div class="tblwrap"><table id="medtable"><thead><tr><th>Drug name</th><th>Condition</th></tr></thead><tbody></tbody></table></div>
+  <div class="medlegend">
+    <button class="medfilter active" data-f="all">All</button>
+    <button class="medfilter" data-f="decline"><span class="dot bad"></span> Decline</button>
+    <button class="medfilter" data-f="caution"><span class="dot warn"></span> Approvable w/ rules</button>
+    <button class="medfilter" data-f="ok"><span class="dot good"></span> Usually OK</button>
+  </div>
+  <div class="tblwrap"><table id="medtable"><thead><tr><th>Drug name</th><th>Condition</th><th>Underwriting</th></tr></thead><tbody></tbody></table></div>
+  <p class="hint" style="margin:-6px 0 16px">Flags summarize the rules on this page — <strong style="color:var(--bad)">red</strong> = an always-decline category, <strong style="color:var(--gold)">amber</strong> = approvable only if the rules below are met, <strong style="color:var(--ok)">green</strong> = usually approvable. Always confirm in the Underwriting Guide or with your FTA before quoting.</p>
   <div class="grid2">
     <div class="callout red"><h4>ALWAYS a decline</h4><ul style="margin:6px 0 0; padding-left:18px">
       <li>Currently taking PAIN PILLS for ongoing pain</li>
@@ -974,13 +995,28 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 /* ---------- meds ---------- */
 (()=>{
   const tb=$("#medtable tbody");
-  const render=q=>{
-    q=(q||"").toLowerCase();
-    tb.innerHTML=MEDS.filter(m=>!q||m[0].toLowerCase().includes(q)||m[1].toLowerCase().includes(q))
-      .map(m=>`<tr><td style="font-weight:600">${esc(m[0])}</td><td>${esc(m[1])}</td></tr>`).join("")
-      ||`<tr><td colspan="2" class="hint">No match — check the underwriting guide or ask your FTA.</td></tr>`;
+  // Classify a condition using the chart's own rules. Unknowns fall to
+  // "caution" — never a false "OK" — since over-flagging is the safe direction.
+  const status=cond=>{
+    const c=cond.toLowerCase();
+    if(/bipolar|schizophren|diabetes|insulin|blood thinner|addiction|rheumatoid|arthritis|overactive bladder|\bpain\b/.test(c))return"decline";
+    if(/cholesterol|hypothyroid|heartburn|gerd|asthma|gout|prostate|herpes|bowel|migraine|sleep aid/.test(c))return"ok";
+    return"caution"; // HBP, anxiety, depression, ADHD, seizures, steroids, HIV, hepatitis, muscle relaxers, etc.
   };
-  render(); $("#medsearch").addEventListener("input",e=>render(e.target.value));
+  const LABEL={decline:"Decline",caution:"Approvable w/ rules",ok:"Usually OK"};
+  let filter="all";
+  const render=()=>{
+    const q=($("#medsearch").value||"").toLowerCase();
+    const rows=MEDS.map(m=>[m[0],m[1],status(m[1])])
+      .filter(m=>(filter==="all"||m[2]===filter)&&(!q||m[0].toLowerCase().includes(q)||m[1].toLowerCase().includes(q)));
+    tb.innerHTML=rows.map(m=>`<tr class="m-${m[2]}"><td style="font-weight:600">${esc(m[0])}</td><td>${esc(m[1])}</td><td><span class="uwtag ${m[2]}">${LABEL[m[2]]}</span></td></tr>`).join("")
+      ||`<tr><td colspan="3" class="hint">No match — check the underwriting guide or ask your FTA.</td></tr>`;
+  };
+  render();
+  $("#medsearch").addEventListener("input",render);
+  $$(".medfilter").forEach(b=>b.addEventListener("click",()=>{
+    filter=b.dataset.f; $$(".medfilter").forEach(x=>x.classList.toggle("active",x===b)); render();
+  }));
 })();
 
 /* ---------- height & weight ---------- */
