@@ -104,8 +104,9 @@ tbody tr:hover{background:var(--gold-dim)}
   <div id="app">
     <div class="stats" id="stats"></div>
 
-    <div class="card" id="pendCard" style="display:none; border-color:var(--gold)">
-      <h3>⚑ Waiting on your approval</h3>
+    <div class="card" id="pendCard" style="border:2px solid var(--gold); background:var(--gold-dim)">
+      <h3 style="font-size:1.25rem">⚑ Pending Approvals <span id="pendCount" class="pill" style="font-size:.9rem"></span></h3>
+      <p class="hint" style="margin:0 0 12px">New people who signed up appear here. Press <strong style="color:var(--ok)">Accept</strong> to unlock the full portal for them, or <strong style="color:var(--bad)">Decline</strong> to remove them.</p>
       <div id="pendList"></div>
     </div>
 
@@ -224,15 +225,17 @@ function render(){
     <div class="stat"><div class="n">${activeWeek}</div><div class="l">Active this week</div></div>
     <div class="stat"><div class="n">${done}</div><div class="l">Fully onboarded</div></div>`;
 
-  $("#pendCard").style.display=pending.length?"block":"none";
-  $("#pendList").innerHTML=pending.map(p=>`
+  $("#pendCount").textContent=pending.length;
+  $("#pendCount").style.background=pending.length?"var(--bad-bg)":"var(--ok-bg)";
+  $("#pendCount").style.color=pending.length?"var(--bad)":"var(--ok)";
+  $("#pendList").innerHTML=pending.length?pending.map(p=>`
     <div class="pend">
       <div><strong>${esc(p.full_name)||"(no name)"}</strong> · <span class="hint">${esc(p.email)} · signed up ${new Date(p.created_at).toLocaleDateString()}</span></div>
       <div style="display:flex; gap:8px">
-        <button class="btn ok" data-approve="${p.id}">Approve</button>
-        <button class="btn danger" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">Deny &amp; remove</button>
+        <button class="btn ok" data-approve="${p.id}">✓ Accept</button>
+        <button class="btn danger" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">✗ Decline</button>
       </div>
-    </div>`).join("");
+    </div>`).join(""):`<p class="hint" style="margin:0">No one is waiting for approval right now. When someone signs up on the portal, they'll show up here.</p>`;
 
   const q=($("#q").value||"").toLowerCase(), fs=$("#fStatus").value, sort=$("#fSort").value;
   let list=agents.filter(p=>(!q||(p.full_name+" "+p.email).toLowerCase().includes(q))&&(!fs||(fs==="pending"?!p.approved:p.approved)));
