@@ -78,8 +78,7 @@ nav.side button.navlink{
   color:var(--text); font:inherit; font-size:.92rem; padding:7px 10px; border-radius:6px;
 }
 nav.side button.navlink:hover{background:var(--gold-dim)}
-body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"]){opacity:.45}
-body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"])::after{content:" 🔒"; font-size:.75em}
+body:not(.unlocked) nav.side .grp{display:none}
 body:not(.unlocked) .members-only{display:none}
 body.unlocked #gateCard{display:none}
 nav.side button.navlink.active{background:var(--gold-dim); color:var(--gold-bright); font-weight:600; box-shadow:inset 2px 0 0 var(--gold)}
