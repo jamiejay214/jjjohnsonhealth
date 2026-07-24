@@ -78,7 +78,7 @@ nav.side button.navlink{
   color:var(--text); font:inherit; font-size:.92rem; padding:7px 10px; border-radius:6px;
 }
 nav.side button.navlink:hover{background:var(--gold-dim)}
-body:not(.unlocked) nav.side .grp{display:none}
+body:not(.unlocked) nav.side .grp:not(.grp-public){display:none}
 body:not(.unlocked) .members-only{display:none}
 body.unlocked #gateCard{display:none}
 nav.side button.navlink.active{background:var(--gold-dim); color:var(--gold-bright); font-weight:600; box-shadow:inset 2px 0 0 var(--gold)}
@@ -290,8 +290,11 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <div class="t2">FT. Laudy</div>
     <div class="t3">2026 Onboarding</div>
   </div>
-  <div class="grp"><div class="grp-label">Start Here</div>
+  <div class="grp grp-public"><div class="grp-label">Start Here</div>
     <button class="navlink" data-view="welcome">Welcome Letter</button>
+    <button class="navlink" data-view="meetteam">Meet the Team</button>
+  </div>
+  <div class="grp"><div class="grp-label">Your Onboarding</div>
     <button class="navlink" data-view="checklist">Onboarding Checklist</button>
     <button class="navlink" data-view="goals">Blueprint Goal Sheet</button>
     <button class="navlink" data-view="shadow">Shadowing Log</button>
@@ -358,11 +361,6 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
       <div class="p"><div class="nm">Team FT. Laudy Leadership</div><div class="rl">Fort Lauderdale, FL</div></div>
     </div>
   </div>
-  <div class="card">
-    <h3 style="text-align:center; font-size:1.3rem; margin-bottom:4px">Meet the Team</h3>
-    <p class="hint" style="text-align:center; margin:0 0 20px">Your leadership — reach out any time.</p>
-    <div class="teamgrid" id="teamgrid"></div>
-  </div>
   <div class="grid2 members-only">
     <div class="card"><h3>New here? Start with these</h3>
       <ol style="margin:0; padding-left:20px">
@@ -380,6 +378,15 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
         <li><a href="#" data-go="objections">Objection handlers</a></li>
       </ul>
     </div>
+  </div>
+</section>
+
+<!-- ================= MEET THE TEAM ================= -->
+<section class="view" id="view-meetteam">
+  <div class="page-head"><div class="eyebrow">Start Here</div><h1>Meet the Team</h1>
+  <p class="sub">Your leadership — reach out any time.</p></div>
+  <div class="card">
+    <div class="teamgrid" id="teamgrid"></div>
   </div>
 </section>
 
@@ -929,8 +936,9 @@ const Cloud={
 };
 
 /* ---------- navigation ---------- */
+const PUBLIC_VIEWS=["welcome","meetteam"];
 function go(view){
-  if(!UNLOCKED&&view!=="welcome"){
+  if(!UNLOCKED&&!PUBLIC_VIEWS.includes(view)){
     view="welcome";
     const gate=$("#gateCard"); if(gate){gate.scrollIntoView({behavior:"smooth"});gate.style.outline="2px solid var(--gold)";setTimeout(()=>gate.style.outline="",1200);}
   }
