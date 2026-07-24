@@ -404,6 +404,17 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <div class="card"><h3>3 · Five goals for the next 3 years</h3><div id="goals3y"></div></div>
   </div>
   <div class="card">
+    <h3>4 · Weekly hours committed</h3>
+    <p class="hint" style="margin:0 0 12px">What hours are you committing to work, Monday through Sunday? Enter a time range (e.g. "9:00 AM – 6:00 PM") or "Off" for days you're not working.</p>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px">
+      <button class="btn ghost hoursfill" data-fill="weekdays">Fill: weekdays 9–6, weekends off</button>
+      <button class="btn ghost hoursfill" data-fill="clear">Clear all</button>
+    </div>
+    <div class="tblwrap"><table>
+      <tbody id="hoursTable"></tbody>
+    </table></div>
+  </div>
+  <div class="card">
     <h3>Commitment</h3>
     <div class="grid2">
       <div><label class="hint" for="gname">Print name</label><input class="goal" id="gname" data-store="goal-name"></div>
@@ -1006,10 +1017,19 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 (()=>{
   const mk=(host,prefix)=>{host.innerHTML=[1,2,3,4,5].map(n=>`<input class="goal" data-store="${prefix}-${n}" placeholder="${n}." style="margin-bottom:8px">`).join("");};
   mk($("#goals12"),"goal-12mo"); mk($("#goals3y"),"goal-3yr");
+  const DAYS=[["mon","Monday"],["tue","Tuesday"],["wed","Wednesday"],["thu","Thursday"],["fri","Friday"],["sat","Saturday"],["sun","Sunday"]];
+  $("#hoursTable").innerHTML=DAYS.map(([k,label])=>`<tr><td style="font-weight:600; width:130px; white-space:nowrap">${label}</td><td style="padding:8px 14px"><input class="goal" data-store="goal-hours-${k}" placeholder="e.g. 9:00 AM – 6:00 PM, or Off" style="margin:0"></td></tr>`).join("");
   $$("[data-store]").forEach(el=>{el.value=store.get(el.dataset.store,"");el.addEventListener("input",()=>store.set(el.dataset.store,el.value));});
   const inc=store.get("goal-income","");
   $$(".inc").forEach(b=>{if(b.dataset.v===inc){b.classList.remove("ghost")}
     b.addEventListener("click",()=>{store.set("goal-income",b.dataset.v);$$(".inc").forEach(x=>x.classList.add("ghost"));b.classList.remove("ghost");});});
+  $$(".hoursfill").forEach(b=>b.addEventListener("click",()=>{
+    DAYS.forEach(([k],i)=>{
+      const el=$(`[data-store="goal-hours-${k}"]`);
+      const v=b.dataset.fill==="clear"?"":(i<5?"9:00 AM – 6:00 PM":"Off");
+      el.value=v; store.set(`goal-hours-${k}`,v);
+    });
+  }));
 })();
 
 /* ---------- shadowing ---------- */
