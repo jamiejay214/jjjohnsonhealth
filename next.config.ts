@@ -5,6 +5,13 @@ import type { NextConfig } from "next";
 // `beforeFiles`, so they take effect before Next.js's own page routing
 // (a plain vercel.json rewrite runs *after* the filesystem and never fires
 // for "/").
+//
+// Only "/" and "/admin" are rewritten here. Every asset the portal HTML
+// loads (logo, PDFs, etc.) must use an absolute path like
+// "/team-ft-laudy-portal/whatever.ext" rather than a bare relative path —
+// the browser resolves relative URLs against the visible address ("/"),
+// not the internal rewrite destination, so a relative "foo.pdf" 404s here
+// even though the real file exists at /team-ft-laudy-portal/foo.pdf.
 const TEAMFTL_HOSTS = ["teamftl.online", "www.teamftl.online"];
 
 const nextConfig: NextConfig = {
@@ -20,7 +27,6 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         ...forHosts("/", "/team-ft-laudy-portal/index.html"),
         ...forHosts("/admin", "/team-ft-laudy-portal/admin.html"),
-        ...forHosts("/logo.png", "/team-ft-laudy-portal/logo.png"),
       ],
       afterFiles: [],
       fallback: [],

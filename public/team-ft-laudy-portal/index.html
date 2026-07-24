@@ -178,8 +178,8 @@ textarea.goal, input.goal{
 .hint{font-size:.8rem; color:var(--muted)}
 .contact-links a{white-space:nowrap}
 mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
-.pdfwrap{border:1px solid var(--line2); border-radius:10px; overflow:hidden; background:var(--panel); height:80vh; min-height:480px}
-.pdfwrap embed{width:100%; height:100%; border:0}
+.pdfwrap{border:1px solid var(--line2); border-radius:10px; overflow:hidden; background:var(--panel); height:85vh; min-height:520px}
+.pdfwrap iframe{width:100%; height:100%; border:0; display:block}
 .medlegend{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px}
 .medfilter{background:var(--panel); border:1px solid var(--line2); color:var(--muted); border-radius:99px; padding:7px 14px; cursor:pointer; font:600 .82rem/1 inherit; display:inline-flex; align-items:center; gap:7px}
 .medfilter:hover{border-color:var(--gold)}
@@ -234,7 +234,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 <div class="shell">
 <nav class="side" id="sidenav">
   <div class="brand">
-    <img class="logoimg" src="logo.png" alt="Team FT. Laudy logo">
+    <img class="logoimg" src="/team-ft-laudy-portal/logo.png" alt="Team FT. Laudy logo">
     <svg viewBox="0 0 200 190" role="img" aria-label="Team FT. Laudy crest">
       <g id="crest">
       <defs>
@@ -325,7 +325,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 <!-- ================= WELCOME ================= -->
 <section class="view" id="view-welcome">
   <div class="hero">
-    <img class="logoimg" src="logo.png" alt="">
+    <img class="logoimg" src="/team-ft-laudy-portal/logo.png" alt="">
     <svg viewBox="0 0 200 190" aria-hidden="true"><use href="#crest"/></svg>
     <div class="eyebrow">Earn more income · Create more impact · Have more freedom</div>
     <h1>Congratulations &amp; Welcome to Team FT. Laudy!</h1>
@@ -641,11 +641,13 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Underwriting Guide</h1>
   <p class="sub">The Premier Choice/Advantage Underwriting Guideline. Use Ctrl+F / Cmd+F inside the viewer to search, or open it in a new tab.</p></div>
   <div style="display:flex; gap:10px; flex-wrap:wrap; margin:0 0 14px">
-    <a class="btn" href="underwriting-guide.pdf" target="_blank" rel="noopener">Open in new tab</a>
-    <a class="btn ghost" href="underwriting-guide.pdf" download>Download PDF</a>
+    <a class="btn" href="/team-ft-laudy-portal/underwriting-guide.pdf" target="_blank" rel="noopener">Open in new tab</a>
+    <a class="btn ghost" href="/team-ft-laudy-portal/underwriting-guide.pdf" download>Download PDF</a>
   </div>
-  <div class="pdfwrap"><embed src="underwriting-guide.pdf#view=FitH" type="application/pdf"></div>
-  <p class="hint" style="margin-top:10px">If the guide doesn't display above (some phones can't preview PDFs), use <strong>Open in new tab</strong>.</p>
+  <div class="pdfwrap"><iframe src="/team-ft-laudy-portal/underwriting-guide.pdf" title="Underwriting Guide PDF">
+    <p style="padding:20px">Your browser can't preview PDFs inline. <a href="/team-ft-laudy-portal/underwriting-guide.pdf">Download the Underwriting Guide</a>.</p>
+  </iframe></div>
+  <p class="hint" style="margin-top:10px">All 75 pages are viewable above — scroll or use your browser's built-in PDF search (Ctrl+F / Cmd+F). If it doesn't display (some phones can't preview PDFs), use <strong>Open in new tab</strong>.</p>
 </section>
 
 <!-- ================= MEDS ================= -->
@@ -930,7 +932,7 @@ $("#themeToggle").addEventListener("click",()=>{
 const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement.dataset.theme=savedTheme;
 
 /* ---------- logo: use logo.png if it exists, else keep the SVG crest ---------- */
-(()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="logo.png";})();
+(()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="/team-ft-laudy-portal/logo.png";})();
 
 /* ---------- auth UI + approval gate ---------- */
 (()=>{
