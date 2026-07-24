@@ -78,8 +78,7 @@ nav.side button.navlink{
   color:var(--text); font:inherit; font-size:.92rem; padding:7px 10px; border-radius:6px;
 }
 nav.side button.navlink:hover{background:var(--gold-dim)}
-body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"]){opacity:.45}
-body:not(.unlocked) nav.side button.navlink:not([data-view="welcome"])::after{content:" 🔒"; font-size:.75em}
+body:not(.unlocked) nav.side .grp{display:none}
 body:not(.unlocked) .members-only{display:none}
 body.unlocked #gateCard{display:none}
 nav.side button.navlink.active{background:var(--gold-dim); color:var(--gold-bright); font-weight:600; box-shadow:inset 2px 0 0 var(--gold)}
@@ -179,6 +178,8 @@ textarea.goal, input.goal{
 .hint{font-size:.8rem; color:var(--muted)}
 .contact-links a{white-space:nowrap}
 mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
+.pdfwrap{border:1px solid var(--line2); border-radius:10px; overflow:hidden; background:var(--panel); height:80vh; min-height:480px}
+.pdfwrap embed{width:100%; height:100%; border:0}
 .medlegend{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px}
 .medfilter{background:var(--panel); border:1px solid var(--line2); color:var(--muted); border-radius:99px; padding:7px 14px; cursor:pointer; font:600 .82rem/1 inherit; display:inline-flex; align-items:center; gap:7px}
 .medfilter:hover{border-color:var(--gold)}
@@ -293,10 +294,11 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <button class="navlink" data-view="approval">Approval &amp; Referral Call</button>
   </div>
   <div class="grp"><div class="grp-label">Underwriting</div>
+    <button class="navlink" data-view="uwguide">Underwriting Guide</button>
     <button class="navlink" data-view="meds">Medication Chart</button>
     <button class="navlink" data-view="hw">Height &amp; Weight</button>
     <button class="navlink" data-view="age">2026 Age Chart</button>
-    <button class="navlink" data-view="hunt">Scavenger Hunt</button>
+    <button class="navlink" data-view="hunt">Underwriting Questionnaire</button>
   </div>
   <div class="grp"><div class="grp-label">Reference</div>
     <button class="navlink" data-view="vocab">Vocabulary</button>
@@ -623,6 +625,18 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   <div class="say"><div class="who">Close</div>Thank you (NAME). Remember, I'm here for anything you need. Please do not hesitate to contact me. I look forward to speaking with you soon. Have a great day!</div>
 </section>
 
+<!-- ================= UW GUIDE ================= -->
+<section class="view" id="view-uwguide">
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Underwriting Guide</h1>
+  <p class="sub">The Premier Choice/Advantage Underwriting Guideline. Use Ctrl+F / Cmd+F inside the viewer to search, or open it in a new tab.</p></div>
+  <div style="display:flex; gap:10px; flex-wrap:wrap; margin:0 0 14px">
+    <a class="btn" href="underwriting-guide.pdf" target="_blank" rel="noopener">Open in new tab</a>
+    <a class="btn ghost" href="underwriting-guide.pdf" download>Download PDF</a>
+  </div>
+  <div class="pdfwrap"><embed src="underwriting-guide.pdf#view=FitH" type="application/pdf"></div>
+  <p class="hint" style="margin-top:10px">If the guide doesn't display above (some phones can't preview PDFs), use <strong>Open in new tab</strong>.</p>
+</section>
+
 <!-- ================= MEDS ================= -->
 <section class="view" id="view-meds">
   <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Common Medication List</h1>
@@ -691,8 +705,8 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 
 <!-- ================= HUNT ================= -->
 <section class="view" id="view-hunt">
-  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Underwriting Scavenger Hunt</h1>
-  <p class="sub">Training exercise: get the Premier Choice/Advantage Underwriting Guideline from your portal (Resources → Underwriting Guides), hit Ctrl+F, and decide for each condition — is the client approvable for an <strong>underwritten</strong> plan, or do they belong on an <strong>ACA / Obamacare</strong> plan? Check your answer for each.</p></div>
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Underwriting Questionnaire</h1>
+  <p class="sub">Training exercise: open the <a href="#" data-go="uwguide">Underwriting Guide</a>, search it (Ctrl+F / Cmd+F), and decide for each condition — is the client approvable for an <strong>underwritten</strong> plan, or do they belong on an <strong>ACA / Obamacare</strong> plan? Check your answer for each.</p></div>
   <div class="progress"><i id="huntbar"></i></div>
   <div class="tblwrap"><table id="hunttable"><thead><tr><th>Condition</th><th style="text-align:center">Underwritten</th><th style="text-align:center">ACA / Obamacare</th></tr></thead><tbody></tbody></table></div>
   <p class="hint">Answers save on this device. Review your calls with your FTA or FSL when you're done.</p>
@@ -784,8 +798,8 @@ const CHECKLIST=[
   `<ol><li>Open the <a href="#" data-go="goals">Blueprint Goal Sheet</a> in this portal.</li><li>Pick your first-year income target and write five 12-month and five 3-year goals.</li><li>Type your name and signature, then print a copy for your leader.</li></ol>`],
  ["Complete 5 leader shadowing sessions","Log each one in the Shadowing Log.",
   `<ol><li>Ask a leader when you can sit in on their next presentation.</li><li>After each session, open the <a href="#" data-go="shadow">Shadowing Log</a> and record the date, the leader, and what you learned.</li><li>Print the log and have each leader sign their session.</li></ol>`],
- ["Complete the Underwriting Scavenger Hunt","Under Underwriting in this portal.",
-  `<ol><li>In your USHA portal, open <strong>Resources → Underwriting Guides</strong> and get the Premier Choice/Advantage guideline.</li><li>Press <strong>Ctrl+F</strong> to search it as you work through the <a href="#" data-go="hunt">Scavenger Hunt</a> in this portal.</li><li>Answer Underwritten or ACA for every condition, then review your answers with your FTA or FSL.</li></ol>`]
+ ["Complete the Underwriting Questionnaire","Under Underwriting in this portal.",
+  `<ol><li>Open the <a href="#" data-go="uwguide">Underwriting Guide</a> in this portal — it's the Premier Choice/Advantage Underwriting Guideline PDF.</li><li>Use your browser's PDF search (Ctrl+F / Cmd+F) as you work through the <a href="#" data-go="hunt">Underwriting Questionnaire</a>.</li><li>Answer Underwritten or ACA for every condition, then review your answers with your FTA or FSL.</li></ol>`]
 ];
 
 /* ---------- helpers ---------- */
