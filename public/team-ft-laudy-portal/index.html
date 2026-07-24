@@ -207,6 +207,15 @@ tr.m-ok td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
 .sig .p{text-align:center}
 .sig .nm{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-weight:700; font-size:1.05rem; color:var(--gold-bright)}
 .sig .rl{font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted)}
+.teamgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px}
+.teamcard{text-align:center}
+.avatar{width:100px; height:100px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center;
+  font:700 1.7rem/1 "Palatino Linotype",Palatino,Georgia,serif; color:#14100a;
+  background:linear-gradient(135deg,var(--gold),var(--gold-bright)); border:2px solid var(--gold-bright); overflow:hidden}
+.avatar img{width:100%; height:100%; object-fit:cover; display:block}
+.tname{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-weight:700; color:var(--gold-bright); font-size:1.02rem}
+.trole{font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:2px 0 8px}
+.tphone{font-weight:600; white-space:nowrap}
 .themebtn{background:none; border:1px solid var(--line); color:var(--muted); border-radius:7px; padding:6px 12px; cursor:pointer; font:inherit; font-size:.8rem}
 /* real logo file replaces the SVG crest when logo.png exists next to this page */
 .logoimg{display:none; max-width:100%; border-radius:10px}
@@ -348,6 +357,11 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <div class="sig">
       <div class="p"><div class="nm">Team FT. Laudy Leadership</div><div class="rl">Fort Lauderdale, FL</div></div>
     </div>
+  </div>
+  <div class="card">
+    <h3 style="text-align:center; font-size:1.3rem; margin-bottom:4px">Meet the Team</h3>
+    <p class="hint" style="text-align:center; margin:0 0 20px">Your leadership — reach out any time.</p>
+    <div class="teamgrid" id="teamgrid"></div>
   </div>
   <div class="grid2 members-only">
     <div class="card"><h3>New here? Start with these</h3>
@@ -778,6 +792,12 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 
 <script>
 /* ---------- data ---------- */
+const TEAM=[
+  {name:"Garrett Laughlin",role:"Regional Sales Leader",phone:"(954) 200-1982",photo:"garrett-laughlin"},
+  {name:"Nick Finazzo",role:"Divisional Sales Leader",phone:"(954) 650-8547",photo:"nick-finazzo"},
+  {name:"May Rojas",role:"Satellite Leader",phone:"(786) 970-2058",photo:"may-rojas"},
+  {name:"Jamie Johnson",role:"Field Sales Leader",phone:"954-805-7882",photo:"jamie-johnson"}
+];
 const MEDS=[["Abilify","Bipolar/Schizophrenia"],["Adderall","ADHD"],["Albuterol","Asthma/Sleep Apnea"],["Allopurinol","Gout"],["Alosetron","Irritable Bowel Syndrome"],["Alprazolam","Anxiety"],["Ambien","Sleep Aid"],["Amlodipine","High Blood Pressure"],["Amphetamine Salt Combo","ADHD"],["Armour Thyroid","Hypothyroidism"],["Ativan","Anxiety"],["Atorvastatin","High Cholesterol"],["Buspirone","Anxiety"],["Chlorpromazine","Bipolar/Schizophrenia"],["Clonazepam","Anxiety"],["Clonidine","HBP/ADHD"],["Concerta","ADHD"],["Cyclobenzaprine","Muscle Relaxer"],["Cymbalta","Anxiety"],["Diazepam","Anxiety"],["Ditropan","Overactive Bladder"],["Effexor","Anxiety"],["Flexeril","Muscle Relaxer"],["Flomax","Enlarged Prostate"],["Fluoxetine","Depression"],["Focalin","ADHD"],["Gabapentin","Pain"],["Harvoni","Hepatitis C"],["Humira","Rheumatoid Arthritis"],["Hydrocodone","Pain"],["Hydrochlorothiazide (HCTZ)","Water Pill (HBP)"],["Insulin","Diabetes"],["Imitrex","Migraines"],["Keppra","Seizures"],["Klonopin","Anxiety"],["Levothyroxine","Hypothyroidism"],["Lexapro","Depression"],["Lipitor","High Cholesterol"],["Lisinopril","High Blood Pressure"],["Lopressor","High Blood Pressure"],["Lorazepam","Anxiety"],["Lortab","Pain"],["Losartan","High Blood Pressure"],["Lunesta","Sleep Aid"],["Meloxicam","Arthritis"],["Metformin (pill)","Diabetes"],["Methylphenidate","ADHD"],["Methadone","Drug Addiction"],["Metoprolol","High Blood Pressure"],["Myrbetriq","Overactive Bladder"],["Naltrexone","Alcohol/Drug Addiction"],["Naproxen","Pain/Migraines"],["NP Thyroid","Hypothyroidism"],["Omeprazole","Heartburn/GERD"],["Oxybutynin","Overactive Bladder"],["Oxycodone","Pain"],["Paroxetine","Depression"],["Percocet","Pain"],["Plavix","Blood Thinner"],["Prednisone","Steroid"],["Prilosec (OTC)","Heartburn/GERD"],["Propranolol","High Blood Pressure"],["Prozac","Depression"],["Risperidone","Bipolar/Schizophrenia"],["Ritalin","ADHD"],["Rizatriptan","Migraines"],["Sertraline","Anxiety"],["Simvastatin","High Cholesterol"],["Strattera","ADHD"],["Synthroid","Hypothyroidism"],["Suboxone","Drug Addiction"],["Tamsulosin","Enlarged Prostate"],["Topamax","Migraines"],["Toprol","High Blood Pressure"],["Tricor","High Cholesterol"],["Tramadol","Pain"],["Trazodone","Depression/Sleep Aid"],["Truvada","HIV/AIDS"],["Valtrex","Herpes"],["Vicodin","Pain"],["Vivitrol","Alcohol/Drug Addiction"],["Vivlodex","Arthritis"],["Vyvanse","ADHD"],["Wellbutrin","Depression"],["Xanax","Anxiety"],["Zocor","High Cholesterol"],["Zoloft","Anxiety/Depression"]];
 const VOCAB=[["FNB","First New Business."],["In Force","Your policy is in effect; client is approved."],["AV — Annualized Volume","The value of the policy being sold (premium × 12 months)."],["OTF","On-the-fly sale."],["OCC / 2CC","One Call Close vs. Two Calls."],["Jetty Thursday","A magical day where things get quickly approved if they are clean apps."],["Taken Rate","Your score with the insurance company on policies submitted vs. “taken” — approved or in the works."],["V-Call","Verification call, second step of the application process."],["APS","“Attending Physician's Statement.” They are pulling medical records from the doctor's office — get with your FTA and ask how you can help expedite the process."],["Underwritten vs. Guaranteed Issue","When a plan requires medical questions and health-history records to be pulled for an approval vs. none at all."],["Posting Deals in the GroupMe #","Monthly premium × 12. Example: $300/month premium × 12 = 3.6#."],["Association (AIBC) (SCA) (ABC)","A supplemental part of our plans — how we make our residual income as well. (Not available in all states, such as MD, NV, UT, KS, SD.) Includes: Accident/Injury Protection · AD&D (accidental death & dismemberment) · 24/7 Telemedicine with MDLive."],["Freedom Life / Enterprise / National Foundation","Underwriting company — varies by state."],["ACA","Affordable Care Act · Obamacare · Marketplace."],["Deductible","The total amount you'll pay for healthcare services before your insurance starts to cover a portion of costs."],["HMO — Health Maintenance Organization","Usually limits coverage to providers within the plan's network, and requires a doctor's referral to see specialists."],["PPO — Preferred Provider Organization","Usually covers some of the cost of out-of-network providers (but not as much as in-network), and doesn't require a referral to see specialists. Nationwide coverage."],["EPO — Exclusive Provider Organization","Usually limits coverage to providers within the plan's network, but doesn't require a referral to see specialists. Exclusively — almost no one accepts it: 1 PCP, 1 OBGYN, 1 cardiologist, etc., so appointments take forever because only one doc is available."],["POS — Point of Service","Like an HMO, but more limited doctor choice. Also requires a referral from your primary-care doctor to see a specialist."],["Max Out of Pocket (MOOP)","The most you'll have to pay for healthcare services during your coverage period (typically 12 months) — your safety net in a major health problem. Monthly premiums don't count toward your out-of-pocket max."],["Co-Pay","Upfront payment provided for the service at hand; doesn't go toward the deductible."],["Co-insurance","The % of coverage after the deductible that is owed by you vs. the insurance company until your max OOP is reached. Most common: 80/20, 70/30. Example: a client has a $1M cancer bill, a $5K deductible, an $8,550 MOOP, and 80/20 co-insurance — they pay the deductible first, then the insurance company pays 80% of the remainder while the client pays 20%, until they reach their MOOP. The deductible usually applies to the MOOP."],["EOB","Explanation of Benefits — not a bill. It explains how the benefits were applied for the service, as well as the in-network repricing applied."],["In-Network vs. Out-of-Network","If a doctor/facility is in-network, your insurance is accepted there. Out-of-network is treated as if you don't even have insurance — they just won't cover you."],["PCP","Primary Care Physician."],["Preventative Care","Yearly wellness: visit · blood work · vaccinations · pap smear / mammogram / colonoscopy."]];
 const LICENSES=[[1,"Texas","Life, Accident, Health & HMO",55.60,10.00],[3,"Georgia *","Life, Accident & Sickness",125.60,16.00],[5,"Colorado","Accident & Health, Life",147.60,0],[6,"North Carolina","Life, Accident & Health or Sickness",149.60,20.00],[7,"Virginia","Health, Life & Annuities",35.60,10.00],[9,"Illinois","Life, Health",362.18,0],[10,"Tennessee","Life, Accident & Health",55.60,15.00],[11,"Maryland","Accident and Health or Sickness, Life",59.60,0],[12,"Ohio","Accident & Health, Life",25.60,30.00],[13,"Indiana","Life, Accident & Health",95.60,0],[14,"Utah","Accident & Health or Sickness, Life",80.60,5.00],[15,"South Carolina","Accident & Health or Sickness, Life",30.60,0],[16,"Louisiana","Accident & Health or Sickness, Life",80.60,30.00],[17,"Missouri","Accident & Health or Sickness, Life",105.60,0],[18,"Michigan","Life, Accident & Health",15.60,5.00],[19,"Oklahoma","Life, Accident & Health or Sickness",125.60,30.00],[20,"Nevada","Life, Health",190.60,15.00],[21,"Kentucky","Health, Life",155.60,50.00],[22,"Kansas","Accident & Health or Sickness, Life",85.60,5.00],[23,"Alabama","Life, Accident & Health or Sickness",86.00,40.00],[24,"Mississippi","Accident & Health or Sickness, Life",106.60,25.00],[25,"Arkansas","Accident, Health & Sickness, Life",81.00,0],[26,"Iowa","Life, Accident & Health",55.60,10.00],[27,"Montana","Life, Disability (Health)",105.60,0],[28,"Nebraska","Life & Annuities, Sickness, Accident & Health",55.60,10.00],[29,"West Virginia","Accident & Health or Sickness, Life",55.60,25.00],[30,"Wyoming","Accident & Health or Sickness, Life",155.60,15.00],[31,"Wisconsin","Life, Accident & Health",155.60,30.00],[32,"South Dakota","Accident & Health or Sickness, Life",35.60,20.00],[33,"Delaware","Accident & Health, Life",105.60,50.00]];
@@ -933,6 +953,26 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 
 /* ---------- logo: use logo.png if it exists, else keep the SVG crest ---------- */
 (()=>{const probe=new Image(); probe.onload=()=>document.body.classList.add("has-logo"); probe.src="/team-ft-laudy-portal/logo.png";})();
+
+/* ---------- meet the team ---------- */
+(()=>{
+  const initials=n=>n.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
+  const host=$("#teamgrid");
+  host.innerHTML=TEAM.map((p,i)=>`
+    <div class="teamcard">
+      <div class="avatar" id="tav-${i}">${initials(p.name)}</div>
+      <div class="tname">${esc(p.name)}</div>
+      <div class="trole">${esc(p.role)}</div>
+      <a class="tphone" href="tel:${p.phone.replace(/\D/g,"")}">${esc(p.phone)}</a>
+    </div>`).join("");
+  // Swap in a real headshot the moment /team-ft-laudy-portal/team/<photo>.jpg exists —
+  // until then the initials avatar above stays as the fallback.
+  TEAM.forEach((p,i)=>{
+    const img=new Image();
+    img.onload=()=>{const av=$("#tav-"+i); if(av)av.innerHTML=`<img src="${img.src}" alt="${esc(p.name)}">`;};
+    img.src=`/team-ft-laudy-portal/team/${p.photo}.jpg`;
+  });
+})();
 
 /* ---------- auth UI + approval gate ---------- */
 (()=>{
