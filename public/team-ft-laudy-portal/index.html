@@ -826,7 +826,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
           <select id="aimLevel">
             <option value="1">FTA — Field Sales Leader / Platinum / Field Training / Sr. Agent</option>
             <option value="2">Career Agent</option>
-            <option value="3">WA — Writing Agent</option>
+            <option value="3" selected>WA — Writing Agent</option>
           </select>
         </div>
         <div>
@@ -1340,6 +1340,7 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   // [workbook tier, name, monthly price, FTA bonus, Career bonus, WA bonus]
   // Listed highest to lowest; Executive Diamond is the default selection.
   const DEFAULT_TIER=6;
+  const DEFAULT_LEVEL=3;   // new agents start as WA — keep this in sync with the markup
   const TIERS=[[6,"Executive Diamond",89.95,23.00,18.00,18.00],
     [5,"Diamond",62.95,16.75,13.00,13.00],
     [4,"Emerald",52.95,12.00,9.00,9.00],
@@ -1391,7 +1392,7 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   host.addEventListener("change",calc);
   $("#aimReset").addEventListener("click",()=>{
     ["#aimHealthPrem","#aimMed","#aimLife","#aimInc","#aimDen","#aimAccPrem"].forEach(id=>$(id).value="");
-    $("#aimMonths").value=8; $("#aimLevel").value="1"; $("#aimHealthProd").value="1";
+    $("#aimMonths").value=8; $("#aimLevel").value=String(DEFAULT_LEVEL); $("#aimHealthProd").value="1";
     $("#aimAccType").value="0"; tierSel.value=String(DEFAULT_TIER); calc();
   });
   calc();
