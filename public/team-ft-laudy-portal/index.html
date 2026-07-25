@@ -840,7 +840,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
       <div class="aim-row">
         <select id="aimHealthProd">
           <option value="1">Premier Choice</option>
-          <option value="2">Premier Advantage</option>
+          <option value="2" selected>Premier Advantage</option>
         </select>
         <input id="aimHealthPrem" type="number" min="0" step="0.01" placeholder="0.00" aria-label="Health monthly premium">
         <span class="out" id="aimHealthAdv">$0.00</span>
@@ -1333,14 +1333,19 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
    workbook (commission-calc.xlsx). Column order everywhere is
    [FTA, Career, WA], matching contract level 1/2/3. */
 (()=>{
-  const HEALTH={1:[.1825,.1625,.16], 2:[.175,.1575,.15]};          // Premier Choice / Premier Advantage
+  // Premier Choice and Premier Advantage pay the same. The workbook rated
+  // Advantage lower and knocked $20 off the premium before commission; per
+  // the team both products price identically, so one rate set covers both
+  // and the product dropdown is just a record of what was written.
+  const HEALTH_RATE=[.1825,.1625,.16];
   const ANC={med:[.79,.75,.70], life:[.74,.70,.65], inc:[.48,.45,.42], den:[.1975,.18,.1625]};
   const ACC_RATE=[.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
-  const PREMIER_ADV_DEDUCT=20;                                      // Premier Advantage: premium less $20
   // [workbook tier, name, monthly price, FTA bonus, Career bonus, WA bonus]
   // Listed highest to lowest; Executive Diamond is the default selection.
   const DEFAULT_TIER=6;
-  const DEFAULT_LEVEL=3;   // new agents start as WA — keep this in sync with the markup
+  // Both of these mirror the `selected` attributes in the markup — keep in sync.
+  const DEFAULT_LEVEL=3;     // new agents start as WA
+  const DEFAULT_PRODUCT=2;   // Premier Advantage
   const TIERS=[[6,"Executive Diamond",89.95,23.00,18.00,18.00],
     [5,"Diamond",62.95,16.75,13.00,13.00],
     [4,"Emerald",52.95,12.00,9.00,9.00],
@@ -1359,9 +1364,8 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     const li=+$("#aimLevel").value-1;
     const months=Math.max(0,parseFloat($("#aimMonths").value)||0);
 
-    const hp=+$("#aimHealthProd").value, hPrem=num("#aimHealthPrem");
-    const hComm=Math.max(0, hp===2 ? hPrem-PREMIER_ADV_DEDUCT : hPrem);
-    const hAdv=hComm*HEALTH[hp][li]*months;
+    const hPrem=num("#aimHealthPrem");
+    const hAdv=hPrem*HEALTH_RATE[li]*months;
 
     let ancPrem=0, ancAdv=0;
     [["med","#aimMed"],["life","#aimLife"],["inc","#aimInc"],["den","#aimDen"]].forEach(([k,id])=>{
@@ -1392,7 +1396,7 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   host.addEventListener("change",calc);
   $("#aimReset").addEventListener("click",()=>{
     ["#aimHealthPrem","#aimMed","#aimLife","#aimInc","#aimDen","#aimAccPrem"].forEach(id=>$(id).value="");
-    $("#aimMonths").value=8; $("#aimLevel").value=String(DEFAULT_LEVEL); $("#aimHealthProd").value="1";
+    $("#aimMonths").value=8; $("#aimLevel").value=String(DEFAULT_LEVEL); $("#aimHealthProd").value=String(DEFAULT_PRODUCT);
     $("#aimAccType").value="0"; tierSel.value=String(DEFAULT_TIER); calc();
   });
   calc();
