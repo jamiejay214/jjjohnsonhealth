@@ -443,7 +443,11 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
       <div><label class="hint" for="gsig">Signature (type your name)</label><input class="goal" id="gsig" data-store="goal-sig" style="font-family:Georgia,serif; font-style:italic"></div>
     </div>
   </div>
-  <button class="btn" onclick="window.print()">Print goal sheet</button>
+  <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
+    <button class="btn" id="goalSaveBtn">Save</button>
+    <span id="goalSaveMsg" class="hint" style="font-weight:600"></span>
+    <button class="btn ghost" onclick="window.print()">Print a copy</button>
+  </div>
 </section>
 
 <!-- ================= SHADOWING ================= -->
@@ -1083,6 +1087,25 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
       el.value=v; store.set(`goal-hours-${k}`,v);
     });
   }));
+  const saveBtn=$("#goalSaveBtn"), saveMsg=$("#goalSaveMsg");
+  saveBtn.addEventListener("click",async()=>{
+    if(!Cloud.session){saveMsg.style.color="var(--bad)";saveMsg.textContent="Sign in first so your leader can see this.";return;}
+    saveBtn.disabled=true; saveMsg.style.color="var(--muted)"; saveMsg.textContent="Saving…";
+    try{
+      // Re-push every goal-sheet field so Save always writes a complete record,
+      // even if an auto-save was missed.
+      $("#view-goals").querySelectorAll("[data-store]").forEach(el=>Cloud.queue(el.dataset.store,el.value));
+      const inc=store.get("goal-income",""); if(inc)Cloud.queue("goal-income",inc);
+      await Cloud.flush();
+      saveMsg.style.color="var(--ok)";
+      saveMsg.textContent="✓ Saved — your team leader can now see this.";
+    }catch(e){
+      saveMsg.style.color="var(--bad)";
+      saveMsg.textContent="Couldn't save — check your connection and try again.";
+    }
+    saveBtn.disabled=false;
+    setTimeout(()=>{saveMsg.textContent="";},6000);
+  });
 })();
 
 /* ---------- shadowing ---------- */

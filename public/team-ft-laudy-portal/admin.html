@@ -298,6 +298,10 @@ function openDrawer(id){
       ${[1,2,3,4,5].map(n=>`<div class="notecard">${n}. ${esc(g("goal-12mo-"+n))||"<span class='hint'>empty</span>"}</div>`).join("")}
       <h3 style="margin:14px 0 6px">3-year goals</h3>
       ${[1,2,3,4,5].map(n=>`<div class="notecard">${n}. ${esc(g("goal-3yr-"+n))||"<span class='hint'>empty</span>"}</div>`).join("")}
+      <h3 style="margin:14px 0 6px">Weekly hours committed</h3>
+      <div class="kv">
+        ${[["mon","Monday"],["tue","Tuesday"],["wed","Wednesday"],["thu","Thursday"],["fri","Friday"],["sat","Saturday"],["sun","Sunday"]].map(([k,label])=>`<span class="k">${label}</span><span>${esc(g("goal-hours-"+k))||"<span class='hint'>—</span>"}</span>`).join("")}
+      </div>
     </div>
     <div class="dsec" id="dShadow">
       ${shadowSessions.map(x=>`<div class="notecard"><strong>Session ${x.n}</strong> — ${x.date?esc(x.date):"<span class='hint'>no date</span>"} · Leader: ${x.leader?esc(x.leader):"<span class='hint'>—</span>"}<br>${x.notes?esc(x.notes):"<span class='hint'>No notes yet.</span>"}</div>`).join("")}
