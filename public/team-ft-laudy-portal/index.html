@@ -1337,18 +1337,22 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   const ANC={med:[.79,.75,.70], life:[.74,.70,.65], inc:[.48,.45,.42], den:[.1975,.18,.1625]};
   const ACC_RATE=[.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
   const SECURE_ADV_DEDUCT=20;                                       // Secure Advantage: premium less $20
-  // [tier, monthly price, FTA bonus, Career bonus, WA bonus]
-  const TIERS=[[1,22.95,4.50,2.80,2.80],[2,32.95,6.25,4.25,4.25],[3,42.95,7.90,5.50,5.50],
-    [4,52.95,12.00,9.00,9.00],[5,62.95,16.75,13.00,13.00],[6,89.95,23.00,18.00,18.00],
-    [7,66.95,9.90,7.35,7.35],[8,76.95,11.65,8.80,8.80],[9,86.95,13.30,10.05,10.05],
-    [10,96.95,17.40,13.55,13.55],[11,106.95,22.15,17.55,17.55],[12,133.95,28.40,22.55,22.55]];
+  // [workbook tier, name, monthly price, FTA bonus, Career bonus, WA bonus]
+  // Listed highest to lowest; Executive Diamond is the default selection.
+  const DEFAULT_TIER=6;
+  const TIERS=[[6,"Executive Diamond",89.95,23.00,18.00,18.00],
+    [5,"Diamond",62.95,16.75,13.00,13.00],
+    [4,"Emerald",52.95,12.00,9.00,9.00],
+    [3,"Sapphire",42.95,7.90,5.50,5.50],
+    [2,"Ruby",32.95,6.25,4.25,4.25]];
 
   const money=n=>(n<0?"-$":"$")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
   const num=id=>{const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:0;};
 
   const tierSel=$("#aimTier");
-  tierSel.innerHTML=`<option value="0">None</option>`+
-    TIERS.map(t=>`<option value="${t[0]}"${t[0]===6?" selected":""}>Tier ${t[0]} — ${money(t[1])}/mo</option>`).join("");
+  tierSel.innerHTML=
+    TIERS.map(t=>`<option value="${t[0]}"${t[0]===DEFAULT_TIER?" selected":""}>${esc(t[1])} — ${money(t[2])}/mo</option>`).join("")+
+    `<option value="0">None — $0.00</option>`;
 
   const calc=()=>{
     const li=+$("#aimLevel").value-1;
@@ -1370,7 +1374,7 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     const accAdv=accComm*months*ACC_RATE[li];
 
     const t=TIERS.find(x=>x[0]===+tierSel.value);
-    const assocPrice=t?t[1]:0, assocBonus=t?t[2+li]:0;
+    const assocPrice=t?t[2]:0, assocBonus=t?t[3+li]:0;
 
     const totalMonthly=hPrem+ancPrem+accPrem+assocPrice;
     $("#aimHealthAdv").textContent=money(hAdv);
@@ -1388,7 +1392,7 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   $("#aimReset").addEventListener("click",()=>{
     ["#aimHealthPrem","#aimMed","#aimLife","#aimInc","#aimDen","#aimAccPrem"].forEach(id=>$(id).value="");
     $("#aimMonths").value=8; $("#aimLevel").value="1"; $("#aimHealthProd").value="1";
-    $("#aimAccType").value="0"; tierSel.value="6"; calc();
+    $("#aimAccType").value="0"; tierSel.value=String(DEFAULT_TIER); calc();
   });
   calc();
 })();
