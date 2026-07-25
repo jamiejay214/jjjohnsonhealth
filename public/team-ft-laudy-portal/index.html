@@ -172,6 +172,34 @@ details.how .howbody p{margin:6px 0}
 .tool label{font-size:.8rem; font-weight:600; color:var(--muted)}
 .tool input,.tool select{background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:7px; padding:8px 12px; font:inherit}
 .tool .result{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-size:1.15rem; color:var(--gold-bright); font-weight:700}
+/* commission calculator (AIM) */
+.aim{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--panel); margin:0 0 18px}
+.aim-head{background:var(--panel2); border-bottom:1px solid var(--line); padding:16px 20px; text-align:center}
+.aim-title{font-family:"Palatino Linotype",Palatino,Georgia,serif; font-size:1.35rem; font-weight:700; color:var(--gold-bright)}
+.aim-sub{font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-top:2px}
+.aim-body{padding:18px 20px}
+.aim-sec{font-size:.7rem; text-transform:uppercase; letter-spacing:.16em; color:var(--gold); font-weight:700; margin:20px 0 8px; padding-bottom:6px; border-bottom:1px solid var(--line2)}
+.aim-top{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.aim-top label{font-size:.72rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:600; display:block; margin-bottom:4px}
+.aim-row{display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr); gap:12px; align-items:center; padding:5px 0}
+.aim-row .lbl{font-weight:600; font-size:.92rem}
+.aim-rowhead span{font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); font-weight:600}
+.aim-rowhead span+span{text-align:right}
+.aim select,.aim input{width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line2); border-radius:7px; padding:8px 11px; font:inherit; font-size:.9rem}
+.aim input[type=number]{text-align:right; font-variant-numeric:tabular-nums}
+.aim .out{text-align:right; font-variant-numeric:tabular-nums; font-weight:600; color:var(--muted); font-size:.92rem}
+.aim-tot{display:flex; justify-content:space-between; align-items:baseline; gap:14px; padding:9px 0; border-bottom:1px solid var(--line2)}
+.aim-tot .k{font-size:.92rem}
+.aim-tot .v{font-variant-numeric:tabular-nums; font-weight:700; color:var(--gold-bright); font-size:1.05rem}
+.aim-tot.big{background:var(--gold-dim); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-top:10px; border-bottom:1px solid var(--line)}
+.aim-tot.big .k{font-weight:700}
+.aim-tot.big .v{font-size:1.5rem; font-family:"Palatino Linotype",Palatino,Georgia,serif}
+@media(max-width:620px){
+  .aim-top{grid-template-columns:1fr}
+  .aim-row{grid-template-columns:1fr 1fr; row-gap:4px}
+  .aim-row .lbl,.aim-row select:first-child{grid-column:1/-1}
+  .aim-rowhead{display:none}
+}
 textarea.goal, input.goal{
   width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line2);
   border-radius:7px; padding:9px 12px; font:inherit; resize:vertical;
@@ -783,14 +811,86 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 <section class="view" id="view-commission">
   <div class="page-head"><div class="eyebrow">Reference</div><h1>Commission Calculator</h1>
   <p class="sub">Estimate your potential commission earnings based on your policies.</p></div>
-  <div class="card" style="background:var(--panel2); border-left:3px solid var(--gold)">
-    <p style="margin-top:0"><strong>Important:</strong> This is not a guaranteed amount but a roundabout calculation, as commissions are subject to change.</p>
+  <div class="callout"><h4>Read this first</h4>This is <strong>not a guaranteed amount</strong> — it is a roundabout calculation for demonstration purposes only. Commission rates vary by state and are subject to change at the sole discretion of USHealth Advisors.</div>
+
+  <div class="aim">
+    <div class="aim-head">
+      <div class="aim-title">Agent Income Model (AIM)</div>
+      <div class="aim-sub">Standard State</div>
+    </div>
+    <div class="aim-body">
+
+      <div class="aim-top">
+        <div>
+          <label for="aimLevel">Contract level</label>
+          <select id="aimLevel">
+            <option value="1">FTA — Field Sales Leader / Platinum / Field Training / Sr. Agent</option>
+            <option value="2">Career Agent</option>
+            <option value="3">WA — Writing Agent</option>
+          </select>
+        </div>
+        <div>
+          <label for="aimMonths">Advance months</label>
+          <input id="aimMonths" type="number" min="0" max="12" step="1" value="8">
+        </div>
+      </div>
+
+      <div class="aim-sec">Health product</div>
+      <div class="aim-row aim-rowhead"><span>Product</span><span>Mo. premium</span><span>Advance</span></div>
+      <div class="aim-row">
+        <select id="aimHealthProd">
+          <option value="1">Premier Choice</option>
+          <option value="2">Secure Advantage</option>
+        </select>
+        <input id="aimHealthPrem" type="number" min="0" step="0.01" placeholder="0.00" aria-label="Health monthly premium">
+        <span class="out" id="aimHealthAdv">$0.00</span>
+      </div>
+
+      <div class="aim-sec">Ancillary products</div>
+      <div class="aim-row aim-rowhead"><span>Product</span><span>Mo. premium</span><span>Advance</span></div>
+      <div class="aim-row"><span class="lbl">MedGuard</span>
+        <input id="aimMed" type="number" min="0" step="0.01" placeholder="0.00" aria-label="MedGuard monthly premium">
+        <span class="out" id="aimMedAdv">$0.00</span></div>
+      <div class="aim-row"><span class="lbl">Life Protector</span>
+        <input id="aimLife" type="number" min="0" step="0.01" placeholder="0.00" aria-label="Life Protector monthly premium">
+        <span class="out" id="aimLifeAdv">$0.00</span></div>
+      <div class="aim-row"><span class="lbl">Income Protector</span>
+        <input id="aimInc" type="number" min="0" step="0.01" placeholder="0.00" aria-label="Income Protector monthly premium">
+        <span class="out" id="aimIncAdv">$0.00</span></div>
+      <div class="aim-row"><span class="lbl">Dental</span>
+        <input id="aimDen" type="number" min="0" step="0.01" placeholder="0.00" aria-label="Dental monthly premium">
+        <span class="out" id="aimDenAdv">$0.00</span></div>
+      <div class="aim-row">
+        <select id="aimAccType" aria-label="Accident Protector type">
+          <option value="0">Accident Protector — none</option>
+          <option value="1">Accident Protector (Single)</option>
+          <option value="2">Accident Protector (Couple)</option>
+          <option value="3">Accident Protector (Family)</option>
+        </select>
+        <input id="aimAccPrem" type="number" min="0" step="0.01" placeholder="0.00" aria-label="Accident Protector monthly premium">
+        <span class="out" id="aimAccAdv">$0.00</span></div>
+
+      <div class="aim-sec">Association product</div>
+      <div class="aim-row">
+        <select id="aimTier" aria-label="Association product tier"></select>
+        <span class="out" id="aimAssocPrice">$0.00</span>
+        <span class="out">&nbsp;</span>
+      </div>
+
+      <div class="aim-sec">Totals</div>
+      <div class="aim-tot"><span class="k">Total Monthly Premium</span><span class="v" id="aimTotMo">$0.00</span></div>
+      <div class="aim-tot"><span class="k">Annualized Volume (AV)</span><span class="v" id="aimAV">$0.00</span></div>
+      <div class="aim-tot"><span class="k">Association Bonus <span class="hint">(monthly credit)</span></span><span class="v" id="aimBonus">$0.00</span></div>
+      <div class="aim-tot big"><span class="k">Total Advance</span><span class="v" id="aimTotAdv">$0.00</span></div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn ghost" id="aimReset" type="button">Reset</button>
+        <a class="btn ghost" href="/team-ft-laudy-portal/commission-calc.xlsx" download>Download the Excel version</a>
+      </div>
+    </div>
   </div>
-  <div style="margin-bottom:20px">
-    <p style="margin:0 0 14px">Download the spreadsheet below to calculate your estimated commission earnings:</p>
-    <a href="/team-ft-laudy-portal/commission-calc.xlsx" download class="btn" style="display:inline-block">Download Commission Calculator (Excel)</a>
-  </div>
-  <p class="hint">Questions about commission calculations? Reach out to your team leader or the finance team.</p>
+
+  <p class="hint">The association bonus is a monthly credit and is not included in the advance. Questions about commission calculations? Reach out to your team leader.</p>
 </section>
 
 </div></main>
@@ -1226,6 +1326,71 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   };
   $("#lictable thead").addEventListener("click",e=>{const k=e.target.dataset.k;if(!k)return;dir=k===sortK?-dir:1;sortK=k;render();});
   render();
+})();
+
+/* ---------- commission calculator (AIM) ----------
+   Rates, fees and tier tables taken directly from the Agent Income Model
+   workbook (commission-calc.xlsx). Column order everywhere is
+   [FTA, Career, WA], matching contract level 1/2/3. */
+(()=>{
+  const HEALTH={1:[.1825,.1625,.16], 2:[.175,.1575,.15]};          // Premier Choice / Secure Advantage
+  const ANC={med:[.79,.75,.70], life:[.74,.70,.65], inc:[.48,.45,.42], den:[.1975,.18,.1625]};
+  const ACC_RATE=[.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
+  const SECURE_ADV_DEDUCT=20;                                       // Secure Advantage: premium less $20
+  // [tier, monthly price, FTA bonus, Career bonus, WA bonus]
+  const TIERS=[[1,22.95,4.50,2.80,2.80],[2,32.95,6.25,4.25,4.25],[3,42.95,7.90,5.50,5.50],
+    [4,52.95,12.00,9.00,9.00],[5,62.95,16.75,13.00,13.00],[6,89.95,23.00,18.00,18.00],
+    [7,66.95,9.90,7.35,7.35],[8,76.95,11.65,8.80,8.80],[9,86.95,13.30,10.05,10.05],
+    [10,96.95,17.40,13.55,13.55],[11,106.95,22.15,17.55,17.55],[12,133.95,28.40,22.55,22.55]];
+
+  const money=n=>(n<0?"-$":"$")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const num=id=>{const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:0;};
+
+  const tierSel=$("#aimTier");
+  tierSel.innerHTML=`<option value="0">None</option>`+
+    TIERS.map(t=>`<option value="${t[0]}"${t[0]===6?" selected":""}>Tier ${t[0]} — ${money(t[1])}/mo</option>`).join("");
+
+  const calc=()=>{
+    const li=+$("#aimLevel").value-1;
+    const months=Math.max(0,parseFloat($("#aimMonths").value)||0);
+
+    const hp=+$("#aimHealthProd").value, hPrem=num("#aimHealthPrem");
+    const hComm=Math.max(0, hp===2 ? hPrem-SECURE_ADV_DEDUCT : hPrem);
+    const hAdv=hComm*HEALTH[hp][li]*months;
+
+    let ancPrem=0, ancAdv=0;
+    [["med","#aimMed"],["life","#aimLife"],["inc","#aimInc"],["den","#aimDen"]].forEach(([k,id])=>{
+      const p=num(id), a=p*months*ANC[k][li];
+      ancPrem+=p; ancAdv+=a;
+      $(id+"Adv").textContent=money(a);
+    });
+
+    const accType=+$("#aimAccType").value, accPrem=num("#aimAccPrem");
+    const accComm=accType ? Math.max(0, accPrem-ACC_FEE[accType]) : 0;
+    const accAdv=accComm*months*ACC_RATE[li];
+
+    const t=TIERS.find(x=>x[0]===+tierSel.value);
+    const assocPrice=t?t[1]:0, assocBonus=t?t[2+li]:0;
+
+    const totalMonthly=hPrem+ancPrem+accPrem+assocPrice;
+    $("#aimHealthAdv").textContent=money(hAdv);
+    $("#aimAccAdv").textContent=money(accAdv);
+    $("#aimAssocPrice").textContent=money(assocPrice);
+    $("#aimTotMo").textContent=money(totalMonthly);
+    $("#aimAV").textContent=money(totalMonthly*12);
+    $("#aimBonus").textContent=money(assocBonus);
+    $("#aimTotAdv").textContent=money(hAdv+ancAdv+accAdv);
+  };
+
+  const host=$("#view-commission");
+  host.addEventListener("input",calc);
+  host.addEventListener("change",calc);
+  $("#aimReset").addEventListener("click",()=>{
+    ["#aimHealthPrem","#aimMed","#aimLife","#aimInc","#aimDen","#aimAccPrem"].forEach(id=>$(id).value="");
+    $("#aimMonths").value=8; $("#aimLevel").value="1"; $("#aimHealthProd").value="1";
+    $("#aimAccType").value="0"; tierSel.value="6"; calc();
+  });
+  calc();
 })();
 
 /* ---------- boot ---------- */
