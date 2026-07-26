@@ -1340,8 +1340,10 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   // Advantage lower and knocked $20 off the premium before commission; per
   // the team both products price identically, so one rate set covers both
   // and the product dropdown is just a record of what was written.
-  const HEALTH_RATE=[.1825,.1625,.16];
-  const ANC={med:[.79,.75,.70], life:[.74,.70,.65], inc:[.48,.45,.42], den:[.1975,.18,.1625]};
+  // WA figures below are the team's current rates. The FTA and Career columns
+  // still come from the workbook and have not been re-confirmed.
+  const HEALTH_RATE=[.1825,.1625,.20];
+  const ANC={med:[.79,.75,.75], life:[.74,.70,.65], inc:[.48,.45,.42], den:[.1975,.18,.18]};
   const ACC_RATE=[.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
   // [workbook tier, name, monthly price, FTA bonus, Career bonus, WA bonus]
   // Listed highest to lowest; Executive Diamond is the default selection.
