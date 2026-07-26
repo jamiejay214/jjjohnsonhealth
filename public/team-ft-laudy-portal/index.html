@@ -210,6 +210,30 @@ section.view.on > *:nth-child(n+5){animation-delay:.22s}
 .page-head p.sub{color:var(--muted); margin:0; max-width:62ch; font-size:1.02rem}
 /* topbar (mobile) */
 .topbar{display:none}
+/* ---------- activity tracker ---------- */
+.actgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px}
+.actcell label{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); font-weight:700; margin-bottom:5px}
+.actcell input{
+  width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line2);
+  border-radius:10px; padding:12px; font:700 1.3rem/1 "Palatino Linotype",Palatino,Georgia,serif;
+  text-align:center; font-variant-numeric:tabular-nums;
+}
+.actcell input:focus{border-color:var(--gold); box-shadow:0 0 0 3px var(--ring); outline:none}
+.statrow{display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px}
+.statbox{background:var(--panel2); border:1px solid var(--line2); border-radius:12px; padding:14px 16px; text-align:center}
+.statbox .n{font:700 1.6rem/1.1 "Palatino Linotype",Palatino,Georgia,serif; color:var(--gold-bright); font-variant-numeric:tabular-nums}
+.statbox .l{font-size:.68rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:4px}
+tfoot td{border-top:1px solid var(--line); font-weight:700; color:var(--gold-bright)}
+/* ---------- licence upload ---------- */
+.uploadbox{
+  border:1px dashed var(--line); border-radius:var(--radius); background:var(--panel2);
+  padding:22px; text-align:center; transition:border-color .2s var(--ease), background .2s var(--ease);
+}
+.uploadbox.drag{border-color:var(--gold); background:var(--gold-dim)}
+.uploadbox input[type=file]{display:none}
+.filerow{display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:space-between;
+  background:var(--panel2); border:1px solid var(--line2); border-radius:12px; padding:14px 18px}
+.filerow .fname{font-weight:600; min-width:0; overflow-wrap:anywhere}
 /* ---------- quote banner ---------- */
 .quotebar{
   position:relative; overflow:hidden; display:flex; align-items:center; gap:18px;
@@ -649,6 +673,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <button class="navlink" data-view="classroom">The Classroom</button>
     <button class="navlink" data-view="checklist">Onboarding Checklist</button>
     <button class="navlink" data-view="goals">Goal Sheet</button>
+    <button class="navlink" data-view="activity">Activity Tracker</button>
     <button class="navlink" data-view="shadow">Shadowing Log</button>
   </div>
   <div class="grp"><div class="grp-label">Sales Scripts</div>
@@ -756,6 +781,40 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 <section class="view" id="view-checklist">
   <div class="page-head"><div class="eyebrow">Start Here</div><h1>Onboarding Checklist</h1>
   <p class="sub">Work top to bottom. Click <strong>How to do this</strong> on any item for step-by-step instructions. Your progress is saved on this device automatically.</p></div>
+
+  <div class="card" id="licUploadCard" style="border-color:var(--gold)">
+    <h3 style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap">
+      <span>1. Upload your Florida licence</span>
+      <span class="pill" id="licDocPill">Not uploaded</span>
+    </h3>
+    <p class="hint" style="margin-top:0">Do this first. Upload a PDF or a photo of your Florida insurance licence — your leader can see it from the admin side once it is up. Maximum 10&nbsp;MB.</p>
+
+    <div id="licDocSignedOut" hidden>
+      <p class="hint" style="margin:0">Sign in to upload your licence.</p>
+    </div>
+
+    <div id="licDocUpload" hidden>
+      <label class="uploadbox" id="licDrop" for="licDocFile">
+        <input type="file" id="licDocFile" accept="application/pdf,image/jpeg,image/png,image/heic">
+        <div style="font-weight:600; margin-bottom:4px">Choose a file, or drop it here</div>
+        <div class="hint">PDF, JPG, PNG or HEIC</div>
+      </label>
+      <p class="hint" id="licDocMsg" role="status" aria-live="polite" style="margin:12px 0 0"></p>
+    </div>
+
+    <div id="licDocHave" hidden>
+      <div class="filerow">
+        <span class="fname" id="licDocName"></span>
+        <span style="display:flex; gap:8px; flex-wrap:wrap">
+          <button class="btn ghost" id="licDocView" type="button">View</button>
+          <button class="btn ghost" id="licDocReplace" type="button">Replace</button>
+          <button class="btn ghost" id="licDocRemove" type="button">Remove</button>
+        </span>
+      </div>
+      <p class="hint" id="licDocWhen" style="margin:10px 0 0"></p>
+    </div>
+  </div>
+
   <div class="progress"><i id="chkbar"></i></div>
   <div id="chklist"></div>
   <div class="card">
@@ -817,6 +876,35 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   <p class="sub">Shadow five leader presentations. After each one, log the date, the leader, and what you learned — then have the leader sign off in person.</p></div>
   <div id="shadowlog"></div>
   <button class="btn" onclick="window.print()">Print shadowing log</button>
+</section>
+
+<!-- ================= ACTIVITY TRACKER ================= -->
+<section class="view" id="view-activity">
+  <div class="page-head"><div class="eyebrow">Your Onboarding</div><h1>Activity Tracker</h1>
+  <p class="sub">Log what you did today. Activity is the part you control — the sales follow. Your leader can see these numbers.</p></div>
+
+  <div class="card">
+    <h3 style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap">
+      <span id="actDayLabel">Today</span>
+      <span>
+        <button class="btn ghost" id="actPrev" type="button" style="padding:5px 11px; font-size:.76rem">&larr; Prev</button>
+        <button class="btn ghost" id="actToday" type="button" style="padding:5px 11px; font-size:.76rem">Today</button>
+        <button class="btn ghost" id="actNext" type="button" style="padding:5px 11px; font-size:.76rem">Next &rarr;</button>
+      </span>
+    </h3>
+    <div class="actgrid" id="actInputs"></div>
+    <p class="hint" id="actSaved" role="status" aria-live="polite" style="margin:12px 0 0">Saves as you type.</p>
+  </div>
+
+  <div class="card">
+    <h3>This week</h3>
+    <div class="tblwrap" style="margin-bottom:14px"><table><thead><tr>
+      <th>Day</th><th style="text-align:right">Dials</th><th style="text-align:right">Contacts</th>
+      <th style="text-align:right">Appts</th><th style="text-align:right">Presentations</th><th style="text-align:right">Sales</th>
+    </tr></thead><tbody id="actWeekBody"></tbody>
+    <tfoot><tr id="actWeekTotal"></tr></tfoot></table></div>
+    <div class="statrow" id="actStats"></div>
+  </div>
 </section>
 
 <!-- ================= CLASSROOM ================= -->
@@ -1601,6 +1689,7 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     const p=Cloud.profile;
     UNLOCKED=!!(p&&(p.is_admin||p.approved));
     document.body.classList.toggle("unlocked",UNLOCKED);
+    document.dispatchEvent(new CustomEvent("ftlaudy:authchange"));
     if(Cloud.session&&!UNLOCKED){
       $("#gateTitle").textContent="Account created — waiting on approval";
       $("#gateMsg").textContent="You're signed in! Your team leader just needs to approve your account, then everything unlocks automatically. Check back soon, or ask your leader to approve you.";
@@ -2058,6 +2147,155 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     $("#aimAccType").value="0"; tierSel.value=String(DEFAULT_TIER); calc();
   });
   calc(); renderSales();
+})();
+
+/* ---------- activity tracker ---------- */
+(()=>{
+  const FIELDS=[["d","Dials"],["c","Contacts"],["a","Appts set"],["p","Presentations"],["s","Sales"]];
+  const iso=dt=>`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+  const host=$("#actInputs"); if(!host)return;
+  let day=new Date();
+
+  const all=()=>{const a=store.get("activity",{}); return (a&&typeof a==="object"&&!Array.isArray(a))?a:{};};
+  const dayData=k=>Object.assign({d:0,c:0,a:0,p:0,s:0},all()[k]||{});
+
+  host.innerHTML=FIELDS.map(([k,label])=>
+    `<div class="actcell"><label for="act-${k}">${label}</label>
+     <input id="act-${k}" data-k="${k}" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></div>`).join("");
+
+  const weekOf=d=>{const s=new Date(d); s.setDate(s.getDate()-((s.getDay()+6)%7));   // Monday first
+    return [...Array(7)].map((_,i)=>{const x=new Date(s); x.setDate(s.getDate()+i); return x;});};
+
+  const paintWeek=()=>{
+    const days=weekOf(day), a=all(), tot={d:0,c:0,a:0,p:0,s:0};
+    $("#actWeekBody").innerHTML=days.map(x=>{
+      const k=iso(x), v=dayData(k);
+      FIELDS.forEach(([f])=>tot[f]+=v[f]);
+      return `<tr${k===iso(new Date())?' style="background:var(--gold-dim)"':""}>
+        <td style="font-weight:600">${x.toLocaleDateString(undefined,{weekday:"short"})} <span class="hint">${x.getDate()}/${x.getMonth()+1}</span></td>
+        ${FIELDS.map(([f])=>`<td style="text-align:right">${v[f]||"—"}</td>`).join("")}
+      </tr>`;
+    }).join("");
+    $("#actWeekTotal").innerHTML=`<td>Week total</td>${FIELDS.map(([f])=>`<td style="text-align:right">${tot[f]}</td>`).join("")}`;
+
+    // Consecutive days up to today with anything logged.
+    let streak=0;
+    for(let i=0;i<400;i++){
+      const x=new Date(); x.setDate(x.getDate()-i);
+      const v=a[iso(x)], any=v&&FIELDS.some(([f])=>+v[f]>0);
+      if(any)streak++; else if(i>0)break;
+    }
+    $("#actStats").innerHTML=`
+      <div class="statbox"><div class="n">${tot.d}</div><div class="l">Dials this week</div></div>
+      <div class="statbox"><div class="n">${tot.d?Math.round(100*tot.c/tot.d):0}%</div><div class="l">Dial → contact</div></div>
+      <div class="statbox"><div class="n">${tot.p?Math.round(100*tot.s/tot.p):0}%</div><div class="l">Presentation → sale</div></div>
+      <div class="statbox"><div class="n">${tot.s}</div><div class="l">Sales this week</div></div>
+      <div class="statbox"><div class="n">${streak}</div><div class="l">Day streak</div></div>`;
+  };
+
+  const paintDay=()=>{
+    const k=iso(day), v=dayData(k), today=iso(new Date());
+    $("#actDayLabel").textContent = k===today ? "Today"
+      : day.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"});
+    FIELDS.forEach(([f])=>{$("#act-"+f).value=v[f]||"";});
+    $("#actNext").disabled = k>=today;                    // no logging the future
+    paintWeek();
+  };
+
+  host.addEventListener("input",e=>{
+    const f=e.target.dataset.k; if(!f)return;
+    const a=all(), k=iso(day);
+    const rec=Object.assign({d:0,c:0,a:0,p:0,s:0},a[k]||{});
+    rec[f]=Math.max(0,parseInt(e.target.value,10)||0);
+    if(FIELDS.every(([x])=>!rec[x]))delete a[k]; else a[k]=rec;
+    store.set("activity",a);
+    $("#actSaved").textContent="Saved.";
+    setTimeout(()=>{$("#actSaved").textContent="Saves as you type.";},1500);
+    paintWeek();
+  });
+  $("#actPrev").addEventListener("click",()=>{day.setDate(day.getDate()-1); paintDay();});
+  $("#actNext").addEventListener("click",()=>{day.setDate(day.getDate()+1); paintDay();});
+  $("#actToday").addEventListener("click",()=>{day=new Date(); paintDay();});
+  paintDay();
+})();
+
+/* ---------- Florida licence upload ----------
+   The file goes to Supabase Storage under a folder named for the agent's user
+   id. Storage policies let an agent touch only their own folder, and let
+   admins read every folder — the same shape as the progress table. The
+   filename and upload date are mirrored into progress so the admin console can
+   list it without trawling storage. */
+(()=>{
+  const card=$("#licUploadCard"); if(!card)return;
+  const BUCKET="agent-docs", MAX=10*1024*1024;
+  const box=$("#licDocUpload"), have=$("#licDocHave"), out=$("#licDocSignedOut"),
+        pill=$("#licDocPill"), msg=$("#licDocMsg"), fileIn=$("#licDocFile");
+
+  const meta=()=>{const m=store.get("licdoc",null); return (m&&typeof m==="object")?m:null;};
+  const say=(t,bad)=>{msg.textContent=t; msg.style.color=bad?"var(--bad)":"var(--muted)";};
+
+  const paint=()=>{
+    const signedIn=!!Cloud.session, m=meta();
+    out.hidden=signedIn; box.hidden=!signedIn||!!m; have.hidden=!signedIn||!m;
+    if(m){
+      pill.textContent="Uploaded"; pill.className="pill ok";
+      $("#licDocName").textContent=m.name;
+      $("#licDocWhen").textContent=`Uploaded ${new Date(m.at).toLocaleString()}`
+        +(m.size?` · ${(m.size/1024/1024).toFixed(1)} MB`:"");
+    }else{
+      pill.textContent=signedIn?"Not uploaded":"Sign in to upload";
+      pill.className="pill"+(signedIn?" bad":"");
+    }
+  };
+
+  const path=name=>`${Cloud.session.user.id}/florida-licence${(name.match(/\.[a-z0-9]+$/i)||[""])[0].toLowerCase()}`;
+
+  const upload=async file=>{
+    if(!Cloud.session){say("Sign in first.",true); return;}
+    if(file.size>MAX){say("That file is over 10 MB. Try a smaller scan or a photo.",true); return;}
+    say("Uploading…");
+    const key=path(file.name);
+    const r=await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${encodeURI(key)}`,{
+      method:"POST",
+      headers:{apikey:SB_KEY, Authorization:"Bearer "+Cloud.session.access_token,
+               "x-upsert":"true", "Content-Type":file.type||"application/octet-stream"},
+      body:file});
+    if(!r.ok){
+      let why=""; try{why=(await r.json()).message||"";}catch(e){}
+      say("Upload failed. "+(why||"Try again, or tell your leader."),true); return;
+    }
+    store.set("licdoc",{name:file.name,path:key,size:file.size,type:file.type,at:new Date().toISOString()});
+    say("Uploaded."); paint();
+  };
+
+  // Signed URL, because the bucket is private.
+  const openFile=async()=>{
+    const m=meta(); if(!m||!Cloud.session)return;
+    const r=await fetch(`${SB_URL}/storage/v1/object/sign/${BUCKET}/${encodeURI(m.path)}`,{
+      method:"POST", headers:{apikey:SB_KEY,Authorization:"Bearer "+Cloud.session.access_token,"Content-Type":"application/json"},
+      body:JSON.stringify({expiresIn:3600})});
+    if(!r.ok){alert("Could not open that file. Try uploading it again.");return;}
+    const d=await r.json();
+    window.open(SB_URL+"/storage/v1"+d.signedURL,"_blank","noopener");
+  };
+
+  fileIn.addEventListener("change",()=>{if(fileIn.files[0])upload(fileIn.files[0]); fileIn.value="";});
+  const drop=$("#licDrop");
+  ["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault(); drop.classList.add("drag");}));
+  ["dragleave","drop"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault(); drop.classList.remove("drag");}));
+  drop.addEventListener("drop",e=>{const f=e.dataTransfer.files[0]; if(f)upload(f);});
+
+  $("#licDocView").addEventListener("click",openFile);
+  $("#licDocReplace").addEventListener("click",()=>{have.hidden=true; box.hidden=false; say("");});
+  $("#licDocRemove").addEventListener("click",async()=>{
+    const m=meta(); if(!m||!confirm("Remove your uploaded licence?"))return;
+    await fetch(`${SB_URL}/storage/v1/object/${BUCKET}/${encodeURI(m.path)}`,
+      {method:"DELETE",headers:{apikey:SB_KEY,Authorization:"Bearer "+Cloud.session.access_token}}).catch(()=>{});
+    store.set("licdoc",null); paint(); say("Removed.");
+  });
+
+  paint();
+  document.addEventListener("ftlaudy:authchange",paint);   // re-check after sign-in/out
 })();
 
 /* ---------- boot ---------- */

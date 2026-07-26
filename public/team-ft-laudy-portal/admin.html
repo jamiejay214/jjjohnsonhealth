@@ -162,6 +162,25 @@ tbody tr:hover{background:var(--gold-dim)}
     </div>
 
     <div class="card">
+      <h3>Activity Leaderboard <span class="hint" style="font-weight:400">— from what agents log themselves</span></h3>
+      <div class="row" style="margin-bottom:12px">
+        <div><label for="lbRange">Period</label>
+          <select id="lbRange"><option value="7">Last 7 days</option><option value="30">Last 30 days</option></select></div>
+        <div><label for="lbSort">Rank by</label>
+          <select id="lbSort">
+            <option value="s">Sales</option><option value="p">Presentations</option>
+            <option value="a">Appointments</option><option value="c">Contacts</option><option value="d">Dials</option>
+          </select></div>
+      </div>
+      <p class="hint" id="lbEmpty" hidden style="margin:0">No activity logged yet. Once agents start filling in the Activity Tracker, the board fills in here.</p>
+      <div class="tblwrap" id="lbWrap" hidden><table><thead><tr>
+        <th>#</th><th>Agent</th><th style="text-align:right">Dials</th><th style="text-align:right">Contacts</th>
+        <th style="text-align:right">Appts</th><th style="text-align:right">Pres.</th>
+        <th style="text-align:right">Sales</th><th style="text-align:right">Days logged</th>
+      </tr></thead><tbody id="lbBody"></tbody></table></div>
+    </div>
+
+    <div class="card">
       <h3>Create an agent login</h3>
       <div class="row">
         <div><label for="nName">Full name</label><input id="nName" style="width:190px"></div>
@@ -245,7 +264,27 @@ function agentStats(id){
   let goals=0; for(const k in d.rows){if(k.startsWith("goal-")&&String(d.rows[k]).trim())goals++;}
   const shadow=new Set(Object.keys(d.rows).filter(k=>k.startsWith("shadow-")&&String(d.rows[k]).trim()).map(k=>k.split("-")[1])).size;
   const overall=Math.round(100*((chk/CHECKLIST.length)+(hunt/HUNT.length)+(goals/N_GOALS)+(shadow/N_SHADOW))/4);
-  return {chk,hunt,goals,shadow,overall,last:d.last,rows:d.rows};
+  // Activity totals from the agent's daily log.
+  const act=(d.rows["activity"]&&typeof d.rows["activity"]==="object")?d.rows["activity"]:{};
+  const today=new Date(); today.setHours(0,0,0,0);
+  const sum=days=>{
+    const t={d:0,c:0,a:0,p:0,s:0}; let logged=0;
+    for(const k in act){
+      const dt=new Date(k+"T00:00:00");
+      if(isNaN(dt)||(today-dt)/864e5>=days||dt>today)continue;
+      const v=act[k]||{}; let any=false;
+      for(const f of ["d","c","a","p","s"]){t[f]+=(+v[f]||0); if(+v[f]>0)any=true;}
+      if(any)logged++;
+    }
+    return {...t,logged};
+  };
+  let lastAct=null;
+  for(const k in act){
+    const v=act[k]||{};
+    if(["d","c","a","p","s"].some(f=>+v[f]>0)){const dt=new Date(k+"T00:00:00"); if(!lastAct||dt>lastAct)lastAct=dt;}
+  }
+  const licdoc=(d.rows["licdoc"]&&typeof d.rows["licdoc"]==="object")?d.rows["licdoc"]:null;
+  return {chk,hunt,goals,shadow,overall,last:d.last,rows:d.rows,wk:sum(7),mo:sum(30),lastAct,licdoc};
 }
 async function loadData(){
   const [pr,pg]=await Promise.all([
@@ -287,6 +326,24 @@ function render(){
         <button class="btn danger" data-del="${p.id}" data-name="${esc(p.full_name||p.email)}">✗ Decline</button>
       </div>
     </div>`).join(""):`<p class="hint" style="margin:0">No one is waiting for approval right now. When someone signs up on the portal, they'll show up here.</p>`;
+
+  /* ----- activity leaderboard ----- */
+  const lbRange=+($("#lbRange")?.value||7), lbKey=$("#lbSort")?.value||"s";
+  const board=agents.filter(p=>p.approved)
+    .map(p=>{const st=agentStats(p.id); return {p,a:lbRange===7?st.wk:st.mo};})
+    .sort((x,y)=>(y.a[lbKey]-x.a[lbKey])||(y.a.s-x.a.s));
+  const anyActivity=board.some(b=>b.a.d+b.a.c+b.a.a+b.a.p+b.a.s>0);
+  $("#lbBody").innerHTML=board.map((b,i)=>`
+    <tr data-open="${b.p.id}">
+      <td style="font-weight:700; color:var(--gold-bright)">${i+1}</td>
+      <td style="font-weight:600">${esc(b.p.full_name)||esc(b.p.email)}</td>
+      <td style="text-align:right">${b.a.d}</td><td style="text-align:right">${b.a.c}</td>
+      <td style="text-align:right">${b.a.a}</td><td style="text-align:right">${b.a.p}</td>
+      <td style="text-align:right; font-weight:700; color:var(--gold-bright)">${b.a.s}</td>
+      <td style="text-align:right">${b.a.logged}</td>
+    </tr>`).join("");
+  $("#lbEmpty").hidden=!!(board.length&&anyActivity);
+  $("#lbWrap").hidden=!(board.length&&anyActivity);
 
   const q=($("#q").value||"").toLowerCase(), fs=$("#fStatus").value, sort=$("#fSort").value;
   let list=agents.filter(p=>(!q||(p.full_name+" "+p.email).toLowerCase().includes(q))&&(!fs||(fs==="pending"?!p.approved:p.approved)));
@@ -337,6 +394,14 @@ function openDrawer(id){
       <button class="btn ghost dtab" data-sec="dGoal">Goal sheet ${s.goals}/${N_GOALS}</button>
       <button class="btn ghost dtab" data-sec="dShadow">Shadowing ${s.shadow}/${N_SHADOW}</button>
       <button class="btn ghost dtab" data-sec="dHunt">Scavenger hunt ${s.hunt}/${HUNT.length}</button>
+      <button class="btn ghost dtab" data-sec="dAct">Activity</button>
+    </div>
+    <div class="notecard" style="margin-bottom:14px">
+      <strong>Florida licence</strong> —
+      ${s.licdoc
+        ? `${esc(s.licdoc.name)} <span class="hint">· uploaded ${new Date(s.licdoc.at).toLocaleDateString()}</span>
+           <button class="btn ghost" style="margin-left:8px" data-doc="${esc(s.licdoc.path)}">View</button>`
+        : `<span class="pill bad">Not uploaded</span>`}
     </div>
     <div class="dsec on" id="dChk">${CHECKLIST.map((c,i)=>`<div class="checkrow"><span class="tick ${chkState[i]?"y":"n"}">${chkState[i]?"✔":"○"}</span><span>${esc(c)}</span></div>`).join("")}</div>
     <div class="dsec" id="dGoal">
@@ -359,6 +424,14 @@ function openDrawer(id){
     </div>
     <div class="dsec" id="dHunt">
       ${HUNT.map((c,i)=>{const a=huntState[i];return `<div class="checkrow"><span class="tick ${a?"y":"n"}">${a?"✔":"○"}</span><span style="flex:1">${esc(c)}</span><span class="pill ${a==="uw"?"ok":a==="aca"?"":"bad"}">${a==="uw"?"Underwritten":a==="aca"?"ACA":"unanswered"}</span></div>`;}).join("")}
+    </div>
+    <div class="dsec" id="dAct">
+      <p class="hint" style="margin:0 0 10px">Last logged ${s.lastAct?s.lastAct.toLocaleDateString():"never"}.</p>
+      <div class="tblwrap"><table><thead><tr><th></th><th style="text-align:right">Dials</th><th style="text-align:right">Contacts</th><th style="text-align:right">Appts</th><th style="text-align:right">Pres.</th><th style="text-align:right">Sales</th><th style="text-align:right">Days logged</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">Last 7 days</td><td style="text-align:right">${s.wk.d}</td><td style="text-align:right">${s.wk.c}</td><td style="text-align:right">${s.wk.a}</td><td style="text-align:right">${s.wk.p}</td><td style="text-align:right; font-weight:700; color:var(--gold-bright)">${s.wk.s}</td><td style="text-align:right">${s.wk.logged}/7</td></tr>
+        <tr><td style="font-weight:600">Last 30 days</td><td style="text-align:right">${s.mo.d}</td><td style="text-align:right">${s.mo.c}</td><td style="text-align:right">${s.mo.a}</td><td style="text-align:right">${s.mo.p}</td><td style="text-align:right; font-weight:700; color:var(--gold-bright)">${s.mo.s}</td><td style="text-align:right">${s.mo.logged}/30</td></tr>
+      </tbody></table></div>
     </div>`;
   $("#drawerBack").hidden=false;
   document.querySelectorAll(".dtab").forEach(b=>b.addEventListener("click",()=>{
@@ -385,8 +458,19 @@ document.addEventListener("click",async e=>{
     if(did){if(!confirm(`Remove ${name}'s login and all their progress? This can't be undone.`))return;
       await callFn({action:"delete",user_id:did});$("#drawerBack").hidden=true;await loadData();return;}
   }catch(err){alert(err.message);return;}
-  const tr=t.closest("tr[data-open]");
-  if(tr)openDrawer(tr.dataset.open);
+  const doc=t.closest("[data-doc]");
+  if(doc){
+    try{
+      const r=await fetch(`${SB_URL}/storage/v1/object/sign/agent-docs/${encodeURI(doc.dataset.doc)}`,
+        {method:"POST",headers:{...H(),"Content-Type":"application/json"},body:JSON.stringify({expiresIn:3600})});
+      if(!r.ok)throw new Error("Could not open that file.");
+      const d=await r.json();
+      window.open(SB_URL+"/storage/v1"+d.signedURL,"_blank","noopener");
+    }catch(err){alert(err.message);}
+    return;
+  }
+  const opener=t.closest("[data-open]");
+  if(opener)openDrawer(opener.dataset.open);
 });
 
 /* ---------- login flow ---------- */
@@ -415,6 +499,8 @@ $("#createGo").addEventListener("click",async()=>{
 $("#q").addEventListener("input",render);
 $("#fStatus").addEventListener("change",render);
 $("#fSort").addEventListener("change",render);
+$("#lbRange").addEventListener("change",render);
+$("#lbSort").addEventListener("change",render);
 $("#refreshGo").addEventListener("click",loadData);
 $("#logoutGo").addEventListener("click",()=>{sessionStorage.removeItem("ftlaudy-admin-rt");location.reload();});
 resume().then(ok=>{if(ok)enter();});
