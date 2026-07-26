@@ -209,6 +209,13 @@ textarea.goal, input.goal{
 mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 .pdfwrap{border:1px solid var(--line2); border-radius:10px; overflow:hidden; background:var(--panel); height:85vh; min-height:520px}
 .pdfwrap iframe{width:100%; height:100%; border:0; display:block}
+/* classroom videos */
+.vidwrap{position:relative; aspect-ratio:16/9; background:#000; border:1px solid var(--line2); border-radius:10px; overflow:hidden; margin:0 0 12px}
+.vidwrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+.vidcard{margin:0 0 26px}
+.vidcard h3{margin:0 0 4px; color:var(--gold-bright); font-size:1.12rem}
+.vidnum{font-size:.7rem; text-transform:uppercase; letter-spacing:.16em; color:var(--gold); font-weight:700; margin-bottom:4px}
+.vidcard p.vd{color:var(--muted); margin:0 0 12px; max-width:68ch; font-size:.92rem}
 .medlegend{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px}
 .medfilter{background:var(--panel); border:1px solid var(--line2); color:var(--muted); border-radius:99px; padding:7px 14px; cursor:pointer; font:600 .82rem/1 inherit; display:inline-flex; align-items:center; gap:7px}
 .medfilter:hover{border-color:var(--gold)}
@@ -330,6 +337,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <button class="navlink" data-view="checklist">Onboarding Checklist</button>
     <button class="navlink" data-view="goals">Blueprint Goal Sheet</button>
     <button class="navlink" data-view="shadow">Shadowing Log</button>
+    <button class="navlink" data-view="classroom">The Classroom</button>
   </div>
   <div class="grp"><div class="grp-label">Sales Scripts</div>
     <button class="navlink" data-view="runners">Runner&rsquo;s Script</button>
@@ -488,6 +496,13 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   <p class="sub">Shadow five leader presentations. After each one, log the date, the leader, and what you learned — then have the leader sign off in person.</p></div>
   <div id="shadowlog"></div>
   <button class="btn" onclick="window.print()">Print shadowing log</button>
+</section>
+
+<!-- ================= CLASSROOM ================= -->
+<section class="view" id="view-classroom">
+  <div class="page-head"><div class="eyebrow">Your Onboarding</div><h1>The Classroom</h1>
+  <p class="sub">Your training videos. Work through them in order — start with compliance.</p></div>
+  <div id="classroomlist"></div>
 </section>
 
 <!-- ================= RUNNERS ================= -->
@@ -1239,6 +1254,33 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     <textarea class="goal" rows="3" data-store="shadow-${n}-notes"></textarea>
     <p class="hint" style="margin-bottom:0">Leader signature: have your leader sign the printed copy.</p></div>`).join("");
   host.querySelectorAll("[data-store]").forEach(el=>{el.value=store.get(el.dataset.store,"");el.addEventListener("input",()=>store.set(el.dataset.store,el.value));});
+})();
+
+/* ---------- classroom ----------
+   To add a video: copy a line into VIDEOS. `drive` is the file id out of a
+   Google Drive share link — the long string between /d/ and /view. Order here
+   is the order agents see. Each video must be shared as "Anyone with the link
+   can view" or agents will hit a Google permission wall inside the player. */
+(()=>{
+  const VIDEOS=[
+    {title:"Compliance Training",
+     drive:"1C08KnfN1hn4ru5sb2-JM1V_2otA3wpXh",
+     desc:"Required before you write your first policy. Covers what you can and cannot say, how to handle client information, and the rules that protect you and the client."},
+  ];
+  const host=$("#classroomlist");
+  if(!VIDEOS.length){host.innerHTML=`<p class="hint">Videos are being added — check back shortly.</p>`;return;}
+  host.innerHTML=VIDEOS.map((v,i)=>`
+    <div class="vidcard">
+      <div class="vidnum">Video ${i+1} of ${VIDEOS.length}</div>
+      <h3>${esc(v.title)}</h3>
+      ${v.desc?`<p class="vd">${esc(v.desc)}</p>`:""}
+      <div class="vidwrap">
+        <iframe src="https://drive.google.com/file/d/${encodeURIComponent(v.drive)}/preview"
+                title="${esc(v.title)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <a class="btn ghost" href="https://drive.google.com/file/d/${encodeURIComponent(v.drive)}/view"
+         target="_blank" rel="noopener">Open in Google Drive</a>
+    </div>`).join("");
 })();
 
 /* ---------- meds ---------- */
