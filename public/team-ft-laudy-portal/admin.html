@@ -18,12 +18,21 @@
   --shadow-lg:0 24px 60px rgba(0,0,0,.45);
   --hairline:rgba(255,255,255,.06);
   --radius:16px; --ease:cubic-bezier(.4,0,.2,1);
+  --aurora-1:rgba(75,156,196,.14); --aurora-2:rgba(212,175,94,.13);
+  --grain:.035; --glass:rgba(19,35,58,.72);
   color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{margin:0; background:var(--bg); color:var(--text); font:15px/1.6 "Avenir Next","Segoe UI",system-ui,sans-serif; -webkit-font-smoothing:antialiased}
-body::before{content:""; position:fixed; inset:0 0 auto 0; height:460px; pointer-events:none; z-index:0;
-  background:radial-gradient(ellipse 900px 340px at 50% -120px, var(--glow), transparent 70%)}
+body::before{content:""; position:fixed; inset:-20% -10% auto -10%; height:150vh; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 700px 300px at 22% 4%, var(--aurora-1), transparent 62%),
+    radial-gradient(ellipse 620px 280px at 78% 0%, var(--aurora-2), transparent 60%),
+    radial-gradient(ellipse 900px 360px at 50% -6%, var(--glow), transparent 68%);
+  animation:drift 26s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-2%,1.5%,0) scale(1.06)}100%{transform:translate3d(2.5%,-1%,0) scale(1.03)}}
+body::after{content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:var(--grain);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .wrap{position:relative; z-index:1}
 h1,h2,h3,.display{font-family:"Palatino Linotype",Palatino,Georgia,serif; letter-spacing:-.01em}
 a{color:var(--ocean)}
@@ -39,9 +48,10 @@ h1{font-size:2.1rem; margin:6px 0 2px;
   background:linear-gradient(135deg,var(--gold-bright) 0%,var(--text) 70%);
   -webkit-background-clip:text; background-clip:text; color:transparent}
 .topbar{display:flex; justify-content:space-between; align-items:flex-end; gap:14px; flex-wrap:wrap; margin-bottom:22px}
-.card{background:var(--surface); border:1px solid var(--line2); border-radius:var(--radius); padding:22px 24px; margin:0 0 18px;
-  box-shadow:var(--shadow-sm); transition:border-color .22s var(--ease), box-shadow .22s var(--ease)}
-.card:hover{border-color:var(--line); box-shadow:var(--shadow-lg)}
+.card{background:var(--glass); backdrop-filter:blur(14px) saturate(120%); -webkit-backdrop-filter:blur(14px) saturate(120%);
+  border:1px solid var(--line2); border-radius:var(--radius); padding:24px 26px; margin:0 0 18px;
+  box-shadow:var(--shadow-sm); transition:border-color .28s var(--ease), box-shadow .28s var(--ease), transform .28s var(--ease)}
+.card:hover{border-color:var(--gold); box-shadow:var(--shadow-lg),0 0 0 1px var(--ring); transform:translateY(-2px)}
 .card h3{margin:0 0 10px; color:var(--gold-bright); font-size:1.08rem}
 input,select{background:var(--panel2); color:var(--text); border:1px solid var(--line); border-radius:9px; padding:10px 13px; font:inherit;
   transition:border-color .18s var(--ease), box-shadow .18s var(--ease)}
@@ -59,9 +69,9 @@ input:focus,select:focus{border-color:var(--gold); box-shadow:0 0 0 3px var(--ri
 .btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
 /* stat tiles */
 .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:18px}
-.stat{background:var(--surface); border:1px solid var(--line2); border-radius:var(--radius); padding:18px 20px;
+.stat{background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid var(--line2); border-radius:var(--radius); padding:20px 22px;
   box-shadow:var(--shadow-sm); transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease)}
-.stat:hover{transform:translateY(-2px); border-color:var(--line); box-shadow:var(--shadow-lg)}
+.stat:hover{transform:translateY(-3px); border-color:var(--gold); box-shadow:var(--shadow-lg),0 0 0 1px var(--ring)}
 .stat .n{font:700 2.1rem/1.1 "Palatino Linotype",Palatino,Georgia,serif; color:var(--gold-bright); font-variant-numeric:tabular-nums}
 .stat .l{font-size:.74rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:4px}
 .stat.warn .n{color:var(--bad)}
@@ -72,7 +82,7 @@ input:focus,select:focus{border-color:var(--gold); box-shadow:0 0 0 3px var(--ri
 .pend:hover{border-color:var(--gold)}
 /* roster */
 table{border-collapse:collapse; width:100%; font-size:.9rem; font-variant-numeric:tabular-nums}
-.tblwrap{overflow-x:auto; border:1px solid var(--line2); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow-sm)}
+.tblwrap{overflow-x:auto; border:1px solid var(--line2); border-radius:var(--radius); background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); box-shadow:var(--shadow-sm)}
 th{text-align:left; font-size:.66rem; position:sticky; top:0; z-index:1; text-transform:uppercase; letter-spacing:.14em; color:var(--gold); padding:10px 14px; border-bottom:1px solid var(--line); background:var(--panel2); white-space:nowrap}
 td{padding:12px 16px; border-bottom:1px solid var(--hairline); vertical-align:middle}
 tbody tr{transition:background .15s var(--ease)}
@@ -110,7 +120,8 @@ tbody tr:hover{background:var(--gold-dim)}
 @media(max-width:700px){.kv{grid-template-columns:1fr}}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important}
-  .btn:hover,.stat:hover{transform:none}
+  body::before{animation:none}
+  .btn:hover,.stat:hover,.card:hover{transform:none}
 }
 </style>
 </head>
