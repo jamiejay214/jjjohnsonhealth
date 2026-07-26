@@ -1520,7 +1520,7 @@ window.addEventListener("hashchange",()=>{const v=location.hash.slice(1); if(v&&
   ];
   const bar=$("#quotebar"), txt=$("#qbText"), who=$("#qbWho"), tick=$("#qbTick").firstElementChild;
   if(!bar)return;
-  const HOLD=9000;
+  const HOLD=45000;          // ms each quote stays up; the countdown bar follows this
   const calm=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let order=[], i=0;
   const shuffle=()=>{                       // Fisher-Yates
