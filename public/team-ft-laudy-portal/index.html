@@ -18,6 +18,10 @@
   --shadow-sm:0 1px 2px rgba(0,0,0,.30),0 6px 18px rgba(0,0,0,.22);
   --shadow-lg:0 24px 60px rgba(0,0,0,.45);
   --hairline:rgba(255,255,255,.06);
+  --aurora-1:rgba(75,156,196,.14);
+  --aurora-2:rgba(212,175,94,.13);
+  --grain:.035;
+  --glass:rgba(19,35,58,.72);
   color-scheme:dark;
 }
 @media (prefers-color-scheme: light){
@@ -37,6 +41,10 @@
     --shadow-sm:0 1px 2px rgba(90,70,20,.07),0 6px 18px rgba(90,70,20,.06);
     --shadow-lg:0 24px 60px rgba(90,70,20,.14);
     --hairline:rgba(60,45,10,.05);
+    --aurora-1:rgba(31,110,150,.10);
+    --aurora-2:rgba(143,111,42,.10);
+    --grain:.022;
+    --glass:rgba(255,253,246,.76);
     color-scheme:light;
   }
 }
@@ -56,6 +64,10 @@
   --shadow-sm:0 1px 2px rgba(0,0,0,.30),0 6px 18px rgba(0,0,0,.22);
   --shadow-lg:0 24px 60px rgba(0,0,0,.45);
   --hairline:rgba(255,255,255,.06);
+  --aurora-1:rgba(75,156,196,.14);
+  --aurora-2:rgba(212,175,94,.13);
+  --grain:.035;
+  --glass:rgba(19,35,58,.72);
   color-scheme:dark;
 }
 :root[data-theme="light"]{
@@ -74,6 +86,10 @@
   --shadow-sm:0 1px 2px rgba(90,70,20,.07),0 6px 18px rgba(90,70,20,.06);
   --shadow-lg:0 24px 60px rgba(90,70,20,.14);
   --hairline:rgba(60,45,10,.05);
+  --aurora-1:rgba(31,110,150,.10);
+  --aurora-2:rgba(143,111,42,.10);
+  --grain:.022;
+  --glass:rgba(255,253,246,.76);
   color-scheme:light;
 }
 :root{--radius:16px; --radius-sm:11px; --ease:cubic-bezier(.4,0,.2,1)}
@@ -84,10 +100,24 @@ body{
   font:16px/1.65 "Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
   -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
-/* Warm light bleeding down from the top, so the page reads as lit rather than flat. */
+/* Slow-drifting aurora behind everything — the page breathes instead of sitting flat. */
 body::before{
-  content:""; position:fixed; inset:0 0 auto 0; height:520px; pointer-events:none; z-index:0;
-  background:radial-gradient(ellipse 900px 380px at 50% -120px, var(--glow), transparent 70%);
+  content:""; position:fixed; inset:-20% -10% auto -10%; height:150vh; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 700px 320px at 22% 4%, var(--aurora-1), transparent 62%),
+    radial-gradient(ellipse 620px 300px at 78% 0%, var(--aurora-2), transparent 60%),
+    radial-gradient(ellipse 900px 400px at 50% -6%, var(--glow), transparent 68%);
+  animation:drift 26s ease-in-out infinite alternate;
+}
+@keyframes drift{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(-2%,1.5%,0) scale(1.06)}
+  100%{transform:translate3d(2.5%,-1%,0) scale(1.03)}
+}
+/* Fine grain so the large flat areas have texture instead of banding. */
+body::after{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:var(--grain);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .shell{position:relative; z-index:1}
 h1,h2,h3,.display{
@@ -146,6 +176,7 @@ nav.side button.navlink.active{
 nav.side button.navlink.active::before{
   content:""; position:absolute; left:0; top:6px; bottom:6px; width:3px; border-radius:99px;
   background:linear-gradient(180deg,var(--gold-bright),var(--gold));
+  box-shadow:0 0 12px var(--gold);
 }
 nav.side button.navlink:focus-visible, .btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible, a:focus-visible{
   outline:2px solid var(--gold); outline-offset:2px; border-radius:8px;
@@ -154,25 +185,76 @@ nav.side .foot{margin-top:auto; padding:16px; font-size:.72rem; color:var(--mute
 main{flex:1; min-width:0; padding:40px 46px 96px}
 .page{max-width:880px; margin:0 auto}
 section.view{display:none}
-section.view.on{display:block; animation:viewIn .28s var(--ease) both}
-@keyframes viewIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+section.view.on{display:block}
+section.view.on > *{animation:riseIn .5s var(--ease) both}
+section.view.on > *:nth-child(1){animation-delay:.02s}
+section.view.on > *:nth-child(2){animation-delay:.07s}
+section.view.on > *:nth-child(3){animation-delay:.12s}
+section.view.on > *:nth-child(4){animation-delay:.17s}
+section.view.on > *:nth-child(n+5){animation-delay:.22s}
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
 .page-head{position:relative; margin-bottom:30px; padding-bottom:20px; border-bottom:1px solid var(--line)}
 /* Short gold rule riding on the divider, echoing the crest's bar. */
 .page-head::after{
   content:""; position:absolute; left:0; bottom:-1px; width:64px; height:2px; border-radius:99px;
   background:linear-gradient(90deg,var(--gold-bright),var(--gold));
 }
-.page-head h1{font-size:2.35rem; margin:8px 0 6px; line-height:1.12}
+.page-head h1{
+  font-size:2.6rem; margin:8px 0 8px; line-height:1.1; letter-spacing:-.02em;
+  background:linear-gradient(135deg,var(--gold-bright) 0%,var(--text) 58%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
 .page-head p.sub{color:var(--muted); margin:0; max-width:62ch; font-size:1.02rem}
 /* topbar (mobile) */
 .topbar{display:none}
+/* ---------- quote banner ---------- */
+.quotebar{
+  position:relative; overflow:hidden; display:flex; align-items:center; gap:18px;
+  max-width:880px; margin:0 auto 30px; padding:20px 26px;
+  border:1px solid var(--line); border-radius:18px;
+  background:linear-gradient(120deg, var(--gold-dim) 0%, transparent 42%), var(--surface);
+  box-shadow:var(--shadow-sm);
+}
+/* Light sweeps across the banner every time the quote changes. */
+.quotebar::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg,transparent 32%,var(--glow) 48%,transparent 62%);
+  transform:translateX(-120%);
+}
+.quotebar.sweep::after{animation:sweep 1.5s var(--ease)}
+@keyframes sweep{to{transform:translateX(120%)}}
+.qb-mark{
+  font:700 3.4rem/.72 "Palatino Linotype",Palatino,Georgia,serif; flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold-bright),var(--gold));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.qb-body{min-width:0; flex:1}
+.qb-text{
+  margin:0; font-family:"Palatino Linotype",Palatino,Georgia,serif;
+  font-size:1.12rem; line-height:1.45; color:var(--text); text-wrap:balance;
+}
+.qb-who{margin:5px 0 0; font-size:.72rem; text-transform:uppercase; letter-spacing:.16em; color:var(--gold); font-weight:700}
+.qb-text,.qb-who{transition:opacity .45s var(--ease), transform .45s var(--ease)}
+.quotebar.fade .qb-text,.quotebar.fade .qb-who{opacity:0; transform:translateY(-6px)}
+/* Thin bar counting down to the next quote. */
+.qb-tick{position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--hairline)}
+.qb-tick i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--gold),var(--gold-bright))}
+.qb-tick i.run{animation:tick var(--qb-dur,9s) linear}
+@keyframes tick{from{width:0} to{width:100%}}
+@media(max-width:600px){
+  .quotebar{padding:16px 18px; gap:12px; margin-bottom:22px}
+  .qb-mark{font-size:2.4rem}
+  .qb-text{font-size:1rem}
+}
 /* ---------- components ---------- */
 .card{
-  background:var(--surface); border:1px solid var(--line2); border-radius:var(--radius);
-  padding:22px 24px; margin:0 0 18px; box-shadow:var(--shadow-sm);
-  transition:box-shadow .22s var(--ease), border-color .22s var(--ease);
+  position:relative; background:var(--glass); backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+  border:1px solid var(--line2); border-radius:var(--radius);
+  padding:24px 26px; margin:0 0 18px; box-shadow:var(--shadow-sm);
+  transition:box-shadow .28s var(--ease), border-color .28s var(--ease), transform .28s var(--ease);
 }
-.card:hover{border-color:var(--line); box-shadow:var(--shadow-lg)}
+.card:hover{border-color:var(--gold); box-shadow:var(--shadow-lg),0 0 0 1px var(--ring); transform:translateY(-2px)}
 .card h3{margin:0 0 10px; color:var(--gold-bright); font-size:1.15rem}
 .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px}
 @media(max-width:760px){.grid2{grid-template-columns:1fr}}
@@ -198,7 +280,8 @@ section.view.on{display:block; animation:viewIn .28s var(--ease) both}
 table{border-collapse:collapse; width:100%; font-size:.92rem; font-variant-numeric:tabular-nums}
 .tblwrap{
   overflow-x:auto; border:1px solid var(--line2); border-radius:var(--radius);
-  background:var(--surface); margin:0 0 18px; box-shadow:var(--shadow-sm);
+  background:var(--glass); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+  margin:0 0 18px; box-shadow:var(--shadow-sm);
 }
 th{
   text-align:left; font-size:.68rem; text-transform:uppercase; letter-spacing:.16em; color:var(--gold);
@@ -343,20 +426,32 @@ tr.m-ok td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
 /* hero (welcome) */
 .hero{
   position:relative; overflow:hidden; text-align:center; padding:46px 26px 40px; margin:0 0 28px;
-  background:radial-gradient(ellipse 620px 300px at 50% -30px, var(--glow), transparent 70%), var(--surface);
-  border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow-lg);
+  background:radial-gradient(ellipse 620px 300px at 50% -30px, var(--glow), transparent 70%), var(--glass);
+  backdrop-filter:blur(16px) saturate(120%); -webkit-backdrop-filter:blur(16px) saturate(120%);
+  border:1px solid var(--line); border-radius:24px; box-shadow:var(--shadow-lg);
 }
+/* Slow band of light travelling across the hero. */
+.hero::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(105deg,transparent 38%,var(--glow) 50%,transparent 62%);
+  transform:translateX(-100%); animation:heroShine 11s ease-in-out infinite;
+}
+@keyframes heroShine{0%,72%{transform:translateX(-100%)} 100%{transform:translateX(100%)}}
 /* Hairline of gold along the top edge, like light catching the crest. */
 .hero::before{
   content:""; position:absolute; top:0; left:12%; right:12%; height:1px;
   background:linear-gradient(90deg,transparent,var(--gold),transparent);
 }
-.hero svg{width:150px; height:auto; margin:0 auto 12px; display:block}
+.hero svg,.hero .logoimg{filter:drop-shadow(0 8px 26px var(--ring))}
+.hero svg{width:158px; height:auto; margin:0 auto 12px; display:block}
 .hero h1{
-  font-size:2.7rem; margin:10px 0 8px; line-height:1.1;
-  background:linear-gradient(135deg,var(--gold-bright) 0%,var(--text) 65%);
+  font-size:3.1rem; margin:12px 0 10px; line-height:1.08; letter-spacing:-.02em;
+  background:linear-gradient(100deg,var(--gold-bright) 0%,var(--text) 40%,var(--gold-bright) 70%,var(--text) 100%);
+  background-size:220% 100%;
   -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shimmer 9s ease-in-out infinite;
 }
+@keyframes shimmer{0%,100%{background-position:0% 50%} 50%{background-position:100% 50%}}
 .hero .sub{color:var(--muted); max-width:52ch; margin:0 auto; font-size:1.05rem}
 @media(max-width:600px){.hero{padding:34px 18px 30px} .hero h1{font-size:2rem} .page-head h1{font-size:1.85rem}}
 .sig{display:flex; gap:26px; justify-content:center; flex-wrap:wrap; margin-top:22px}
@@ -397,17 +492,21 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 /* Honour the OS "reduce motion" setting: keep the styling, drop the movement. */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
-  section.view.on{animation:none}
+  body::before{animation:none}
+  section.view.on > *{animation:none; opacity:1; transform:none}
+  .hero::after,.quotebar::after{display:none}
+  .hero h1{animation:none; background-position:0 50%}
   nav.side button.navlink:hover,.check:hover,.btn:hover,.teamcard:hover .avatar{transform:none}
 }
 @media print{
   nav.side,.topbar,.searchbox,.tool,.themebtn,.btn{display:none !important}
   body{background:#fff; color:#000}
-  body::before{display:none}
+  body::before,body::after,.quotebar{display:none !important}
   section.view{display:block !important; page-break-before:always; animation:none}
   .card,.say,.tblwrap{border-color:#999; box-shadow:none; background:#fff}
   .hero{box-shadow:none; background:#fff}
-  .hero h1,.brand .t2{-webkit-text-fill-color:#000; color:#000}
+  .hero h1,.brand .t2,.page-head h1{-webkit-text-fill-color:#000; color:#000; animation:none}
+  .card,.tblwrap,.hero{backdrop-filter:none; -webkit-backdrop-filter:none}
 }
 </style>
 
@@ -505,7 +604,16 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   </div>
 </nav>
 
-<main><div class="page">
+<main>
+<div class="quotebar" id="quotebar" aria-live="off">
+  <div class="qb-mark">&ldquo;</div>
+  <div class="qb-body">
+    <p class="qb-text" id="qbText"></p>
+    <p class="qb-who" id="qbWho"></p>
+  </div>
+  <div class="qb-tick" id="qbTick"><i></i></div>
+</div>
+<div class="page">
 
 <!-- ================= WELCOME ================= -->
 <section class="view" id="view-welcome">
@@ -1221,6 +1329,106 @@ function go(view){
 $$("nav.side .navlink").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
 document.addEventListener("click",e=>{const a=e.target.closest("[data-go]"); if(a){e.preventDefault(); go(a.dataset.go);}});
 window.addEventListener("hashchange",()=>{const v=location.hash.slice(1); if(v&&$("#view-"+v))go(v);});
+
+/* ---------- quote banner ----------
+   Quotes are shuffled, then played all the way through before reshuffling, so
+   you never see the same one twice in a run. To add one: {q:"...", by:"..."}. */
+(()=>{
+  const QUOTES=[
+    {q:"Success is walking from failure to failure with no loss of enthusiasm.", by:"Winston Churchill"},
+    {q:"The harder the conflict, the more glorious the triumph.", by:"Thomas Paine"},
+    {q:"Opportunities don't happen. You create them.", by:"Chris Grosser"},
+    {q:"Don't watch the clock; do what it does. Keep going.", by:"Sam Levenson"},
+    {q:"The only place success comes before work is in the dictionary.", by:"Vidal Sassoon"},
+    {q:"Act as if what you do makes a difference. It does.", by:"William James"},
+    {q:"Fall seven times, stand up eight.", by:"Japanese proverb"},
+    {q:"Quality performance starts with a positive attitude.", by:"Jeffrey Gitomer"},
+    {q:"Every sale has five obstacles: no need, no money, no hurry, no desire, no trust.", by:"Zig Ziglar"},
+    {q:"You don't close a sale, you open a relationship.", by:"Patricia Fripp"},
+    {q:"People don't buy for logical reasons. They buy for emotional reasons.", by:"Zig Ziglar"},
+    {q:"Approach each customer with the idea of helping them solve a problem.", by:"Brian Tracy"},
+    {q:"The best salespeople know that their expertise can become their enemy.", by:"Deb Calvert"},
+    {q:"Make a customer, not a sale.", by:"Katherine Barchetti"},
+    {q:"Timid salesmen have skinny kids.", by:"Zig Ziglar"},
+    {q:"If you are not taking care of your customer, your competitor will.", by:"Bob Hooey"},
+    {q:"Your income is directly related to your philosophy, not the economy.", by:"Jim Rohn"},
+    {q:"Motivation is what gets you started. Habit is what keeps you going.", by:"Jim Rohn"},
+    {q:"Don't wish it were easier. Wish you were better.", by:"Jim Rohn"},
+    {q:"Either you run the day or the day runs you.", by:"Jim Rohn"},
+    {q:"Success is nothing more than a few simple disciplines practiced every day.", by:"Jim Rohn"},
+    {q:"You miss 100% of the shots you don't take.", by:"Wayne Gretzky"},
+    {q:"The expert in anything was once a beginner.", by:"Helen Hayes"},
+    {q:"Hard work beats talent when talent doesn't work hard.", by:"Tim Notke"},
+    {q:"Whether you think you can or you think you can't, you're right.", by:"Henry Ford"},
+    {q:"The way to get started is to quit talking and begin doing.", by:"Walt Disney"},
+    {q:"Setting goals is the first step in turning the invisible into the visible.", by:"Tony Robbins"},
+    {q:"The only limit to our realization of tomorrow is our doubts of today.", by:"Franklin D. Roosevelt"},
+    {q:"It always seems impossible until it's done.", by:"Nelson Mandela"},
+    {q:"Great things never came from comfort zones.", by:"Neil Strauss"},
+    {q:"Discipline is choosing between what you want now and what you want most.", by:"Abraham Lincoln"},
+    {q:"Courage is what it takes to stand up and speak; and to sit down and listen.", by:"Winston Churchill"},
+    {q:"Nothing is particularly hard if you divide it into small jobs.", by:"Henry Ford"},
+    {q:"You don't have to be great to start, but you have to start to be great.", by:"Zig Ziglar"},
+    {q:"Obstacles are those frightful things you see when you take your eyes off your goal.", by:"Henry Ford"},
+    {q:"Success usually comes to those too busy to be looking for it.", by:"Henry David Thoreau"},
+    {q:"Energy and persistence conquer all things.", by:"Benjamin Franklin"},
+    {q:"A goal properly set is halfway reached.", by:"Zig Ziglar"},
+    {q:"The difference between ordinary and extraordinary is that little extra.", by:"Jimmy Johnson"},
+    {q:"Winners are not people who never fail, but people who never quit.", by:"Edwin Louis Cole"},
+    {q:"Excellence is not a skill, it's an attitude.", by:"Ralph Marston"},
+    {q:"If you want to be successful, find out what the price is and pay it.", by:"Scott Adams"},
+    {q:"Selling is really about having conversations with people and helping improve their lives.", by:"Lori Richardson"},
+    {q:"Value the relationship more than the quota.", by:"Jeff Gitomer"},
+    {q:"Learn the rules like a pro, so you can break them like an artist.", by:"Pablo Picasso"},
+    {q:"Confidence and enthusiasm are the greatest sales producers in any kind of economy.", by:"O.B. Smith"},
+    {q:"Stop selling. Start helping.", by:"Zig Ziglar"},
+    {q:"The successful warrior is the average person with laser-like focus.", by:"Bruce Lee"},
+    {q:"Never give up on a dream just because of the time it will take to accomplish it.", by:"Earl Nightingale"},
+    {q:"Our greatest weakness lies in giving up.", by:"Thomas Edison"},
+    {q:"Do the hard jobs first. The easy jobs will take care of themselves.", by:"Dale Carnegie"},
+    {q:"You can have everything in life you want, if you will just help enough other people get what they want.", by:"Zig Ziglar"},
+    {q:"Persistence is to the character of man as carbon is to steel.", by:"Napoleon Hill"},
+    {q:"Success is the sum of small efforts repeated day in and day out.", by:"Robert Collier"},
+    {q:"The road to success is always under construction.", by:"Lily Tomlin"},
+    {q:"Don't be afraid to give up the good to go for the great.", by:"John D. Rockefeller"},
+    {q:"Well done is better than well said.", by:"Benjamin Franklin"},
+    {q:"Dream big and dare to fail.", by:"Norman Vaughan"},
+    {q:"What you get by achieving your goals is not as important as what you become.", by:"Zig Ziglar"},
+    {q:"Believe you can and you're halfway there.", by:"Theodore Roosevelt"},
+    {q:"The best way to predict the future is to create it.", by:"Peter Drucker"},
+    {q:"It's not about having time. It's about making time.", by:"Unknown"},
+    {q:"Earn more income. Create more impact. Have more freedom.", by:"Team FT. Laudy"},
+  ];
+  const bar=$("#quotebar"), txt=$("#qbText"), who=$("#qbWho"), tick=$("#qbTick").firstElementChild;
+  if(!bar)return;
+  const HOLD=9000;
+  const calm=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let order=[], i=0;
+  const shuffle=()=>{                       // Fisher-Yates
+    order=QUOTES.map((_,n)=>n);
+    for(let n=order.length-1;n>0;n--){const j=Math.floor(Math.random()*(n+1));[order[n],order[j]]=[order[j],order[n]];}
+  };
+  const paint=()=>{
+    if(i>=order.length){shuffle(); i=0;}     // full pass done — reshuffle
+    const item=QUOTES[order[i++]];
+    txt.textContent=item.q; who.textContent=item.by;
+    if(calm)return;
+    tick.classList.remove("run"); void tick.offsetWidth; tick.classList.add("run");
+    bar.classList.remove("sweep"); void bar.offsetWidth; bar.classList.add("sweep");
+  };
+  shuffle(); paint();
+  bar.style.setProperty("--qb-dur",HOLD+"ms");
+  const advance=()=>{
+    if(document.hidden)return;               // don't burn through quotes in a background tab
+    if(calm){paint();return;}
+    bar.classList.add("fade");
+    setTimeout(()=>{paint(); bar.classList.remove("fade");},450);
+  };
+  setInterval(advance,HOLD);
+  bar.addEventListener("click",advance);     // tap for the next one
+  bar.style.cursor="pointer";
+  bar.title="Tap for another";
+})();
 
 /* ---------- theme ---------- */
 $("#themeToggle").addEventListener("click",()=>{
