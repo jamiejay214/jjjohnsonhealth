@@ -120,6 +120,9 @@ body::after{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .shell{position:relative; z-index:1}
+/* Sprite holding the crest. Takes no space but stays rendered, so <use> can
+   resolve it even while the sidebar is hidden. */
+.crest-sprite{position:absolute; width:0; height:0; overflow:hidden}
 h1,h2,h3,.display{
   font-family:"Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
   letter-spacing:-.01em; text-wrap:balance;
@@ -416,6 +419,14 @@ mark{background:var(--gold); color:#14100a; border-radius:3px; padding:0 2px}
 /* classroom videos */
 .vidwrap{position:relative; aspect-ratio:16/9; background:#000; border:1px solid var(--line2); border-radius:10px; overflow:hidden; margin:0 0 12px}
 .vidwrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+.vidgroup summary{display:flex; align-items:center; gap:10px}
+.vidgroup summary::before{flex-shrink:0}
+.vidcount{
+  margin-left:auto; font-family:"Avenir Next","Segoe UI",system-ui,sans-serif;
+  font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--gold); background:var(--gold-dim); border-radius:99px; padding:3px 10px; white-space:nowrap;
+}
+.vidgroup .vidcard:last-child{margin-bottom:4px}
 .vidcard{margin:0 0 26px}
 .vidcard h3{margin:0 0 4px; color:var(--gold-bright); font-size:1.12rem}
 .vidnum{font-size:.7rem; text-transform:uppercase; letter-spacing:.16em; color:var(--gold); font-weight:700; margin-bottom:4px}
@@ -491,11 +502,58 @@ body.has-logo .logoimg{display:block; margin:0 auto 10px}
 body.has-logo .brand .logoimg{width:120px}
 body.has-logo .hero .logoimg{width:190px}
 body.has-logo .brand svg, body.has-logo .hero svg{display:none}
+/* ---------- mobile ----------
+   Below 900px the sidebar used to dump every nav group above the content, so a
+   phone opened on a wall of links. It is now a menu behind a sticky top bar. */
 @media(max-width:900px){
+  .topbar{
+    display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:30;
+    padding:10px 14px; background:var(--sidebar); border-bottom:1px solid var(--line);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  }
+  .tb-logo{display:none; width:34px; height:auto; border-radius:7px; flex-shrink:0}
+  body.has-logo .tb-logo{display:block; margin:0}
+  .tb-name{
+    flex:1; min-width:0; font-family:"Palatino Linotype",Palatino,Georgia,serif;
+    font-weight:700; font-size:1.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .menubtn{
+    display:inline-flex; align-items:center; gap:9px; flex-shrink:0;
+    background:var(--gold-dim); border:1px solid var(--line); color:var(--gold-bright);
+    font:700 .84rem/1 "Avenir Next","Segoe UI",system-ui,sans-serif;
+    padding:10px 15px; border-radius:10px; cursor:pointer; min-height:42px;
+  }
+  .menubtn .bars, .menubtn .bars::before, .menubtn .bars::after{
+    content:""; display:block; width:16px; height:2px; border-radius:2px; background:currentColor;
+  }
+  .menubtn .bars{position:relative}
+  .menubtn .bars::before{position:absolute; top:-5px}
+  .menubtn .bars::after{position:absolute; top:5px}
+  body.nav-open .menubtn{background:var(--gold); color:#14100a; border-color:var(--gold)}
+
   .shell{flex-direction:column}
-  nav.side{position:static; width:100%; height:auto; border-right:0; border-bottom:1px solid var(--line)}
-  nav.side .grp{display:inline-block; vertical-align:top}
-  main{padding:22px 18px 70px}
+  nav.side{
+    position:static; width:100%; height:auto; border-right:0;
+    border-bottom:1px solid var(--line); display:none;
+  }
+  body.nav-open nav.side{display:flex}
+  nav.side .grp{display:block; padding:10px 12px 2px}
+  nav.side button.navlink{padding:12px; font-size:1rem}   /* thumb-sized targets */
+  nav.side .brand{display:none}                            /* the top bar carries the brand */
+  nav.side .foot{margin-top:12px}
+  main{padding:20px 16px 72px}
+  .page,.quotebar{max-width:100%}
+}
+@media(max-width:520px){
+  main{padding:16px 12px 64px}
+  .card{padding:18px 16px}
+  .callout{padding:14px 15px}
+  .hero{padding:30px 16px 26px}
+  .btn{padding:12px 18px}                                  /* easier to hit */
+  details.obj summary{padding:14px 16px}
+  details.obj .body{padding:2px 14px 14px}
 }
 .modal-backdrop{position:fixed; inset:0; background:rgba(4,8,16,.66); display:flex; align-items:center; justify-content:center; z-index:50; padding:18px}
 .modal-backdrop[hidden]{display:none}
@@ -521,51 +579,63 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 }
 </style>
 
+<!-- Crest sprite. Kept outside the sidebar: a <use> cannot resolve a source
+     inside a display:none subtree, and the sidebar is hidden on mobile. -->
+<svg class="crest-sprite" aria-hidden="true" focusable="false">
+  <g id="crest">
+  <defs>
+    <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0d189"/><stop offset=".5" stop-color="#cfa64f"/><stop offset="1" stop-color="#a97e2f"/>
+    </linearGradient>
+    <linearGradient id="wav" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1b5e8f"/><stop offset="1" stop-color="#4b9cc4"/>
+    </linearGradient>
+  </defs>
+  <!-- crown -->
+  <g fill="url(#gld)">
+    <path d="M70 38 L78 16 L92 32 L100 10 L108 32 L122 16 L130 38 Z"/>
+    <rect x="68" y="38" width="64" height="8" rx="3"/>
+    <circle cx="78" cy="14" r="3.4"/><circle cx="100" cy="8" r="3.8"/><circle cx="122" cy="14" r="3.4"/>
+  </g>
+  <!-- laurel -->
+  <g fill="url(#gld)" opacity=".95">
+    <g id="laurelL">
+      <ellipse cx="28" cy="150" rx="4.5" ry="10" transform="rotate(30 28 150)"/>
+      <ellipse cx="22" cy="132" rx="4.5" ry="10" transform="rotate(18 22 132)"/>
+      <ellipse cx="19" cy="113" rx="4.5" ry="10" transform="rotate(8 19 113)"/>
+      <ellipse cx="19" cy="94" rx="4.5" ry="10" transform="rotate(-4 19 94)"/>
+      <ellipse cx="22" cy="76" rx="4.5" ry="10" transform="rotate(-16 22 76)"/>
+      <ellipse cx="28" cy="60" rx="4.5" ry="10" transform="rotate(-28 28 60)"/>
+    </g>
+    <use href="#laurelL" transform="translate(200,0) scale(-1,1)"/>
+  </g>
+  <!-- shield -->
+  <path d="M48 50 h104 v72 q0 34 -52 52 q-52 -18 -52 -52 Z" fill="#0d1a2c" stroke="url(#gld)" stroke-width="5"/>
+  <path d="M58 60 h84 v60 q0 27 -42 42 q-42 -15 -42 -27 Z" fill="none" stroke="url(#gld)" stroke-width="1.4" opacity=".7"/>
+  <!-- wave -->
+  <path d="M56 138 q14 -12 28 -2 q16 11 32 2 q16 -9 28 3 q-16 26 -44 35 q-28 -9 -44 -38 Z" fill="url(#wav)" opacity=".85"/>
+  <path d="M58 140 q13 -9 26 -1 M92 141 q14 5 26 -2 M124 140 q10 -4 18 2" stroke="#dce9f2" stroke-width="2" fill="none" opacity=".8"/>
+  <!-- lettering -->
+  <text x="100" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="13" letter-spacing="4" fill="url(#gld)" font-weight="bold">USHA</text>
+  <text x="100" y="100" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-weight="bold" font-size="20" fill="url(#gld)">Ft. Laudy</text>
+  <text x="100" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" letter-spacing="3" fill="url(#gld)">TEAM</text>
+  <!-- base -->
+  <path d="M60 178 h80" stroke="url(#gld)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>
+<div class="topbar">
+  <img class="tb-logo logoimg" src="/team-ft-laudy-portal/logo.png" alt="">
+  <div class="tb-name">Team FT. Laudy</div>
+  <button class="menubtn" id="menuBtn" aria-expanded="false" aria-controls="sidenav">
+    <span class="bars" aria-hidden="true"></span><span id="menuLabel">Menu</span>
+  </button>
+</div>
 <div class="shell">
 <nav class="side" id="sidenav">
   <div class="brand">
     <img class="logoimg" src="/team-ft-laudy-portal/logo.png" alt="Team FT. Laudy logo">
     <svg viewBox="0 0 200 190" role="img" aria-label="Team FT. Laudy crest">
-      <g id="crest">
-      <defs>
-        <linearGradient id="gld" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f0d189"/><stop offset=".5" stop-color="#cfa64f"/><stop offset="1" stop-color="#a97e2f"/>
-        </linearGradient>
-        <linearGradient id="wav" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#1b5e8f"/><stop offset="1" stop-color="#4b9cc4"/>
-        </linearGradient>
-      </defs>
-      <!-- crown -->
-      <g fill="url(#gld)">
-        <path d="M70 38 L78 16 L92 32 L100 10 L108 32 L122 16 L130 38 Z"/>
-        <rect x="68" y="38" width="64" height="8" rx="3"/>
-        <circle cx="78" cy="14" r="3.4"/><circle cx="100" cy="8" r="3.8"/><circle cx="122" cy="14" r="3.4"/>
-      </g>
-      <!-- laurel -->
-      <g fill="url(#gld)" opacity=".95">
-        <g id="laurelL">
-          <ellipse cx="28" cy="150" rx="4.5" ry="10" transform="rotate(30 28 150)"/>
-          <ellipse cx="22" cy="132" rx="4.5" ry="10" transform="rotate(18 22 132)"/>
-          <ellipse cx="19" cy="113" rx="4.5" ry="10" transform="rotate(8 19 113)"/>
-          <ellipse cx="19" cy="94" rx="4.5" ry="10" transform="rotate(-4 19 94)"/>
-          <ellipse cx="22" cy="76" rx="4.5" ry="10" transform="rotate(-16 22 76)"/>
-          <ellipse cx="28" cy="60" rx="4.5" ry="10" transform="rotate(-28 28 60)"/>
-        </g>
-        <use href="#laurelL" transform="translate(200,0) scale(-1,1)"/>
-      </g>
-      <!-- shield -->
-      <path d="M48 50 h104 v72 q0 34 -52 52 q-52 -18 -52 -52 Z" fill="#0d1a2c" stroke="url(#gld)" stroke-width="5"/>
-      <path d="M58 60 h84 v60 q0 27 -42 42 q-42 -15 -42 -27 Z" fill="none" stroke="url(#gld)" stroke-width="1.4" opacity=".7"/>
-      <!-- wave -->
-      <path d="M56 138 q14 -12 28 -2 q16 11 32 2 q16 -9 28 3 q-16 26 -44 35 q-28 -9 -44 -38 Z" fill="url(#wav)" opacity=".85"/>
-      <path d="M58 140 q13 -9 26 -1 M92 141 q14 5 26 -2 M124 140 q10 -4 18 2" stroke="#dce9f2" stroke-width="2" fill="none" opacity=".8"/>
-      <!-- lettering -->
-      <text x="100" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="13" letter-spacing="4" fill="url(#gld)" font-weight="bold">USHA</text>
-      <text x="100" y="100" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-weight="bold" font-size="20" fill="url(#gld)">Ft. Laudy</text>
-      <text x="100" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" letter-spacing="3" fill="url(#gld)">TEAM</text>
-      <!-- base -->
-      <path d="M60 178 h80" stroke="url(#gld)" stroke-width="4" stroke-linecap="round"/>
-      </g>
+      <use href="#crest"/>
     </svg>
     <div class="t1">Team</div>
     <div class="t2">FT. Laudy</div>
@@ -1363,6 +1433,19 @@ function go(view){
   location.hash=view; window.scrollTo({top:0});
 }
 $$("nav.side .navlink").forEach(b=>b.addEventListener("click",()=>go(b.dataset.view)));
+/* Mobile menu: the sidebar is hidden behind the top bar below 900px. */
+(()=>{
+  const btn=$("#menuBtn"), label=$("#menuLabel"); if(!btn)return;
+  const set=on=>{
+    document.body.classList.toggle("nav-open",on);
+    btn.setAttribute("aria-expanded",on?"true":"false");
+    label.textContent=on?"Close":"Menu";
+  };
+  btn.addEventListener("click",()=>set(!document.body.classList.contains("nav-open")));
+  // Picking a tab should get you straight to it, not leave the menu covering it.
+  $$("nav.side .navlink").forEach(b=>b.addEventListener("click",()=>set(false)));
+  addEventListener("keydown",e=>{if(e.key==="Escape")set(false);});
+})();
 document.addEventListener("click",e=>{const a=e.target.closest("[data-go]"); if(a){e.preventDefault(); go(a.dataset.go);}});
 window.addEventListener("hashchange",()=>{const v=location.hash.slice(1); if(v&&$("#view-"+v))go(v);});
 
@@ -1632,12 +1715,14 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 })();
 
 /* ---------- classroom ----------
-   To add a video, copy a line into VIDEOS with the id from its share link:
+   Videos live in GROUPS, one collapsible section per topic. To add a video,
+   drop a line into the right group's `videos` with the id from its share link:
      drive    https://drive.google.com/file/d/<ID>/view   (between /d/ and /view)
      vidyard  https://share.vidyard.com/watch/<ID>        (after /watch/)
-   `desc` is optional. Order here is the order agents see, and the "Video N of M"
-   labels follow from it. Each video has to be shared so anyone with the link can
-   view it — otherwise agents hit the host's permission wall inside the player. */
+   For a new topic, add a whole group — `open:true` makes it start expanded.
+   `desc` is optional. Order here is the order agents see. Every video has to be
+   shared so anyone with the link can view it, or agents hit the host's
+   permission wall inside the player. */
 (()=>{
   const SOURCES={
     drive:{label:"Google Drive",
@@ -1647,30 +1732,57 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
       embed:id=>`https://play.vidyard.com/${encodeURIComponent(id)}.html`,
       watch:id=>`https://share.vidyard.com/watch/${encodeURIComponent(id)}`},
   };
-  const VIDEOS=[
-    {title:"Compliance Training",
-     drive:"1C08KnfN1hn4ru5sb2-JM1V_2otA3wpXh",
-     desc:"Required before you write your first policy. Covers what you can and cannot say, how to handle client information, and the rules that protect you and the client."},
-    {title:"Competitors — Part 1", vidyard:"7WkGUxpA5QYbsjS3Nyvguk"},
-    {title:"Competitors — Part 2", vidyard:"HSHqdzyzrkZmi3zgePxAe9", desc:"Watch Part 1 first."},
+  const GROUPS=[
+    {name:"Compliance", open:true, videos:[
+      {title:"Compliance Training", drive:"1C08KnfN1hn4ru5sb2-JM1V_2otA3wpXh",
+       desc:"Required before you write your first policy. Covers what you can and cannot say, how to handle client information, and the rules that protect you and the client."},
+    ]},
+    {name:"Product Training", videos:[
+      {title:"Premier Advantage Training", drive:"1nQrfrj_ovdRUSyu6lSEVeQnoNYj7avZA"},
+    ]},
+    {name:"Associations", videos:[
+      {title:"Understanding Associations", vidyard:"b7xiuwi8Xogrc9dnf68QHt"},
+    ]},
+    {name:"Competitors", videos:[
+      {title:"Competitors — Part 1", vidyard:"7WkGUxpA5QYbsjS3Nyvguk"},
+      {title:"Competitors — Part 2", vidyard:"HSHqdzyzrkZmi3zgePxAe9", desc:"Watch Part 1 first."},
+    ]},
   ];
-  const host=$("#classroomlist");
-  const cards=VIDEOS.map((v,i)=>{
+
+  const card=(v,i,n)=>{
     const key=Object.keys(SOURCES).find(k=>v[k]);
     if(!key)return "";                       // unknown source — skip rather than render a dead player
     const s=SOURCES[key], id=v[key];
+    // The player is described here but only mounted when its section opens, so
+    // the page doesn't spin up every video at once as the library grows.
     return `<div class="vidcard">
-      <div class="vidnum">Video ${i+1} of ${VIDEOS.length}</div>
+      <div class="vidnum">Video ${i+1} of ${n}</div>
       <h3>${esc(v.title)}</h3>
       ${v.desc?`<p class="vd">${esc(v.desc)}</p>`:""}
-      <div class="vidwrap">
-        <iframe src="${s.embed(id)}" title="${esc(v.title)}"
-                allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
-      </div>
+      <div class="vidwrap" data-embed="${s.embed(id)}" data-vtitle="${esc(v.title)}"></div>
       <a class="btn ghost" href="${s.watch(id)}" target="_blank" rel="noopener">Open on ${esc(s.label)}</a>
     </div>`;
-  }).join("");
-  host.innerHTML=cards||`<p class="hint">Videos are being added — check back shortly.</p>`;
+  };
+
+  const host=$("#classroomlist");
+  const live=GROUPS.filter(g=>g.videos.length);
+  host.innerHTML=live.length ? live.map(g=>`
+    <details class="obj vidgroup"${g.open?" open":""}>
+      <summary>${esc(g.name)}<span class="vidcount">${g.videos.length} video${g.videos.length>1?"s":""}</span></summary>
+      <div class="body">${g.videos.map((v,i)=>card(v,i,g.videos.length)).join("")}</div>
+    </details>`).join("")
+    : `<p class="hint">Videos are being added — check back shortly.</p>`;
+
+  const mount=root=>root.querySelectorAll(".vidwrap[data-embed]").forEach(w=>{
+    const f=document.createElement("iframe");
+    f.src=w.dataset.embed; f.title=w.dataset.vtitle;
+    f.setAttribute("allow","autoplay; fullscreen"); f.allowFullscreen=true; f.loading="lazy";
+    w.appendChild(f); w.removeAttribute("data-embed");
+  });
+  host.querySelectorAll("details.vidgroup").forEach(d=>{
+    if(d.open)mount(d);
+    d.addEventListener("toggle",()=>{if(d.open)mount(d);});
+  });
 })();
 
 /* ---------- meds ---------- */
