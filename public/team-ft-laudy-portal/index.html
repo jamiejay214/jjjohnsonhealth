@@ -1257,30 +1257,45 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 })();
 
 /* ---------- classroom ----------
-   To add a video: copy a line into VIDEOS. `drive` is the file id out of a
-   Google Drive share link — the long string between /d/ and /view. Order here
-   is the order agents see. Each video must be shared as "Anyone with the link
-   can view" or agents will hit a Google permission wall inside the player. */
+   To add a video, copy a line into VIDEOS with the id from its share link:
+     drive    https://drive.google.com/file/d/<ID>/view   (between /d/ and /view)
+     vidyard  https://share.vidyard.com/watch/<ID>        (after /watch/)
+   `desc` is optional. Order here is the order agents see, and the "Video N of M"
+   labels follow from it. Each video has to be shared so anyone with the link can
+   view it — otherwise agents hit the host's permission wall inside the player. */
 (()=>{
+  const SOURCES={
+    drive:{label:"Google Drive",
+      embed:id=>`https://drive.google.com/file/d/${encodeURIComponent(id)}/preview`,
+      watch:id=>`https://drive.google.com/file/d/${encodeURIComponent(id)}/view`},
+    vidyard:{label:"Vidyard",
+      embed:id=>`https://play.vidyard.com/${encodeURIComponent(id)}.html`,
+      watch:id=>`https://share.vidyard.com/watch/${encodeURIComponent(id)}`},
+  };
   const VIDEOS=[
     {title:"Compliance Training",
      drive:"1C08KnfN1hn4ru5sb2-JM1V_2otA3wpXh",
      desc:"Required before you write your first policy. Covers what you can and cannot say, how to handle client information, and the rules that protect you and the client."},
+    {title:"Competitors — Part 1", vidyard:"7WkGUxpA5QYbsjS3Nyvguk"},
+    {title:"Competitors — Part 2", vidyard:"HSHqdzyzrkZmi3zgePxAe9", desc:"Watch Part 1 first."},
   ];
   const host=$("#classroomlist");
-  if(!VIDEOS.length){host.innerHTML=`<p class="hint">Videos are being added — check back shortly.</p>`;return;}
-  host.innerHTML=VIDEOS.map((v,i)=>`
-    <div class="vidcard">
+  const cards=VIDEOS.map((v,i)=>{
+    const key=Object.keys(SOURCES).find(k=>v[k]);
+    if(!key)return "";                       // unknown source — skip rather than render a dead player
+    const s=SOURCES[key], id=v[key];
+    return `<div class="vidcard">
       <div class="vidnum">Video ${i+1} of ${VIDEOS.length}</div>
       <h3>${esc(v.title)}</h3>
       ${v.desc?`<p class="vd">${esc(v.desc)}</p>`:""}
       <div class="vidwrap">
-        <iframe src="https://drive.google.com/file/d/${encodeURIComponent(v.drive)}/preview"
-                title="${esc(v.title)}" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        <iframe src="${s.embed(id)}" title="${esc(v.title)}"
+                allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
       </div>
-      <a class="btn ghost" href="https://drive.google.com/file/d/${encodeURIComponent(v.drive)}/view"
-         target="_blank" rel="noopener">Open in Google Drive</a>
-    </div>`).join("");
+      <a class="btn ghost" href="${s.watch(id)}" target="_blank" rel="noopener">Open on ${esc(s.label)}</a>
+    </div>`;
+  }).join("");
+  host.innerHTML=cards||`<p class="hint">Videos are being added — check back shortly.</p>`;
 })();
 
 /* ---------- meds ---------- */
