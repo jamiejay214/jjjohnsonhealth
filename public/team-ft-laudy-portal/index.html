@@ -827,9 +827,10 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
         <div>
           <label for="aimLevel">Contract level</label>
           <select id="aimLevel">
-            <option value="1">FTA — Field Sales Leader / Platinum / Field Training / Sr. Agent</option>
-            <option value="2">Career Agent</option>
-            <option value="3" selected>WA — Writing Agent</option>
+            <option value="1">FSL — Field Sales Leader / Platinum Agent</option>
+            <option value="2">FTA — Field Training Agent / Sr. Agent</option>
+            <option value="3">Career Agent</option>
+            <option value="4" selected>WA — Writing Agent</option>
           </select>
         </div>
         <div>
@@ -1332,30 +1333,36 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
 })();
 
 /* ---------- commission calculator (AIM) ----------
-   Rates, fees and tier tables taken directly from the Agent Income Model
-   workbook (commission-calc.xlsx). Column order everywhere is
-   [FTA, Career, WA], matching contract level 1/2/3. */
+   Structure and the tier/fee tables come from the Agent Income Model
+   workbook (commission-calc.xlsx); the commission rates have since been
+   updated by the team. Column order everywhere is [FSL, FTA, Career, WA],
+   matching contract level 1/2/3/4. */
 (()=>{
   // Premier Choice and Premier Advantage pay the same. The workbook rated
   // Advantage lower and knocked $20 off the premium before commission; per
   // the team both products price identically, so one rate set covers both
   // and the product dropdown is just a record of what was written.
-  // WA figures below are the team's current rates. The FTA and Career columns
-  // still come from the workbook and have not been re-confirmed.
-  const HEALTH_RATE=[.1825,.1625,.20];
-  const ANC={med:[.79,.75,.75], life:[.74,.70,.65], inc:[.48,.45,.42], den:[.1975,.18,.18]};
-  const ACC_RATE=[.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
-  // [workbook tier, name, monthly price, FTA bonus, Career bonus, WA bonus]
+  // Rate columns run [FSL, FTA, Career, WA] = contract level 1/2/3/4.
+  // Health, MedGuard and Dental at FSL, FTA and WA are the team's confirmed
+  // current rates. Everything else still comes from the workbook: the whole
+  // Career column, and Life Protector / Income Protector / Accident Protector
+  // / association bonus at FSL and FTA. Where FSL had no figure it repeats
+  // FTA's, so those cells understate rather than invent a number.
+  const HEALTH_RATE=[.248,.229,.1625,.20];
+  const ANC={med:[.88,.84,.75,.75], life:[.74,.74,.70,.65],
+             inc:[.48,.48,.45,.42], den:[.24,.22,.18,.18]};
+  const ACC_RATE=[.60,.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
+  // [workbook tier, name, monthly price, FSL bonus, FTA bonus, Career bonus, WA bonus]
   // Listed highest to lowest; Executive Diamond is the default selection.
   const DEFAULT_TIER=6;
   // Both of these mirror the `selected` attributes in the markup — keep in sync.
-  const DEFAULT_LEVEL=3;     // new agents start as WA
+  const DEFAULT_LEVEL=4;     // new agents start as WA
   const DEFAULT_PRODUCT=2;   // Premier Advantage
-  const TIERS=[[6,"Executive Diamond",89.95,23.00,18.00,18.00],
-    [5,"Diamond",62.95,16.75,13.00,13.00],
-    [4,"Emerald",52.95,12.00,9.00,9.00],
-    [3,"Sapphire",42.95,7.90,5.50,5.50],
-    [2,"Ruby",32.95,6.25,4.25,4.25]];
+  const TIERS=[[6,"Executive Diamond",89.95,23.00,23.00,18.00,18.00],
+    [5,"Diamond",62.95,16.75,16.75,13.00,13.00],
+    [4,"Emerald",52.95,12.00,12.00,9.00,9.00],
+    [3,"Sapphire",42.95,7.90,7.90,5.50,5.50],
+    [2,"Ruby",32.95,6.25,6.25,4.25,4.25]];
 
   const money=n=>(n<0?"-$":"$")+Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
   const num=id=>{const v=parseFloat($(id).value); return isFinite(v)&&v>0?v:0;};
