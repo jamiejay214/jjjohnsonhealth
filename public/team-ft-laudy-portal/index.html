@@ -382,6 +382,17 @@ details.how .howbody p{margin:6px 0}
 .aim-tot.big{background:var(--gold-dim); border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin-top:10px; border-bottom:1px solid var(--line)}
 .aim-tot.big .k{font-weight:700}
 .aim-tot.big .v{font-size:1.5rem; font-family:"Palatino Linotype",Palatino,Georgia,serif}
+/* On a phone the sales list keeps only the sale, its advance and Remove, so
+   everything is reachable without scrolling the table sideways. Monthly
+   premium, AV and the association bonus are all still in the totals below. */
+@media(max-width:620px){
+  #aimSalesWrap th:nth-child(2),#aimSalesWrap td:nth-child(2),
+  #aimSalesWrap th:nth-child(3),#aimSalesWrap td:nth-child(3),
+  #aimSalesWrap th:nth-child(4),#aimSalesWrap td:nth-child(4){display:none}
+  #aimSalesWrap th,#aimSalesWrap td{padding:9px 10px}
+  #aimSalesWrap th{white-space:normal}
+  #aimSalesWrap .aim-del{padding:5px 9px !important}
+}
 @media(max-width:620px){
   .aim-top{grid-template-columns:1fr}
   .aim-row{grid-template-columns:1fr 1fr; row-gap:4px}
@@ -1141,14 +1152,39 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
       <div class="aim-tot"><span class="k">Association Bonus <span class="hint">(monthly credit)</span></span><span class="v" id="aimBonus">$0.00</span></div>
       <div class="aim-tot big"><span class="k">Total Advance</span><span class="v" id="aimTotAdv">$0.00</span></div>
 
-      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
-        <button class="btn ghost" id="aimReset" type="button">Reset</button>
+      <div class="aim-sec">Add this to your running total</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+        <input id="aimName" placeholder="Client or policy name (optional)" aria-label="Client or policy name" style="flex:1 1 220px">
+        <button class="btn" id="aimAdd" type="button">Add this sale</button>
+        <span class="hint" id="aimAddMsg" role="status" aria-live="polite"></span>
+      </div>
+
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn ghost" id="aimReset" type="button">Reset form</button>
         <a class="btn ghost" href="/team-ft-laudy-portal/commission-calc.xlsx" download>Download the Excel version</a>
       </div>
     </div>
   </div>
 
-  <p class="hint">The association bonus is a monthly credit and is not included in the advance. Questions about commission calculations? Reach out to your team leader.</p>
+  <div class="card">
+    <h3 style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap">
+      <span>My sales</span><span class="hint" id="aimSalesCount"></span>
+    </h3>
+    <p class="hint" id="aimSalesEmpty" hidden>No sales added yet. Fill in a sale above and press <strong>Add this sale</strong> — they stack up here and total at the bottom.</p>
+    <div class="tblwrap" id="aimSalesWrap" hidden style="margin-bottom:14px">
+      <table><thead><tr>
+        <th>Sale</th><th style="text-align:right">Mo. premium</th><th style="text-align:right">AV</th>
+        <th style="text-align:right">Assoc. bonus</th><th style="text-align:right">Advance</th><th></th>
+      </tr></thead><tbody id="aimSalesBody"></tbody></table>
+    </div>
+    <div class="aim-tot"><span class="k">Total Monthly Premium</span><span class="v" id="sumMo">$0.00</span></div>
+    <div class="aim-tot"><span class="k">Total Annualized Volume</span><span class="v" id="sumAV">$0.00</span></div>
+    <div class="aim-tot"><span class="k">Total Association Bonus <span class="hint">(monthly credit)</span></span><span class="v" id="sumBonus">$0.00</span></div>
+    <div class="aim-tot big"><span class="k">Total Advance</span><span class="v" id="sumAdv">$0.00</span></div>
+    <div style="margin-top:14px"><button class="btn ghost" id="aimClear" type="button" hidden>Clear all sales</button></div>
+  </div>
+
+  <p class="hint">Your sales list saves to your account, so it is still here next time you sign in. The association bonus is a monthly credit and is not included in the advance. Questions about commission calculations? Reach out to your team leader.</p>
 </section>
 
 </div></main>
@@ -1803,46 +1839,113 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     TIERS.map(t=>`<option value="${t[0]}"${t[0]===DEFAULT_TIER?" selected":""}>${esc(t[1])} — ${money(t[2])}/mo</option>`).join("")+
     `<option value="0">None — $0.00</option>`;
 
-  const calc=()=>{
-    const li=+$("#aimLevel").value-1;
-    const months=Math.max(0,parseFloat($("#aimMonths").value)||0);
-
-    const hPrem=num("#aimHealthPrem");
-    const hAdv=hPrem*HEALTH_RATE[li]*months;
-
-    let ancPrem=0, ancAdv=0;
-    [["med","#aimMed"],["life","#aimLife"],["inc","#aimInc"],["den","#aimDen"]].forEach(([k,id])=>{
-      const p=num(id), a=p*months*ANC[k][li];
-      ancPrem+=p; ancAdv+=a;
-      $(id+"Adv").textContent=money(a);
+  // Pure maths, so the live form and every saved sale go through the same code.
+  // Saved sales keep their inputs rather than their totals, so a rate change
+  // re-prices the whole list instead of leaving stale numbers behind.
+  const compute=s=>{
+    const li=Math.min(3,Math.max(0,(+s.level||DEFAULT_LEVEL)-1));
+    const months=Math.max(0,+s.months||0);
+    const hAdv=(+s.health||0)*HEALTH_RATE[li]*months;
+    let ancPrem=0, ancAdv=0; const per={};
+    ["med","life","inc","den"].forEach(k=>{
+      const p=+s[k]||0, a=p*months*ANC[k][li];
+      ancPrem+=p; ancAdv+=a; per[k]=a;
     });
-
-    const accType=+$("#aimAccType").value, accPrem=num("#aimAccPrem");
-    const accComm=accType ? Math.max(0, accPrem-ACC_FEE[accType]) : 0;
+    const accComm=s.accType ? Math.max(0,(+s.accPrem||0)-ACC_FEE[s.accType]) : 0;
     const accAdv=accComm*months*ACC_RATE[li];
-
-    const t=TIERS.find(x=>x[0]===+tierSel.value);
+    const t=TIERS.find(x=>x[0]===+s.tier);
     const assocPrice=t?t[2]:0, assocBonus=t?t[3+li]:0;
-
-    const totalMonthly=hPrem+ancPrem+accPrem+assocPrice;
-    $("#aimHealthAdv").textContent=money(hAdv);
-    $("#aimAccAdv").textContent=money(accAdv);
-    $("#aimAssocPrice").textContent=money(assocPrice);
-    $("#aimTotMo").textContent=money(totalMonthly);
-    $("#aimAV").textContent=money(totalMonthly*12);
-    $("#aimBonus").textContent=money(assocBonus);
-    $("#aimTotAdv").textContent=money(hAdv+ancAdv+accAdv);
+    const monthly=(+s.health||0)+ancPrem+(+s.accPrem||0)+assocPrice;
+    return {per, hAdv, accAdv, assocPrice, assocBonus, monthly, av:monthly*12, advance:hAdv+ancAdv+accAdv};
   };
+
+  const readForm=()=>({
+    level:+$("#aimLevel").value, product:+$("#aimHealthProd").value,
+    months:Math.max(0,parseFloat($("#aimMonths").value)||0),
+    health:num("#aimHealthPrem"), med:num("#aimMed"), life:num("#aimLife"),
+    inc:num("#aimInc"), den:num("#aimDen"),
+    accType:+$("#aimAccType").value, accPrem:num("#aimAccPrem"), tier:+tierSel.value,
+  });
+
+  const calc=()=>{
+    const r=compute(readForm());
+    $("#aimMedAdv").textContent=money(r.per.med);
+    $("#aimLifeAdv").textContent=money(r.per.life);
+    $("#aimIncAdv").textContent=money(r.per.inc);
+    $("#aimDenAdv").textContent=money(r.per.den);
+    $("#aimHealthAdv").textContent=money(r.hAdv);
+    $("#aimAccAdv").textContent=money(r.accAdv);
+    $("#aimAssocPrice").textContent=money(r.assocPrice);
+    $("#aimTotMo").textContent=money(r.monthly);
+    $("#aimAV").textContent=money(r.av);
+    $("#aimBonus").textContent=money(r.assocBonus);
+    $("#aimTotAdv").textContent=money(r.advance);
+  };
+
+  /* ----- running list of sales ----- */
+  const LEVELS={1:"FSL",2:"FTA",3:"Career",4:"WA"};
+  const PRODUCTS={1:"Premier Choice",2:"Premier Advantage"};
+  let sales=store.get("aim-sales",[]);
+  if(!Array.isArray(sales))sales=[];
+
+  const renderSales=()=>{
+    const body=$("#aimSalesBody"), empty=$("#aimSalesEmpty"), wrap=$("#aimSalesWrap");
+    $("#aimSalesCount").textContent=sales.length?`${sales.length} sale${sales.length>1?"s":""}`:"";
+    if(!sales.length){
+      empty.hidden=false; wrap.hidden=true; $("#aimClear").hidden=true;
+      ["#sumMo","#sumAV","#sumBonus","#sumAdv"].forEach(id=>$(id).textContent=money(0));
+      return;
+    }
+    empty.hidden=true; wrap.hidden=false; $("#aimClear").hidden=false;
+    let mo=0, av=0, bonus=0, adv=0;
+    body.innerHTML=sales.map((s,i)=>{
+      const r=compute(s);
+      mo+=r.monthly; av+=r.av; bonus+=r.assocBonus; adv+=r.advance;
+      return `<tr>
+        <td>${i+1}. ${esc(s.name||"Sale "+(i+1))}
+          <br><span class="hint">${esc(PRODUCTS[s.product]||"")} · ${esc(LEVELS[s.level]||"")} · ${s.months} mo</span></td>
+        <td style="text-align:right">${money(r.monthly)}</td>
+        <td style="text-align:right">${money(r.av)}</td>
+        <td style="text-align:right">${money(r.assocBonus)}</td>
+        <td style="text-align:right; font-weight:700; color:var(--gold-bright)">${money(r.advance)}</td>
+        <td style="text-align:right"><button class="btn ghost aim-del" data-i="${i}" style="padding:5px 11px; font-size:.76rem">Remove</button></td>
+      </tr>`;
+    }).join("");
+    $("#sumMo").textContent=money(mo);
+    $("#sumAV").textContent=money(av);
+    $("#sumBonus").textContent=money(bonus);
+    $("#sumAdv").textContent=money(adv);
+  };
+  const save=()=>{store.set("aim-sales",sales); renderSales();};
+
+  $("#aimAdd").addEventListener("click",()=>{
+    const s=readForm();
+    if(!compute(s).monthly){                       // nothing entered — don't add an empty row
+      const w=$("#aimAddMsg"); w.textContent="Enter a premium first."; setTimeout(()=>w.textContent="",2500); return;
+    }
+    s.name=($("#aimName").value||"").trim()||("Sale "+(sales.length+1));
+    sales.push(s); save();
+    $("#aimName").value="";
+    const w=$("#aimAddMsg"); w.textContent="Added."; setTimeout(()=>w.textContent="",2000);
+  });
+  $("#aimSalesBody").addEventListener("click",e=>{
+    const b=e.target.closest(".aim-del"); if(!b)return;
+    sales.splice(+b.dataset.i,1); save();
+  });
+  $("#aimClear").addEventListener("click",()=>{
+    if(sales.length&&!confirm("Clear all "+sales.length+" saved sales?"))return;
+    sales=[]; save();
+  });
 
   const host=$("#view-commission");
   host.addEventListener("input",calc);
   host.addEventListener("change",calc);
   $("#aimReset").addEventListener("click",()=>{
-    ["#aimHealthPrem","#aimMed","#aimLife","#aimInc","#aimDen","#aimAccPrem"].forEach(id=>$(id).value="");
+    ["#aimHealthPrem","#aimMed","#aimLife","#aimInc","#aimDen","#aimAccPrem","#aimName"].forEach(id=>$(id).value="");
     $("#aimMonths").value=8; $("#aimLevel").value=String(DEFAULT_LEVEL); $("#aimHealthProd").value=String(DEFAULT_PRODUCT);
     $("#aimAccType").value="0"; tierSel.value=String(DEFAULT_TIER); calc();
   });
-  calc();
+  calc(); renderSales();
 })();
 
 /* ---------- boot ---------- */
