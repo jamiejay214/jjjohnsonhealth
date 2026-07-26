@@ -809,9 +809,8 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
 <!-- ================= CONTACTS ================= -->
 <section class="view" id="view-contacts">
   <div class="page-head"><div class="eyebrow">Reference</div><h1>Contact List</h1>
-  <p class="sub">Team FT. Laudy leadership and support contacts.</p></div>
-  <div class="card"><h3>Updated list coming soon</h3>
-  <p style="margin:0">The 2026 contact list is being updated. Until it's posted here, ask your team leader for the current leadership and support numbers.</p></div>
+  <p class="sub">Team FT. Laudy leadership and support contacts. Tap any number to call.</p></div>
+  <div id="contactlist"></div>
 </section>
 
 <!-- ================= LICENSE ================= -->
@@ -1362,6 +1361,41 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   const bar=()=>{const s=store.get("hunt",{});$("#huntbar").style.width=(100*Object.keys(s).length/HUNT.length)+"%";};
   tb.addEventListener("change",e=>{const i=e.target.name.slice(1);const s=store.get("hunt",{});s[i]=e.target.value;store.set("hunt",s);bar();});
   bar();
+})();
+
+/* ---------- contact list ----------
+   Leadership is generated from TEAM (the Meet the Team data) so the six
+   leaders' numbers live in exactly one place. Everyone else is listed here. */
+(()=>{
+  const GROUPS=[
+    {name:"Leadership", people:[
+      ...TEAM.map(p=>({name:p.name, role:p.role, phone:p.phone})),
+      {name:"Maria", phone:"561-233-5416"},
+    ]},
+    {name:"Gee's Team", people:[
+      {name:"Alme", phone:"954-531-5176"},
+      {name:"Gabby", phone:"786-690-4947"},
+      {name:"Joseph", phone:"239-850-5588"},
+      {name:"Michael Hollin", phone:"406-546-4051"},
+      {name:"Mina", phone:"857-272-7727"},
+      {name:"Jasmine", phone:"754-281-3073"},
+      {name:"Etay", phone:"754-715-3233"},
+    ]},
+    {name:"Frank's Team", people:[
+      {name:"Carlos", phone:"954-734-3483"},
+      {name:"Daniela", phone:"954-778-8623"},
+      {name:"David", phone:"954-268-6739"},
+      {name:"Jada", phone:"954-470-7353"},
+      {name:"Taylor", phone:"315-561-1388"},
+      {name:"Christian", phone:"862-209-8171"},
+    ]},
+  ];
+  $("#contactlist").innerHTML=GROUPS.map(g=>`
+    <h3 class="display" style="color:var(--gold-bright); margin:22px 0 8px; font-size:1.15rem">${esc(g.name)}</h3>
+    <div class="tblwrap"><table><tbody>${g.people.map(p=>`<tr>
+      <td style="font-weight:600">${esc(p.name)}${p.role?`<br><span class="hint" style="font-weight:400">${esc(p.role)}</span>`:""}</td>
+      <td class="contact-links" style="text-align:right; white-space:nowrap"><a href="tel:${p.phone.replace(/\D/g,"")}">${esc(p.phone)}</a></td>
+    </tr>`).join("")}</tbody></table></div>`).join("");
 })();
 
 /* ---------- vocab ---------- */
