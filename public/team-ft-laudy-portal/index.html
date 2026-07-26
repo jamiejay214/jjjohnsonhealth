@@ -1343,15 +1343,15 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   // the team both products price identically, so one rate set covers both
   // and the product dropdown is just a record of what was written.
   // Rate columns run [FSL, FTA, Career, WA] = contract level 1/2/3/4.
-  // Health, MedGuard and Dental at FSL, FTA and WA are the team's confirmed
-  // current rates. Everything else still comes from the workbook: the whole
-  // Career column, and Life Protector / Income Protector / Accident Protector
-  // / association bonus at FSL and FTA. Where FSL had no figure it repeats
-  // FTA's, so those cells understate rather than invent a number.
-  const HEALTH_RATE=[.248,.229,.1625,.20];
-  const ANC={med:[.88,.84,.75,.75], life:[.74,.74,.70,.65],
-             inc:[.48,.48,.45,.42], den:[.24,.22,.18,.18]};
-  const ACC_RATE=[.60,.60,.55,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
+  // Health, MedGuard and Dental are the team's confirmed current rates at all
+  // four levels, as is Accident Protector at Career. Still from the workbook
+  // and unconfirmed: Life Protector and Income Protector throughout, Accident
+  // Protector at FSL / FTA / WA, and the association bonus. Where FSL had no
+  // figure it repeats FTA's rather than invent a number.
+  const HEALTH_RATE=[.248,.229,.21,.20];
+  const ANC={med:[.88,.84,.80,.75], life:[.74,.74,.70,.65],
+             inc:[.48,.48,.45,.42], den:[.24,.22,.20,.18]};
+  const ACC_RATE=[.60,.60,.60,.55], ACC_FEE={1:9.95, 2:12.95, 3:16.95}; // fee comes off before commission
   // [workbook tier, name, monthly price, FSL bonus, FTA bonus, Career bonus, WA bonus]
   // Listed highest to lowest; Executive Diamond is the default selection.
   const DEFAULT_TIER=6;
