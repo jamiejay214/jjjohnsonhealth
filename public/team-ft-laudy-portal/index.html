@@ -210,6 +210,39 @@ section.view.on > *:nth-child(n+5){animation-delay:.22s}
 .page-head p.sub{color:var(--muted); margin:0; max-width:62ch; font-size:1.02rem}
 /* topbar (mobile) */
 .topbar{display:none}
+/* ---------- pre-qualify ---------- */
+.pqgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px}
+.pqgrid label{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); font-weight:700; margin-bottom:5px}
+.pqgrid input,.pqgrid select{width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line2);
+  border-radius:9px; padding:10px 12px; font:inherit}
+.pqgrid input:focus,.pqgrid select:focus{border-color:var(--gold); box-shadow:0 0 0 3px var(--ring); outline:none}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0}
+.chip{display:inline-flex; align-items:center; gap:8px; border-radius:99px; padding:5px 12px;
+  font-size:.82rem; font-weight:600; border:1px solid var(--line2); background:var(--panel2)}
+.chip.decline{border-color:var(--bad); background:var(--bad-bg); color:var(--bad)}
+.chip.caution{border-color:var(--gold); background:var(--gold-dim); color:var(--gold)}
+.chip.ok{border-color:var(--ok); background:var(--ok-bg); color:var(--ok)}
+.chip button{background:none; border:0; color:inherit; cursor:pointer; font:inherit; font-size:1rem; line-height:1; padding:0; opacity:.75}
+.chip button:hover{opacity:1}
+.medpick{position:relative}
+.medlist{position:absolute; z-index:5; left:0; right:0; margin-top:6px; max-height:230px; overflow-y:auto;
+  border:1px solid var(--line); border-radius:10px; background:var(--panel2); box-shadow:var(--shadow-lg)}
+.medlist button{display:flex; justify-content:space-between; gap:10px; width:100%; text-align:left; background:none;
+  border:0; border-bottom:1px solid var(--hairline); color:var(--text); font:inherit; font-size:.86rem; padding:9px 12px; cursor:pointer}
+.medlist button:last-child{border-bottom:0}
+.medlist button:hover{background:var(--gold-dim)}
+.verdict{border-radius:var(--radius); padding:20px 22px; margin:0 0 16px; border:1px solid var(--line2)}
+.verdict.ok{background:var(--ok-bg); border-color:var(--ok)}
+.verdict.caution{background:var(--gold-dim); border-color:var(--gold)}
+.verdict.decline{background:var(--bad-bg); border-color:var(--bad)}
+.verdict h3{margin:0 0 4px; font-size:1.3rem}
+.verdict.ok h3{color:var(--ok)} .verdict.caution h3{color:var(--gold)} .verdict.decline h3{color:var(--bad)}
+.verdict p{margin:0; color:var(--text)}
+.reasons{list-style:none; margin:0; padding:0}
+.reasons li{display:flex; gap:10px; align-items:flex-start; padding:9px 0; border-bottom:1px solid var(--hairline); font-size:.92rem}
+.reasons li:last-child{border-bottom:0}
+.reasons .rmark{flex-shrink:0; font-weight:700; width:1.2em}
+.reasons .rmark.ok{color:var(--ok)} .reasons .rmark.caution{color:var(--gold)} .reasons .rmark.decline{color:var(--bad)}
 /* ---------- activity tracker ---------- */
 .actgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px}
 .actcell label{display:block; font-size:.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); font-weight:700; margin-bottom:5px}
@@ -683,6 +716,7 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
     <button class="navlink" data-view="approval">Approval &amp; Referral Call</button>
   </div>
   <div class="grp"><div class="grp-label">Underwriting</div>
+    <button class="navlink" data-view="prequal">Pre-Qualify a Lead</button>
     <button class="navlink" data-view="uwguide">Underwriting Guide</button>
     <button class="navlink" data-view="meds">Medication Chart</button>
     <button class="navlink" data-view="hw">Height &amp; Weight</button>
@@ -1116,6 +1150,42 @@ body.has-logo .brand svg, body.has-logo .hero svg{display:none}
   <div class="say"><div class="who">Gratitude</div>More importantly, I just want to thank you for trusting me through this process. I'm grateful we had the chance to connect and get you in a great spot with your coverage. If there is anything you need regarding your plan, give me a call or shoot me a text — I'm here to help.</div>
   <div class="say"><div class="who">The referral ask</div>Now, as I mentioned, most of my clients connect me with their friends or family members who they want to help get affordable coverage as well.<br><br>The cool part is, when someone you refer gets approved, I will send you a <strong>$100 referral bonus</strong> — via whatever method you prefer: Zelle, Venmo, Cash App, totally up to you.<br><br>Here's what makes it super easy: most of my clients just introduce us in a quick three-way text. That way, it's simple, and I can take it from there.<br><br>Who's the first person that comes to mind you want to help?<br><br><span class="hint">(After that)</span> Great — and who else are you thinking about?<br><br><span class="hint">(NO)</span> Okay, no worries. Let me know in the future if there is anyone you think of!</div>
   <div class="say"><div class="who">Close</div>Thank you (NAME). Remember, I'm here for anything you need. Please do not hesitate to contact me. I look forward to speaking with you soon. Have a great day!</div>
+</section>
+
+<!-- ================= PRE-QUALIFY ================= -->
+<section class="view" id="view-prequal">
+  <div class="page-head"><div class="eyebrow">Underwriting</div><h1>Pre-Qualify a Lead</h1>
+  <p class="sub">A first look before you spend an hour on someone who was never writable. Uses the medication chart, height &amp; weight tables and age rules already in this portal.</p></div>
+
+  <div class="card">
+    <h3>The client</h3>
+    <div class="pqgrid">
+      <div><label for="pqAge">Age</label><input id="pqAge" type="number" min="0" max="120" inputmode="numeric" placeholder="e.g. 42"></div>
+      <div><label for="pqSex">Sex</label><select id="pqSex"><option value="m">Male</option><option value="f">Female</option></select></div>
+      <div><label for="pqHeight">Height</label><select id="pqHeight"></select></div>
+      <div><label for="pqWeight">Weight (lbs)</label><input id="pqWeight" type="number" min="0" max="700" inputmode="numeric" placeholder="e.g. 190"></div>
+      <div><label for="pqState">State</label><select id="pqState"></select></div>
+      <div><label for="pqHbp">High blood pressure?</label><select id="pqHbp"><option value="no">No / unknown</option><option value="yes">Yes</option></select></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Medications</h3>
+    <p class="hint" style="margin-top:0">Search the chart and add everything they take. Leave empty if none.</p>
+    <div class="medpick">
+      <input id="pqMedQ" type="search" placeholder="Search medications&hellip;" aria-label="Search medications" autocomplete="off"
+             style="width:100%; background:var(--panel2); color:var(--text); border:1px solid var(--line2); border-radius:9px; padding:10px 12px; font:inherit">
+      <div class="medlist" id="pqMedList" hidden></div>
+    </div>
+    <div class="chips" id="pqMedChips"></div>
+  </div>
+
+  <div id="pqResult"></div>
+
+  <div style="display:flex; gap:10px; flex-wrap:wrap">
+    <button class="btn ghost" id="pqReset" type="button">Clear and start over</button>
+    <button class="btn ghost" id="pqGoMeds" type="button" data-go="meds">Open the full medication chart</button>
+  </div>
 </section>
 
 <!-- ================= UW GUIDE ================= -->
@@ -1874,18 +1944,22 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
   });
 })();
 
+/* Classify a condition using the chart's own rules. Unknowns fall to
+   "caution" — never a false "OK" — since over-flagging is the safe direction.
+   Shared by the Medication Chart and the Pre-Qualify tool so the two can't
+   disagree about the same drug. */
+const medStatus=cond=>{
+  const c=String(cond).toLowerCase();
+  if(/bipolar|schizophren|diabetes|insulin|blood thinner|addiction|rheumatoid|arthritis|overactive bladder|\bpain\b/.test(c))return"decline";
+  if(/cholesterol|hypothyroid|heartburn|gerd|asthma|gout|prostate|herpes|bowel|migraine|sleep aid/.test(c))return"ok";
+  return"caution"; // HBP, anxiety, depression, ADHD, seizures, steroids, HIV, hepatitis, muscle relaxers, etc.
+};
+const MED_LABEL={decline:"Decline",caution:"Approvable w/ rules",ok:"Usually OK"};
+
 /* ---------- meds ---------- */
 (()=>{
   const tb=$("#medtable tbody");
-  // Classify a condition using the chart's own rules. Unknowns fall to
-  // "caution" — never a false "OK" — since over-flagging is the safe direction.
-  const status=cond=>{
-    const c=cond.toLowerCase();
-    if(/bipolar|schizophren|diabetes|insulin|blood thinner|addiction|rheumatoid|arthritis|overactive bladder|\bpain\b/.test(c))return"decline";
-    if(/cholesterol|hypothyroid|heartburn|gerd|asthma|gout|prostate|herpes|bowel|migraine|sleep aid/.test(c))return"ok";
-    return"caution"; // HBP, anxiety, depression, ADHD, seizures, steroids, HIV, hepatitis, muscle relaxers, etc.
-  };
-  const LABEL={decline:"Decline",caution:"Approvable w/ rules",ok:"Usually OK"};
+  const status=medStatus, LABEL=MED_LABEL;
   let filter="all";
   const render=()=>{
     const q=($("#medsearch").value||"").toLowerCase();
@@ -2147,6 +2221,127 @@ const savedTheme=store.get("theme",null); if(savedTheme)document.documentElement
     $("#aimAccType").value="0"; tierSel.value=String(DEFAULT_TIER); calc();
   });
   calc(); renderSales();
+})();
+
+/* ---------- pre-qualify a lead ----------
+   Everything below reads the portal's own reference data — the medication
+   chart's classifier, the height/weight tables, and the association state
+   exclusions from the vocabulary list. Nothing is judged by a rule that isn't
+   already published to agents somewhere in this portal, and the result is
+   deliberately framed as a first look rather than an underwriting decision. */
+(()=>{
+  const ageIn=$("#pqAge"); if(!ageIn)return;
+  // Association products are not sold in these states (see Vocabulary → Association).
+  const NO_ASSOC=["Maryland","Nevada","Utah","Kansas","South Dakota"];
+  const STATES=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+  const RANK={ok:0,caution:1,decline:2};
+  const range=str=>String(str).split("-").map(Number);
+
+  $("#pqHeight").innerHTML=HEIGHTS.map((h,i)=>`<option value="${i}">${h}</option>`).join("");
+  $("#pqHeight").value="8";                                  // 5'6", middle of the table
+  $("#pqState").innerHTML=STATES.map(s=>`<option${s==="Florida"?" selected":""}>${s}</option>`).join("");
+
+  let meds=[];                                               // [{name, cond, status}]
+
+  /* ----- medication picker ----- */
+  const medQ=$("#pqMedQ"), medList=$("#pqMedList");
+  const closeList=()=>{medList.hidden=true;};
+  medQ.addEventListener("input",()=>{
+    const q=medQ.value.trim().toLowerCase();
+    if(q.length<2){closeList(); return;}
+    const hits=MEDS.filter(m=>!meds.some(x=>x.name===m[0])&&
+      (m[0].toLowerCase().includes(q)||m[1].toLowerCase().includes(q))).slice(0,10);
+    medList.innerHTML=hits.length
+      ? hits.map(m=>`<button type="button" data-n="${esc(m[0])}" data-c="${esc(m[1])}">
+          <span>${esc(m[0])}</span><span class="hint">${esc(m[1])}</span></button>`).join("")
+      : `<div class="hint" style="padding:10px 12px">Not on the chart. Check the Underwriting Guide or ask your FTA.</div>`;
+    medList.hidden=false;
+  });
+  medList.addEventListener("click",e=>{
+    const b=e.target.closest("button[data-n]"); if(!b)return;
+    meds.push({name:b.dataset.n, cond:b.dataset.c, status:medStatus(b.dataset.c)});
+    medQ.value=""; closeList(); paint();
+  });
+  document.addEventListener("click",e=>{if(!e.target.closest(".medpick"))closeList();});
+  $("#pqMedChips").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-rm]"); if(!b)return;
+    meds.splice(+b.dataset.rm,1); paint();
+  });
+
+  /* ----- checks ----- */
+  const buildCheck=()=>{
+    const w=parseInt($("#pqWeight").value,10), i=+$("#pqHeight").value;
+    if(!isFinite(w)||w<=0)return null;
+    const row=($("#pqSex").value==="m"?HW_M:HW_F)[i];
+    const acc=range(row[0]), big=range(row[1]), small=range(row[2]), hbp=range(row[3]);
+    const h=HEIGHTS[i];
+    if(w<acc[0]||w>acc[1])
+      return {status:"decline", text:`At ${h}, ${w} lbs is outside the acceptable range of ${row[0]} lbs.`};
+    if($("#pqHbp").value==="yes"&&w>hbp[1])
+      return {status:"decline", text:`With high blood pressure the limit at ${h} is ${hbp[1]} lbs — this client is ${w}.`};
+    if(w>=big[0])
+      return {status:"caution", text:`${w} lbs at ${h} falls in the BMI 35+ band (${row[1]} lbs). Writable, but expect questions.`};
+    if(w<=small[1])
+      return {status:"caution", text:`${w} lbs at ${h} is in the BMI 18.5-or-under band (${row[2]} lbs).`};
+    if(w>hbp[1])
+      return {status:"caution", text:`Fine as things stand, but if high blood pressure comes up the limit at ${h} is ${hbp[1]} lbs.`};
+    return {status:"ok", text:`${w} lbs at ${h} sits inside the acceptable range (${row[0]} lbs).`};
+  };
+
+  const ageCheck=()=>{
+    const a=parseInt(ageIn.value,10);
+    if(!isFinite(a))return null;
+    if(a>=65)return {status:"decline", text:`Age ${a} — Medicare age. This is not an underwritten health plan; look at Medicare options.`};
+    if(a<18)return {status:"caution", text:`Age ${a} — under 18. Check with your FTA how the household gets written.`};
+    return {status:"ok", text:`Age ${a} — inside the 18–64 band these charts cover.`};
+  };
+
+  const paint=()=>{
+    $("#pqMedChips").innerHTML=meds.map((m,i)=>`
+      <span class="chip ${m.status}">${esc(m.name)}
+        <button type="button" data-rm="${i}" aria-label="Remove ${esc(m.name)}">&times;</button></span>`).join("");
+
+    const rows=[];
+    const age=ageCheck(); if(age)rows.push(age);
+    const build=buildCheck(); if(build)rows.push(build);
+    meds.forEach(m=>rows.push({status:m.status, text:`${m.name} (${m.cond}) — ${MED_LABEL[m.status]}.`}));
+
+    const st=$("#pqState").value;
+    if(NO_ASSOC.includes(st))rows.push({status:"caution",
+      text:`${st} does not have the association product, so the plan and the commission both look different here.`});
+
+    const host=$("#pqResult");
+    if(!rows.length){
+      host.innerHTML=`<div class="card"><p class="hint" style="margin:0">Put in an age and a weight and the read-out appears here.</p></div>`;
+      return;
+    }
+    const worst=rows.reduce((a,r)=>RANK[r.status]>RANK[a]?r.status:a,"ok");
+    const HEAD={
+      ok:["Looks underwritable","Nothing in our charts stops this one. Still run the full health questions on the call."],
+      caution:["Worth a call — with conditions","Writable, but the things below will come up. Know your answers before you dial."],
+      decline:["Probably not underwritten","Take them to ACA, or check with your FTA before spending more time here."],
+    }[worst];
+    host.innerHTML=`
+      <div class="verdict ${worst}"><h3>${HEAD[0]}</h3><p>${HEAD[1]}</p></div>
+      <div class="card">
+        <h3>What we found</h3>
+        <ul class="reasons">${rows.slice().sort((a,b)=>RANK[b.status]-RANK[a.status])
+          .map(r=>`<li><span class="rmark ${r.status}">${r.status==="ok"?"✔":r.status==="caution"?"!":"✕"}</span><span>${esc(r.text)}</span></li>`).join("")}</ul>
+      </div>
+      <div class="callout red"><h4>A first look, not a decision</h4>
+        This reads the medication chart, height and weight tables and age rules in this portal. It does not know the
+        client's full history and it is not underwriting. Confirm anything borderline against the
+        <a href="#" data-go="uwguide">Underwriting Guide</a> or with your FTA before you promise a client anything.</div>`;
+  };
+
+  ["#pqAge","#pqWeight"].forEach(id=>$(id).addEventListener("input",paint));
+  ["#pqSex","#pqHeight","#pqState","#pqHbp"].forEach(id=>$(id).addEventListener("change",paint));
+  $("#pqReset").addEventListener("click",()=>{
+    meds=[]; ageIn.value=""; $("#pqWeight").value=""; $("#pqSex").value="m";
+    $("#pqHeight").value="8"; $("#pqState").value="Florida"; $("#pqHbp").value="no"; medQ.value="";
+    closeList(); paint();
+  });
+  paint();
 })();
 
 /* ---------- activity tracker ---------- */
